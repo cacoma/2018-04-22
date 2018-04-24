@@ -5,9 +5,29 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+//alterei todo o arquivo pois nao estava inicializando corretamente as funcionalidades rcaziraghi 24042018
+
+import Vue from 'vue';
+import BootstrapVue from 'bootstrap-vue';
+import VueTheMask from 'vue-the-mask';
+import money from 'v-money';
+//import racaz from './javascript/js.js';
+import VueCharts from 'vue-chartjs';
+import VueChartkick from 'vue-chartkick';
+import Chart from 'chart.js'
+
+Vue.use(money, {
+  precision: 4
+});
+Vue.use(VueTheMask);
+Vue.use(BootstrapVue);
+//Vue.use(racaz);
+Vue.use(VueChartkick, {adapter: Chart})
+
 require('./bootstrap');
 
 window.Vue = require('vue');
+window.moment = require('moment');
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -16,22 +36,8 @@ window.Vue = require('vue');
  */
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('navbaradmin', require('./components/layouts/navbaradmin.vue'));
 
 const app = new Vue({
     el: '#app'
 });
-
-// importar bibliotecas no app.js - Machado - 22/04/2018 as 21:46hs
-import BootstrapVue from 'bootstrap-vue';
-import moment from 'moment';
-import Vue from 'vue';
-import money from 'v-money';
-import VueTheMask from 'vue-the-mask';
-
-// Bootstrap and Bootstrap-vue css files - Machado - 22/04/2018 as 21:57hs
-//import 'bootstrap/dist/css/bootstrap.css';
-//import 'bootstrap-vue/dist/bootstrap-vue.css';
-
-// register directive v-money and componente <money> - Machado - 22/04/2018 as 21:49hs
-Vue.use(money,{precision: 4});
-Vue.use(VueTheMask);

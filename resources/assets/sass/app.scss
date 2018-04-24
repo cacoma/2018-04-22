@@ -6,9 +6,11 @@
 @import "variables";
 
 // Bootstrap
-@import '~bootstrap/scss/bootstrap';
+@import "~bootstrap/scss/bootstrap";
+//importar o css do bootstrap-vue
+@import "~bootstrap-vue/dist/bootstrap-vue.css";
 
-.navbar-laravel {
+.navbar-cacoma {
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }

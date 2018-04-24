@@ -12,8 +12,8 @@ return [
     | any other location as required by the application or its packages.
     |
     */
-
-    'name' => env('APP_NAME', 'Laravel'),
+    //alterado por rcaziraghi 23042018
+    'name' => env('APP_NAME', 'Cacoma'),
 
     /*
     |--------------------------------------------------------------------------
@@ -38,8 +38,9 @@ return [
     | application. If disabled, a simple generic error page is shown.
     |
     */
-
-    'debug' => env('APP_DEBUG', false),
+    //alterado por rcaziraghi em 23042018
+    //'debug' => env('APP_DEBUG', false),
+    'debug' => env('APP_DEBUG', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -51,8 +52,9 @@ return [
     | your application so that it is used when running Artisan tasks.
     |
     */
-
-    'url' => env('APP_URL', 'http://localhost'),
+    //alterado por rcaziraghi em 23042018
+    //'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://cacoma.tk'),
 
     /*
     |--------------------------------------------------------------------------
@@ -77,8 +79,9 @@ return [
     | to any of the locales which will be supported by the application.
     |
     */
-
-    'locale' => 'en',
+    //alterado por rcaziraghi em 23042018
+    //'locale' => 'en',
+    'locale' => 'pt-br',
 
     /*
     |--------------------------------------------------------------------------
