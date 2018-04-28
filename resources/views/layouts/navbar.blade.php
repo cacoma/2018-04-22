@@ -8,11 +8,17 @@
                 </button>
                <!-- Left Side Of Navbar -->
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                @auth
                   <b-navbar-nav>
                       <b-nav-item href="/home">Home</b-nav-item>
-                      <b-nav-item href="/invests">Invest</b-nav-item>
+<!--                       <b-nav-item href="/invests">Invest</b-nav-item> -->
+                            <b-nav-item-dropdown text="Investimentos" right>
+                              <b-dropdown-item href="/invests">Indexar</b-dropdown-item>
+                              <b-dropdown-item href="/invests/create">Adicionar</b-dropdown-item>
+                            </b-nav-item-dropdown>
                   </b-navbar-nav>
                         <navbaradmin :auth="{{ auth()->user() }}"></navbaradmin>
+                @endauth
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->

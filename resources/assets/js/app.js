@@ -11,7 +11,8 @@ import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
 import VueTheMask from 'vue-the-mask';
 import money from 'v-money';
-//import racaz from './javascript/js.js';
+import racaz from './javascript/js.js';
+//import Errors from './javascript/classErrors.js';
 import VueCharts from 'vue-chartjs';
 import VueChartkick from 'vue-chartkick';
 import Chart from 'chart.js'
@@ -21,7 +22,8 @@ Vue.use(money, {
 });
 Vue.use(VueTheMask);
 Vue.use(BootstrapVue);
-//Vue.use(racaz);
+Vue.use(racaz);
+//Vue.use(Errors);
 Vue.use(VueChartkick, {adapter: Chart})
 
 require('./bootstrap');
@@ -37,6 +39,11 @@ window.moment = require('moment');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('navbaradmin', require('./components/layouts/navbaradmin.vue'));
+Vue.component('homecarousel', require('./components/layouts/homecarousel.vue'));
+Vue.component('homechart', require('./components/layouts/homechart.vue'));
+Vue.component('index', require('./components/index.vue'));
+Vue.component('createinvests', require('./components/invests/createInvests.vue'));
+Vue.component('createinveststypestocks', require('./components/invests/createTypeStocks.vue'));
 
 const app = new Vue({
     el: '#app'

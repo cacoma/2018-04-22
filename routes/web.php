@@ -18,3 +18,9 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('users', 'UserController');
+Route::resource('brokers', 'BrokerController');
+Route::post('/stocks/investstore', 'StockController@investstore'); //investimentos de acoes
+Route::resource('stocks', 'StockController');
+Route::resource('monthlyquotes', 'MonthlyQuoteController');
+Route::resource('invests', 'InvestController');

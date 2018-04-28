@@ -21,11 +21,25 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
+  <div class="sk-cube-grid" id="sk-cube-grid">
+  <div class="sk-cube sk-cube1"></div>
+  <div class="sk-cube sk-cube2"></div>
+  <div class="sk-cube sk-cube3"></div>
+  <div class="sk-cube sk-cube4"></div>
+  <div class="sk-cube sk-cube5"></div>
+  <div class="sk-cube sk-cube6"></div>
+  <div class="sk-cube sk-cube7"></div>
+  <div class="sk-cube sk-cube8"></div>
+  <div class="sk-cube sk-cube9"></div>
+</div>
     <div id="app">
+<!--       div para fazer "blur" na pagina quando necessario (carregamento de alguma página,  etc) -->
+      <div id="blur">
        @include ('layouts.navbar')
         <main class="py-4">
             @yield('content')
         </main>
+    </div>
     </div>
 </body>
 </html>
