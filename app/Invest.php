@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\Broker;
 use App\MonthlyQuote;
+use App\DailyQuote;
 use App\Stock;
 
 class invest extends Model
@@ -37,6 +38,10 @@ class invest extends Model
     public function monthlyQuote()
     {
         return $this->hasMany(monthlyQuote::Class, 'stock_id', 'stock_id');
+    }    
+  public function dailyQuote()
+    {
+        return $this->hasMany(dailyQuote::Class, 'stock_id', 'stock_id');
     }
   
     public function lastMonthlyQuote() 

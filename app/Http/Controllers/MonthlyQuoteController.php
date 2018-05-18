@@ -43,7 +43,7 @@ class MonthlyQuoteController extends Controller
         if ($user->role_id == '1') {
             return view('monthlyQuotes.create');
         } else {
-            return back()->with('error', 'Permissao invalida!');
+            return back()->with('message', 'Permissao invalida.|warning');
         }
     }
     /**
@@ -61,6 +61,9 @@ class MonthlyQuoteController extends Controller
         if ($user->role_id == '1') {
             $quote = $this->validate(request(), [
                         'symbol' => 'required|string|max:255|exists:stocks,symbol',
+                    ],[
+                        'symbol.required' => 'O código da ação deve ser inserido.',
+                        'symbol.exists' => 'O código da ação deve constar no sistema.',
                     ]);
             $symbol =  strtoupper($quote['symbol']);
             //testar se stock esta cadastrada no banco
@@ -88,10 +91,10 @@ class MonthlyQuoteController extends Controller
                     fclose($handle);
                 } else {
                     //nao funcionou a importacao,problema no AV
-                    return redirect('home')->with('error', 'Algo errado com o sitio AV');
+                    return redirect('home')->with('flash', 'Algo errado com o sitio AV.|warning');
                 }
                 //retorna que deu tudo certo
-                return redirect('home')->with('success', 'Dados inseridos no BD');
+                return redirect('home')->with('flash', 'Dados inseridos no BD.|success');
                         //caso exista mais de um registro, buscar se o possui registro do mes passado, para inserir somente este
             } elseif (DB::table('monthly_quotes')->where('stock_id', $stockid)->whereDate('timestamp', '>', Carbon::now()->subMonth(1))->doesntExist()) {
                             //esse comando exclui a primeira linha do csv
@@ -112,10 +115,10 @@ class MonthlyQuoteController extends Controller
                 fclose($handle);
             } else {
                 //neste caso ja existe registro do ultimo mes
-                return redirect('home')->with('error', 'Dados já existentes na base');
+                return redirect('home')->with('flash', 'Dados já existentes na base.|warning');
             }
         } else {
-            redirect('home')->with('error', 'Permissao invalida!');
+            redirect('home')->with('flash', 'Permissao invalida.|warning');
         }
     }
     /**

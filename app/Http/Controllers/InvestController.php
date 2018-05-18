@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\Invest;
 use App\Users;
 use App\MonthlyQuote;
+use App\DailyQuote;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,24 +24,30 @@ class InvestController extends Controller
     {
         $user = Auth::user();
         if ($user->role_id == '1') {
-            $invests = Invest::with(['monthlyQuote' => function ($query) {
-                $query->whereDate('timestamp', '>', Carbon::now()->subMonth(2))->latest();
+            //$invests = Invest::with(['monthlyQuote', 'broker'])->get();
+          //$invests = Invest::with(['monthlyQuote' => function ($query) {
+          $invests = Invest::with(['dailyQuote' => function ($query) {
+                $query->orderBy('timestamp', 'desc');
+                //$query->first();
             }, 'broker'])->get();
             foreach ($invests as $key => $value) {
-                // 					//ajusta nome do broker
-                // 					//ajusta se a cotacao for menor ou maior que o price a forma da célula
-                $value->quote = $value->monthlyQuote[0]->close;
+                //se existir, insere o valor da cotacao dos ultimo mes, caso não, vai zerado
+                 if(isset($value->dailyQuote[0]->close)){
+                $value->quote = $value->dailyQuote[0]->close;
+                } else {
+                  $value->quote = 0;
+                }
                 //retira o objeto de dentro do objeto, para renderizar corretamente
-                unset($value->monthlyQuote);
+                unset($value->dailyQuote);
                 //para passar o nome do broker
                 $value->broker_id = $value->broker->name;
                 //retira o objeto de dentro do objeto, para renderizar corretamente
                 unset($value->broker);
                 //retira informacoes que nao queremos renderizar
                 unset($value->stock_id);
-                if ($value->type == 'stock') {
-                    $value->type = 'Ação';
-                }
+//                 if ($value->type == 'stock') {
+//                     $value->type = 'Ação';
+//                 }
                 //calcula porcentagem e insere dado no objeto
                 $value->percentage = ($value->quote / $value->price - 1);
                 if ($value->price >= $value->quote) {
@@ -61,14 +68,21 @@ class InvestController extends Controller
             //depois ele puxa somente os registros que o timestamp, que eh a data real do fechamento, e puxa somente dos ultimos dois meses e a ultima por primeiro.
             //isso se faz para caso nao tenha sido inserido o valor neste mes ainda
             //alem desse relacionamento ele traz somente os investimentos que o id é o do usuario registrado
-            $invests = Invest::with(['monthlyQuote' => function ($query) {
-                $query->whereDate('timestamp', '>', Carbon::now()->subMonth(2))->latest();
+            //daily$invests = Invest::with(['monthlyQuote' => function ($query) {
+            $invests = Invest::with(['dailyQuote' => function ($query) {
+                $query->orderBy('timestamp', 'desc');
+                 //$query->first();
             }, 'broker'])->where('user_id', $user->id)->get();
+          //$invests = Invest::with(['monthlyQuote', 'broker'])->where('user_id', $user->id)->get();
             foreach ($invests as $key => $value) {
-                // 					//ajusta se a cotacao for menor ou maior que o price a forma da célula
-                $value->quote = $value->monthlyQuote[0]->close;
+                //se existir, insere o valor da cotacao dos ultimo mes, caso não, vai zerado
+                if(isset($value->dailyQuote[0]->close)){
+                $value->quote = $value->dailyQuote[0]->close;
+                } else {
+                  $value->quote = 0;
+                }
                 //retira o objeto de dentro do objeto, para renderizar corretamente
-                unset($value->monthlyQuote);
+                unset($value->dailyQuote);
                 //para passar o nome do broker
                 $value->broker_id = $value->broker->name;
                 //retira o objeto de dentro do objeto, para renderizar corretamente
@@ -77,9 +91,9 @@ class InvestController extends Controller
                 unset($value->stock_id);
                 unset($value->user_id);
                 //ajusta o nome do dado interno
-                if ($value->type == 'stock') {
-                    $value->type = 'Ação';
-                }
+//                 if ($value->type == 'stock') {
+//                     $value->type = 'Ação';
+//                 }
                 //cria a variavel percentage e atribui valor
                 $value->percentage = ($value->quote / $value->price - 1);
                 if ($value->price >= $value->quote) {

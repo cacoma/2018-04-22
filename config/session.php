@@ -42,9 +42,10 @@ return [
     | should be encrypted before it is stored. All encryption will be run
     | automatically by Laravel and you can use the Session like normal.
     |
-    */
+    */ 
+    //alterado por rcaziraghi 11/05/2018 era -> false
 
-    'encrypt' => false,
+    'encrypt' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -121,10 +122,11 @@ return [
     | new session cookie is created by the framework for every driver.
     |
     */
+    //alerado por rcaziraghi 11/05/2018 era ->str_slug(env('APP_NAME', 'laravel'), '_').'_session'
 
     'cookie' => env(
         'SESSION_COOKIE',
-        str_slug(env('APP_NAME', 'laravel'), '_').'_session'
+        str_slug(env('APP_NAME', 'cacoma'), '_').'_session'
     ),
 
     /*

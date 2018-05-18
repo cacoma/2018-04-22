@@ -5,7 +5,7 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ExampleTest extends TestCase
+class unitTest extends TestCase
 {
     /**
      * A basic test example.
@@ -16,4 +16,6 @@ class ExampleTest extends TestCase
     {
         $this->assertTrue(true);
     }
+  
+
 }

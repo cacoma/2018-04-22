@@ -19,6 +19,10 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+<!--  acesso para o javascript de variaveis do sistema  -->
+      <script>
+       window.aplhavantage_apikey = "{{ env('MIX_APLHAVANTAGE_APIKEY') }}"
+      </script>
 </head>
 <body>
   <div class="sk-cube-grid" id="sk-cube-grid">
@@ -33,6 +37,8 @@
   <div class="sk-cube sk-cube9"></div>
 </div>
     <div id="app">
+<!--   componente que mostra mensagens de erro     -->
+      <flash message="{{ session('flash') }}"></flash> 
 <!--       div para fazer "blur" na pagina quando necessario (carregamento de alguma página,  etc) -->
       <div id="blur">
        @include ('layouts.navbar')

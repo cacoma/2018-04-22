@@ -18,15 +18,4 @@ use Illuminate\Support\Facades\DB;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-//listagem de stocks
-Route::get('/searchstocks',function(){
- $query = Input::get('query');
- $stocks = DB::table('stocks')->where('symbol','like',$query.'%')->get();
- return response()->json($stocks);
-});
-//listagem de corretoras
-Route::get('/searchbrokers',function(){
- $query = Input::get('query');
- $brokers = DB::table('brokers')->where('name','like',$query.'%')->get();
- return response()->json($brokers);
-});
+

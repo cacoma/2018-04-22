@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
+
 
 class BrokerController extends Controller
 {
@@ -38,7 +40,7 @@ class BrokerController extends Controller
         if ($user->role_id == '1') {
             return view('brokers.create');
         } else {
-            return back()->with('error', 'Permissao invalida!');
+            return back()->with('message', 'Permissao invalida.|warning');
         }
     }
     /**
@@ -54,18 +56,33 @@ class BrokerController extends Controller
         $user = Auth::user();
         //dono e admin somente podem alterar
         if ($user->role_id == '1') {
-            $broker = $this->validate(request(), [
+        $this->validate(request(), [
                         'name' => 'required|string|max:255',
-                        'cnpj' => 'required|string|max:18',
-                    ]);
-            Broker::create([
-            'name' => $broker['name'],
-                        'cnpj' => $broker['cnpj'],
-                        'created_at' => Carbon::now(),
-            ]);
-            return redirect('brokers')->with('success', 'A corretora foi adicionada.');
+                        'cnpj' => 'required|string|max:18|min:18|unique:brokers,cnpj',
+                    ],[
+                        'name.required' => 'O nome da corretora deve ser inserido.',
+                        'cnpj.required' => 'O CNPJ da corretora é necessário.',
+                        'cnpj.max' => 'O CNPJ da corretora deve ter no máximo 18 caracteres.',
+                        'cnpj.min' => 'O CNPJ da corretora deve ter no minimo 18 caracteres.',
+                        'cnpj.unique' => 'O CNPJ da corretora nao pode ser repetido.'
+          ]);
+          $broker = new Broker;
+          $broker->name = $request->name;
+          $broker->cnpj = $request->cnpj;
+          $broker->save();
+//             Broker::create([
+//             'name' => $broker['name'],
+//                         'cnpj' => $broker['cnpj'],
+//                         'created_at' => Carbon::now(),
+//             ]);
+        return response()->json([
+                              'type' => 'success',
+                              'message' => 'A corretora foi inserida.|success'
+                          ]);
         } else {
-            return back()->with('error', 'Permissao invalida!');
+            return response()->json([
+                                'message' => 'Permissao invalida.|warning'
+                                ], 200);
         }
     }
     private function formatcnpj($request)
@@ -119,19 +136,26 @@ class BrokerController extends Controller
         if ($user->role_id == '1') {
             $brokerUpdate = Broker::find($id);
             $this->validate(request(), [
-                        'name' => 'required|string|max:255',
-                        'cnpj' => 'required|string|max:18',
-                        ]);
+                        'name' => ['required', 'string', 'max:255'],
+                        'cnpj' => ['required', 'string', 'max:18', 'min:18', Rule::unique('brokers')->ignore($brokerUpdate->cnpj, 'cnpj'),],
+                        ],[
+                        'name.required' => 'O nome da corretora deve ser inserido.',
+                        'cnpj.required' => 'O CNPJ da corretora é necessário.',
+                        'cnpj.max' => 'O CNPJ da corretora deve ter no máximo 18 caracteres.',
+                        'cnpj.min' => 'O CNPJ da corretora deve ter no minimo 18 caracteres.',
+                        'cnpj.unique' => 'O CNPJ da corretora nao pode ser repetido.'
+          ]);
             $brokerUpdate->name = $request->get('name');
             $brokerUpdate->cnpj = $request->get('cnpj');
             $brokerUpdate->save();
             return response()->json([
-            'success' => 'Corretora atualizada!'
-        ], 200);
+                              'type' => 'success',
+                              'message' => 'A corretora foi atualizada.|success'
+                          ]);
         } else {
             return response()->json([
-            'error' => 'Permissao invalida'
-        ], 200);
+                                'message' => 'Permissao invalida.|error'
+                                ], 200);
         }
     }
     /**
@@ -149,12 +173,12 @@ class BrokerController extends Controller
             $brokerDel = Broker::findOrFail($id);
             $brokerDel->delete();
             return response()->json([
-            'success' => 'Corretora deletada!'
-                ], 200);
-        // return redirect('users.index')->with('success','Usuario atualizado');
+                              'type' => 'success',
+                              'message' => 'A corretora foi deletada.|success'
+                          ]);
         } else {
             return response()->json([
-                                'error' => 'Permissao invalida'
+                                'message' => 'Permissao invalida.|warning'
                                 ], 200);
         }
     }

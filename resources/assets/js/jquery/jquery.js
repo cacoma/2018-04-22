@@ -4,7 +4,3 @@ $(window).ready(function() {
     //faz fadeout de forma lenta
     $( ".sk-cube-grid" ).fadeOut( "slow" );
 });
-//date picker
-$( function() {
-    $( "#datepicker" ).datepicker();
-  } );

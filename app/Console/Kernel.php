@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -26,6 +27,17 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        //comando para importar precos no final do dia
+        $schedule->command('massInsertion:dailyQuotes')
+          ->timezone('America/Sao_Paulo')
+          ->dailyAt('18:00')
+//         ->weekdays()
+//           ->hourly()
+//           ->timezone('America/Sao_Paulo')
+//           ->between('8:00', '18:00')
+          ->after(function () {
+             Log::info("Execução da importação em massa programada");
+         });
     }
 
     /**

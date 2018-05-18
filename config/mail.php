@@ -16,7 +16,8 @@ return [
     |
     */
 
-    'driver' => env('MAIL_DRIVER', 'smtp'),
+    //'driver' => env('MAIL_DRIVER', 'smtp'), alterado por rcaziraghi em 15052018
+    'driver' => env('MAIL_DRIVER', 'ses'),
 
     /*
     |--------------------------------------------------------------------------
@@ -29,7 +30,8 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+    //'host' => env('MAIL_HOST', 'smtp.mailgun.org'), alterado por rcaziraghi 15052018
+    'host' => env('MAIL_HOST', ''),
 
     /*
     |--------------------------------------------------------------------------
@@ -54,11 +56,15 @@ return [
     | used globally for all e-mails that are sent by your application.
     |
     */
-
-    'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
-    ],
+    //editado por rcaziraghi em 15052018
+//     'from' => [
+//         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+//         'name' => env('MAIL_FROM_NAME', 'Example'),
+//     ],
+      'from' => [
+        'address' => env('MAIL_FROM_ADDRESS', 'admin@cacoma.tk'),
+        'name' => env('MAIL_FROM_NAME', 'Cacoma'),
+      ],
 
     /*
     |--------------------------------------------------------------------------

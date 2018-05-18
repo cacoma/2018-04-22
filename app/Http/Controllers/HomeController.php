@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\MonthlyQuote;
+use App\DailyQuote;
 use App\Invest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
+         $user = Auth::user();
           //variavel que leva os dados do chart pie (pizza)
          $pie = new \stdClass;
          $portPerfP = new \stdClass;
@@ -66,9 +67,14 @@ class HomeController extends Controller
             unset($portPer->stock);           
             
         //busca as cotacoes dos ultimos 12 meses para cada acao que o usuario possui em carteira
-          $portPer->temp = monthlyQuote::where('stock_id', '=', $portPer->stock_id)
+//           $portPer->temp = monthlyQuote::where('stock_id', '=', $portPer->stock_id)
+//               ->selectRaw('timestamp, close')
+//                 ->whereDate('timestamp', '>', Carbon::now()->subMonth(12))
+//                       ->orderBy('timestamp', 'asc')->get();
+        
+        $portPer->temp = dailyQuote::where('stock_id', '=', $portPer->stock_id)
               ->selectRaw('timestamp, close')
-                ->whereDate('timestamp', '>', Carbon::now()->subMonth(12))
+                ->whereDate('timestamp', '>', Carbon::now()->subDays(30))
                       ->orderBy('timestamp', 'asc')->get();
         
         //insere os dados de data e valor de fechamento nas variaveis temporarias
@@ -125,13 +131,17 @@ class HomeController extends Controller
         foreach ($results as &$result) {
           
             //pega as ultimas cotacoes mensais da acao
-            $result->lastQuote = monthlyQuote::where('stock_id', '=', $result->stock_id)
-                ->whereDate('timestamp', '>', Carbon::now()->subMonth(2))
-                      ->orderBy('timestamp', 'asc')->get();
+            $result->lastQuote = dailyQuote::where('stock_id', '=', $result->stock_id)
+            //$result->lastQuote = monthlyQuote::where('stock_id', '=', $result->stock_id)
+            //$result->quote = monthlyQuote::where('stock_id', '=', $result->stock_id)
+                //->whereDate('timestamp', '>', Carbon::now()->subMonth(2))
+                      ->orderBy('timestamp', 'desc')
+                        ->first();
             //pega a ultima ultima (caso nao tenha atualizado por ultimo)
-            $result->quote = $result->lastQuote[0]->close;
+          
+            $result->quote = $result->lastQuote->close;
             //retira objeto nao necessario
-            unset($result->lastQuote);
+            //unset($result->lastQuote);
             //faz o calculo do total atualizado
             $result->totalUpdated = floatval(preg_replace("/[^-0-9\.]/", "", $result->quote)) * floatval(preg_replace("/[^-0-9\.]/", "", $result->quant));
             //faz o calculo de % de ganho ou perda

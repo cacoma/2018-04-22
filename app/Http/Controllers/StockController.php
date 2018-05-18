@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\InvestInserted;
 
 class StockController extends Controller
 {
@@ -44,7 +47,7 @@ class StockController extends Controller
         if ($user->role_id == '1') {
             return view('stocks.create');
         } else {
-            return back()->with('error', 'Permissao invalida!');
+            return back()->with('message', 'Permissao invalida.|warning');
         }
     }
     /**
@@ -59,18 +62,28 @@ class StockController extends Controller
         $user = Auth::user();
         //dono e admin somente podem alterar
         if ($user->role_id == '1') {
-            $stock = $this->validate(request(), [
-                        'symbol' => 'required|string|max:255|unique:stocks,symbol',
+            $this->validate(request(), [
+                        'symbol' => 'required|string|max:9|unique:stocks,symbol',
                         'type' => 'required|string|max:255',
+                    ], [
+                        'symbol.required' => 'O código da ação deve ser inserido.',
+                        'symbol.max' => 'O código da ação deve ter no máximo 9 caracteres.',
+                        'symbol.unique' => 'O código da ação não deve ser duplicado.',
+                        'type.required'  => 'O tipo de ação é requerido.',
+                        'type.max'  => 'O tamanho máximo de texto é 255 caracteres.'
                     ]);
-            Stock::create([
-            'symbol' => strtoupper($stock['symbol']),
-                        'type' => strtoupper($stock['type']),
-                        'created_at' => Carbon::now(),
-            ]);
-            return redirect()->action('MonthlyQuotesController@create', ['symbol' => strtoupper($stock['symbol'])]);
+            $stock = new Stock;
+            $stock->symbol = strtoupper($request->symbol);
+            $stock->type = strtoupper($request->type);
+            $stock->save();
+            return response()->json([
+                              'type' => 'success',
+                              'message' => 'A ação foi inserida.|success'
+                          ]);
         } else {
-            redirect('stocks')->with('error', 'Permissao invalida!');
+            return response()->json([
+                                'message' => 'Permissao invalida.|warning'
+                                ], 200);
         }
     }
     /**
@@ -117,20 +130,26 @@ class StockController extends Controller
         if ($user->role_id == '1') {
             $stockUpdate = Stock::find($id);
             $this->validate(request(), [
-                        'symbol' => 'required|string|max:255',
-                        'type' => 'required|string|max:255',
-                        ]);
+                        'symbol' => ['required', 'string', 'max:9', Rule::unique('stocks')->ignore($stockUpdate->symbol, 'symbol'),],
+                        'type' => ['required', 'string', 'max:255'],
+                        ], [
+                        'symbol.required' => 'O código da ação deve ser inserido.',
+                        'symbol.max' => 'O código da ação deve ter no máximo 9 caracteres.',
+                        'symbol.unique' => 'O código da ação não deve ser duplicado.',
+                        'type.required'  => 'O tipo de ação é requerido.',
+                        'type.max'  => 'O tamanho máximo de texto é 255 caracteres.'
+                    ]);
             $stockUpdate->symbol = strtoupper($request->get('symbol'));
             $stockUpdate->type = strtoupper($request->get('type'));
             $stockUpdate->save();
             return response()->json([
-            'success' => 'Ação atualizada!'
-        ], 200);
-        // return redirect('users.index')->with('success','Usuario atualizado');
+                              'type' => 'success',
+                              'message' => 'A ação foi atualizada.|success'
+                          ]);
         } else {
             return response()->json([
-            'error' => 'Permissao invalida'
-        ], 200);
+                                'message' => 'Permissao invalida.|warning'
+                                ], 200);
         }
     }
     /**
@@ -147,12 +166,12 @@ class StockController extends Controller
             $stockDel = Stock::findOrFail($id);
             $stockDel->delete();
             return response()->json([
-            'success' => 'Ação deletada!'
+            'message' => 'Ação deletada.|success'
                 ], 200);
         // return redirect('users.index')->with('success','Usuario atualizado');
         } else {
             return response()->json([
-                                'error' => 'Permissao invalida'
+                                'message' => 'Permissao invalida.|warning'
                                 ], 200);
         }
     }
@@ -166,34 +185,34 @@ class StockController extends Controller
         $user = Auth::user();
         //$userid = $request->user()->id;
         //dd($request);
-         //Validator::make($request->all(), [
-         $this->validate(request(), [
+        //Validator::make($request->all(), [
+        $this->validate(request(), [
                         'symbol' => 'required|string|max:255|exists:stocks,symbol',
                         'quant' => 'required|numeric|min:1',
                         'price' => 'required|numeric|min:0.0001',
-                        'brokerfee' => 'required|numeric|min:0',
-                        'dateinvest' => 'required|before:tomorrow',
-                        'broker' => 'required|exists:brokers,name',
-                    ],[
+                        'broker_fee' => 'required|numeric|min:0',
+                        'date_invest' => 'required|before:tomorrow',
+                        'broker_name' => 'required|exists:brokers,name',
+                    ], [
                         'symbol.required' => 'O código da ação deve ser inserido.',
                         'symbol.exists' => 'O código da ação deve constar no sistema.',
                         'quant.required'  => 'A quantidade é necessária.',
                         'price.required'  => 'O preço é necessário.',
                         'price.min'  => 'O preço deve ser maior que zero.',
-                        'brokerfee.min'  => 'A corretagem deve ser inserida, mesmo que zero.',
-                        'dateinvest.required'  => 'A data do investimento deve ser inserida.',
-                        'dateinvest.before'  => 'A data do investimento deve ser menor que o dia de hoje.',
-                        'broker.required'  => 'A corretora deve ser inserida.',
-                        'broker.exists'  => 'A corretora deve estar cadastrada.',
+                        'broker_fee.min'  => 'A corretagem deve ser inserida, mesmo que zero.',
+                        'date_invest.required'  => 'A data do investimento deve ser inserida.',
+                        'date_invest.before'  => 'A data do investimento deve ser menor que o dia de hoje.',
+                        'broker_name.required'  => 'A corretora deve ser inserida.',
+                        'broker_name.exists'  => 'A corretora deve estar cadastrada.',
                     ]);
-         
+
 //           if ($validator->fails()) {
 //             return redirect('invests/create')
 //                         ->withErrors($validator)
 //                         ->withInput();
 //         };
         //dd($request);
-        $brokerid = DB::table('brokers')->where('name', $request->broker)->value('id');
+        $brokerid = DB::table('brokers')->where('name', $request->broker_name)->value('id');
         //$brokerid = $request->broker()->id;
         $stockid = DB::table('stocks')->where('symbol', $request->symbol)->value('id');
         //dd($invests,$brokerid,$stockid,$user->id);
@@ -208,51 +227,58 @@ class StockController extends Controller
 //                         'stock_id' => $stockid,
 //                         'broker_id' => $brokerid,
 //             ]);
-            //dd($request->dateinvest,$brokerid,$stockid,$user->id);
-            $invest = new Invest;
-            $invest->type = 'stock';
-            $invest->symbol = strtoupper($request->symbol);
-            $invest->quant = floatval($request->quant);
-            $invest->price = $request->price;
-            $invest->broker_fee = $request->brokerfee;
-            $invest->date_invest = new Carbon($request->dateinvest);
-            $invest->user_id = $user->id;
-            $invest->stock_id = $stockid;
-            $invest->broker_id = $brokerid;
-            //dd($invest);
-            $invest->save();
-          
-          
+        //dd($request->dateinvest,$brokerid,$stockid,$user->id);
+        $invest = new Invest;
+        $invest->type = 'stock';
+        $invest->symbol = strtoupper($request->symbol);
+        $invest->quant = floatval($request->quant);
+        $invest->price = $request->price;
+        $invest->broker_fee = $request->broker_fee;
+        $invest->date_invest = new Carbon($request->date_invest);
+        $invest->user_id = $user->id;
+        $invest->stock_id = $stockid;
+        $invest->broker_id = $brokerid;
+        //dd($invest);
+        $invest->save();
+
+        Mail::to($request->user())->send(new InvestInserted($invest));
         return response()->json([
                               'type' => 'success',
-                              'message' => 'O investimento foi inserido.'
+                              'message' => 'O investimento foi inserido.|success'
                           ]);
     }
     //metodo para transformar os valores da tela em valores de bd (virgulas e pontos) da corretagem e preco da acao
-    private function formatcurrencytodb($request)
-    {
-        //retira os pontos e substitui a virgula por pontos
-      
-        $request['price'] = strtr($request['price'], array('.' => '', ',' => '.'));
-        $request['brokerfee'] = strtr($request['brokerfee'], array('.' => '', ',' => '.'));
-        //transforma em float
-        $request['price'] = floatval($request['price']);
-        $request['brokerfee'] = floatval($request['brokerfee']);
-        //retornar valor
-        
-        //return $request;
-    }
+//     private function formatcurrencytodb($request)
+//     {
+//         //retira os pontos e substitui a virgula por pontos
+
+//         $request['price'] = strtr($request['price'], array('.' => '', ',' => '.'));
+//         $request['brokerfee'] = strtr($request['brokerfee'], array('.' => '', ',' => '.'));
+//         //transforma em float
+//         $request['price'] = floatval($request['price']);
+//         $request['brokerfee'] = floatval($request['brokerfee']);
+//         //retornar valor
+
+//         //return $request;
+//     }
     public function investedit($id)
     {
         //abre a tela onde vai ser feita a edicao
-        $invest = invest::findOrFail($id);
+        $invest = invest::with('broker')->findOrFail($id);
+        $invest->broker_name = $invest->broker->name;
+        unset($invest->broker);
+        //$invest->price = strtr($invest->price, array('.' => ','));
+        $invest->price = floatval($invest->price);
+        //$invest->broker_fee = strtr($invest->broker_fee, array('.' => ','));
+        $invest->broker_fee = floatval($invest->broker_fee);
+        $invest->quant = floatval($invest->quant);
         return view('stocks.stockinvestedit', compact('invest', 'id'));
         //return redirect('invests')->with('success', 'Foi ao lugar certo.');
     }
     public function investupdate(Request $request)
     {
         //primeiro ajusta os valores para formato de bando de dados, depois acha o investimento entao valida os dados e por fim faz o store
-        $request = $this->formatcurrencytodb($request);
+        //$request = $this->formatcurrencytodb($request);
         //acha o investimento
         $investUpdate = Invest::findOrFail($request->id);
         //pega o id do user
@@ -265,6 +291,17 @@ class StockController extends Controller
                         'broker_fee' => 'required|numeric|min:0',
                         'date_invest' => 'required|before:tomorrow',
                         'broker_name' => 'required|exists:brokers,name',
+                     ], [
+                        'symbol.required' => 'O código da ação deve ser inserido.',
+                        'symbol.exists' => 'O código da ação deve constar no sistema.',
+                        'quant.required'  => 'A quantidade é necessária.',
+                        'price.required'  => 'O preço é necessário.',
+                        'price.min'  => 'O preço deve ser maior que zero.',
+                        'broker_fee.min'  => 'A corretagem deve ser inserida, mesmo que zero.',
+                        'date_invest.required'  => 'A data do investimento deve ser inserida.',
+                        'date_invest.before'  => 'A data do investimento deve ser menor que o dia de hoje.',
+                        'broker_name.required'  => 'A corretora deve ser inserida.',
+                        'broker_name.exists'  => 'A corretora deve estar cadastrada.',
                     ]);
         //pega info de broker e stock id
         $brokerid = DB::table('brokers')->where('name', $request->broker_name)->value('id');
@@ -282,6 +319,27 @@ class StockController extends Controller
         $investUpdate->broker_id = $brokerid;
         $investUpdate->save();
         //retorna com sucesso
-        return redirect('invests')->with('success', 'O investimento foi atualizado.');
+        return response()->json([
+                              'type' => 'success',
+                              'message' => 'O investimento foi atualizado.|success'
+                          ]);
+    }
+    public function investdestroy($id)
+    {
+        //
+        $user = Auth::user();
+        if ($user->role_id == '1') {
+            $investDel = invest::findOrFail($id);
+            $investDel->delete();
+            return response()->json([
+                              'type' => 'success',
+                              'message' => 'O investimento foi deletado.|success'
+                          ]);
+        // return redirect('users.index')->with('success','Usuario atualizado');
+        } else {
+            return response()->json([
+                                  'message' => 'Permissao invalida.|warning'
+                                  ], 200);
+        }
     }
 }

@@ -5,7 +5,9 @@ racaz = function() {
   //   var yourVar1;
   //   var yourVar2;
   //formatadores
-  var slug = window.location.pathname.slice(1);
+  var pathArray = window.location.pathname.split('/');
+  var slug = pathArray[1];
+  var fullSlug = window.location.pathname.slice(1);
   var locale = 'pt-BR';
   //para valores monetarios
   var options = {
@@ -52,10 +54,50 @@ racaz = function() {
     ["percentage", "%"],
     ["invests", "Investimentos"],
     ["stocks", "Ações"],
+    ["stock", "Ação"],
     ["brokers", "Corretoras"],
+    ["broker_name", "Corretora"],
     ["users", "Usuários"],
-    ["monthlyquotes", "Cotações mensais"]
+    ["monthlyquotes", "Cotações mensais"],
+    ["dailyquotes", "Cotações diarias"],
+    ["fail", "Falha"],
+    ["success", "Sucesso"],
+    ["upToDate", "Atualiz. anteriormente"]
   ]
+
+  //variaveis para utilizar no vue datepicker, com a finalidade de limitar a quantidade de datas que podem ser utilizadas
+
+  var dateInvestLimit = {
+    disabledDates: {
+      //to: new Date(2016, 0, 5), // Disable all dates up to specific date
+      from: new Date(), // Disable all dates after specific date
+      //from: new Date(new Date().setDate(new Date().getDate()-1)), // Disable all dates after specific date
+      days: [6, 0], // Disable Saturday's and Sunday's
+      //daysOfMonth: [29, 30, 31], // Disable 29th, 30th and 31st of each month
+      //     dates: [ // Disable an array of dates
+      //       new Date(2016, 9, 16),
+      //       new Date(2016, 9, 17),
+      //       new Date(2016, 9, 18)
+      //     ],
+      //     ranges: [{ // Disable dates in given ranges (exclusive).
+      //       from: new Date(2016, 11, 25),
+      //       to: new Date(2016, 11, 30)
+      //     }, {
+      //       from: new Date(2017, 1, 12),
+      //       to: new Date(2017, 2, 25)
+      //     }],
+      // a custom function that returns true if the date is disabled
+      // this can be used for wiring you own logic to disable a date if none
+      // of the above conditions serve your purpose
+      // this function should accept a date and return true if is disabled
+      //     customPredictor: function(date) {
+      //       // disables the date if it is a multiple of 5
+      //       if(date.getDate() % 5 == 0){
+      //         return true
+      //       }
+      //     }
+    }
+  };
 
 
   capitalizeFirstLetter = function(string) {
@@ -74,9 +116,10 @@ racaz = function() {
     var fields = [];
     //depois ele vai fazer o tratamento dos dados apresentados, trazendo para formatos de apresentacao
     if (Array.isArray(data)) {
-      for (const value of data) {
+      for (var value of data) {
+        //value = value.replace(/[.\W\d]/g,'');
         //aqui ele formata as datas
-        if (value == "timestamp" || value == "date_invest") {
+        if (value == "timestamp" || value == "date_invest" || value == "data") {
           fields.push({
             key: value,
             label: racaz.columnName(value),
@@ -86,27 +129,31 @@ racaz = function() {
             }
           });
           //aqui formata os precos
-        } else if (value == "open" || value == "high" || value == "low" || value == "close" || value == "price" || value == "quote" || value == "broker_fee" || value == "total") {
+        } else if (value == "open" || value == "high" || value == "low" ||
+          value == "close" || value == "price" || value == "quote" ||
+          value == "broker_fee" || value == "total" ||
+          value == "1. open" || value == "2. high" || value == "3. low" || value == "4. close"
+        ) {
           fields.push({
             key: value,
-            label: racaz.columnName(value),
+            label: racaz.columnName(value.replace(/[.\W\d]/g, '')),
             sortable: true,
             formatter: (value) => {
-              return currFormatter.format(value);
+              return currFormatter.format(parseFloat(value));
               //return value;
             }
           });
           //aqui traz volume para valor inteiro, sem fracao
-        } else if (value == "volume" || value == "quant") {
+        } else if (value == "volume" || value == "quant" || value == "5. volume") {
           fields.push({
             key: value,
-            label: racaz.columnName(value),
+            label: racaz.columnName(value.replace(/[.\W\d]/g, '')),
             sortable: true,
             formatter: (value) => {
               return parseFloat(value).toFixed(0);
             }
           });
-          //o item _cellVariants nao é renderizado
+          //acerta a forma de apresentar porcentagem
         } else if (value == "percentage") {
           fields.push({
             key: value,
@@ -116,9 +163,19 @@ racaz = function() {
               return percFormatter.format(value);
             }
           });
+          //ajusta o nome do investimento
+        } else if (value == "type") {
+          fields.push({
+            key: value,
+            label: racaz.columnName(value),
+            sortable: true,
+            formatter: (value) => {
+              return racaz.columnName(value);
+            }
+          });
           //o item _cellVariants nao é renderizado
-        } else if (value == "_cellVariants" || value == "created_at" || value == "updated_at") {
-          //
+        } else if (value == "_cellVariants" || value == "created_at" || value == "updated_at" || value == "redirect") {
+          // faz nada
         } else {
           fields.push({
             key: value,
@@ -129,7 +186,7 @@ racaz = function() {
       }
       return fields;
     } else {
-      console.log(data);
+      console.log('fields filler' + data);
     }
   };
   formtt = function(data) {
@@ -151,19 +208,24 @@ racaz = function() {
       } else if (data[0] == "created_at" || data[0] == "updated_at") {
         data[1] = moment(String(data[1])).format('DD/MM/YYYY hh:mm');
       } else {
-        console.log(data);
+        console.log('Nao formatado pelo formtt, mas sucesso' + data);
       }
       return data[1];
     } else {
-      console.log(data);
+      console.log('Nao formatado pelo formtt, fail ' + data);
     }
   }
+
   return {
     "capitalizeFirstLetter": capitalizeFirstLetter,
     "slug": slug,
+    "fullSlug": fullSlug,
+    "pathArray": pathArray,
     "columnName": columnName,
     "fieldsFiller": fieldsFiller,
-    "formtt": formtt
+    "formtt": formtt,
+    "dateInvestLimit": dateInvestLimit,
+    "currFormatter": currFormatter,
   }
 
 }();

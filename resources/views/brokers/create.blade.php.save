@@ -1,0 +1,16 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container-fluid justify-content-center">
+<div class="card">
+  <div class="card-header">Cadastro de corretoras</div>
+    <div class="card-body">
+
+  <create></create>
+   
+</div>
+</div>
+</div> 
+
+</div>
+@endsection
