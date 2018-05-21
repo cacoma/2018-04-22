@@ -14,6 +14,7 @@ class CreateDailyQuotesTable extends Migration
         Schema::create('daily_quotes', function (Blueprint $table) {
           $table->increments('id');
           $table->integer('stock_id')->unsigned();
+          //$table->integer('stock_id');
           $table->decimal('volume',18,4);
           $table->decimal('open',18,4);
           $table->decimal('high',18,4);

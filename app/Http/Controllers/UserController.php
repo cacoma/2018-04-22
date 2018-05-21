@@ -23,13 +23,19 @@ class UserController extends Controller
      */
     public function index()
     {
-      if (Gate::allows('admin-only', auth()->user())) {
+      //if (Gate::allows('admin-only', auth()->user())) {
+      $user = Auth::user();
+        //dono e admin somente podem alterar
+      //if ($user->role_id == '1') {
+      if (Gate::allows('admin')) {
+      //if ($user->can('view')) {
         $users = User::all();
         return view('users.index')->with('users', $users);
       } else {
-         return response()->json([
-            'message' => 'Acesso negado.|warning'
-        ], 200);
+//          return response()->json([
+//             'message' => 'Acesso negado.|warning'
+//         ], 200);
+        return redirect('home')->with('flash', 'Acesso negado.|warning');
       }
     }
     /**

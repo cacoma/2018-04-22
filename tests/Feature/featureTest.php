@@ -27,10 +27,10 @@ class featureTest extends TestCase
                 ->assertStatus(200); //deveria ser 200
     }
 
-    public function test_home_page_exists()
-    {
-        $this->get('/home')
-          ->assertSee('portfolio');
-    }
+//     public function test_home_page_exists()
+//     {
+//         $this->get('/home')
+//           ->assertSee('portfolio');
+//     }
     
 }

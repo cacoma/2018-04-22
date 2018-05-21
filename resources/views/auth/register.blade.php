@@ -15,7 +15,7 @@
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Nome') }}</label>
 
                             <div class="col-md-6">
-                                <input id="name" type="text" autocomplete='name' class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira o nome!')" required autofocus>
+                                <input id="name" type="text" autocomplete='name' dusk="registername" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira o nome!')" required autofocus>
 
                                 @if ($errors->has('name'))
                                     <span class="invalid-feedback">
@@ -29,7 +29,7 @@
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail') }}</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" autocomplete='email' class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira o email!')" required>
+                                <input id="email" type="email" autocomplete='email' dusk="registeremail" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira o email!')" required>
 
                                 @if ($errors->has('email'))
                                     <span class="invalid-feedback">
@@ -43,7 +43,7 @@
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Senha') }}</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a senha!')" required>
+                                <input id="password" type="password" dusk="registerpassword" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a senha!')" required>
 
                                 @if ($errors->has('password'))
                                     <span class="invalid-feedback">
@@ -57,13 +57,13 @@
                             <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirmar senha') }}</label>
 
                             <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a confirmação da senha!')" required>
+                                <input id="password-confirm" type="password" dusk="registerconfirmpassword" class="form-control" name="password_confirmation" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a confirmação da senha!')" required>
                             </div>
                         </div>
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" dusk="registersubmit">
                                     {{ __('Registrar') }}
                                 </button>
                             </div>

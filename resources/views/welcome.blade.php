@@ -69,10 +69,10 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
-                        <a href="{{ url('/home') }}">Home</a>
+                        <a href="{{ url('/home') }}" dusk="welcomelinktohome">Home</a>
                     @else
-                        <a href="{{ route('login') }}">Login</a>
-                        <a href="{{ route('register') }}">Registrar-se</a>
+                        <a href="{{ route('login') }}" dusk="welcomelogin">Login</a>
+                        <a href="{{ route('register') }}" dusk="welcomeregister">Registrar-se</a>
                     @endauth
                 </div>
             @endif

@@ -24,7 +24,7 @@ class CreateInvestsTable extends Migration
             $table->dateTime('date_invest');
             $table->decimal('broker_fee', 12, 2);
             $table->integer('broker_id')->unsigned();
-            $table->decimal('total', 18, 4);
+            //$table->decimal('total', 18, 4);
 
 
             //foreign keys

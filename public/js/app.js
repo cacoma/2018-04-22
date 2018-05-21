@@ -98835,23 +98835,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['results', 'portperf', 'portperfp', 'pie'],
   data: function data() {
     return {
       slide: 0,
-      sliding: null
+      sliding: null,
+      dusk: 'ok' //para o dusk validar o componente
     };
   },
 
@@ -98876,6 +98867,12 @@ var render = function() {
   return _c(
     "div",
     [
+      _c(
+        "div",
+        { staticStyle: { display: "none" }, attrs: { id: "duskcheck" } },
+        [_vm._v(_vm._s(_vm.dusk))]
+      ),
+      _vm._v(" "),
       _c(
         "b-carousel",
         {

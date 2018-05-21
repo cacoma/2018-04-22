@@ -15,7 +15,7 @@
                             <label for="email" class="col-sm-4 col-form-label text-md-right">{{ __('E-Mail') }}</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" autocomplete='email' class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira o e-mail!')" required autofocus>
+                                <input id="email" type="email" dusk="loginemail" autocomplete='email' class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira o e-mail!')" required autofocus>
 
                                 @if ($errors->has('email'))
                                     <span class="invalid-feedback">
@@ -29,7 +29,7 @@
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Senha') }}</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a senha!')" required>
+                                <input id="password" type="password" dusk="loginpassword" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a senha!')" required>
 
                                 @if ($errors->has('password'))
                                     <span class="invalid-feedback">
@@ -51,11 +51,11 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" dusk="loginsubmit">
                                     {{ __('Login') }}
                                 </button>
 
-                                <a class="btn btn-link" href="{{ route('password.request') }}">
+                                <a class="btn btn-link" href="{{ route('password.request') }}" dusk="loginpasswordforgot">
                                     {{ __('Esqueceu sua senha?') }}
                                 </a>
                             </div>

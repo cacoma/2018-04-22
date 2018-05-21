@@ -25,7 +25,7 @@
       </script>
 </head>
 <body>
-  <div class="sk-cube-grid" id="sk-cube-grid">
+  <div class="sk-cube-grid" id="sk-cube-grid" dusk="cubegrid">
   <div class="sk-cube sk-cube1"></div>
   <div class="sk-cube sk-cube2"></div>
   <div class="sk-cube sk-cube3"></div>
@@ -38,9 +38,9 @@
 </div>
     <div id="app">
 <!--   componente que mostra mensagens de erro     -->
-      <flash message="{{ session('flash') }}"></flash> 
+      <flash message="{{ session('flash') }}" dusk="flash"></flash> 
 <!--       div para fazer "blur" na pagina quando necessario (carregamento de alguma página,  etc) -->
-      <div id="blur">
+      <div id="blur" dusk="blur">
        @include ('layouts.navbar')
         <main class="py-4">
             @yield('content')
