@@ -12,17 +12,25 @@ class featureTest extends TestCase
      *
      * @return void
      */
-    public function test_pagina_principal_carrega()
+
+    public function test_welcome_page_exists()
     {
         $this->get('/')
             ->assertSee('Cacoma')
               ->assertStatus(200);
     }
   
-  public function test_home_carrega()
+  public function test_login_exists()
+    {
+        $this->get('/login')
+          ->assertSee('Login')
+                ->assertStatus(200); //deveria ser 200
+    }
+
+    public function test_home_page_exists()
     {
         $this->get('/home')
-          ->assertSee('Login');
-        //$response->assertStatus(302); //deveria ser 200
+          ->assertSee('portfolio');
     }
+    
 }
