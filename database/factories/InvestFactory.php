@@ -5,9 +5,9 @@ use Faker\Generator as Faker;
 $factory->define(App\Invest::class, function (Faker $faker) {
     return [
         'type' => $faker->word,
-        'symbol' => function () {
-            return factory(App\Stock::class)->create()->symbol;
-        },
+        // 'symbol' => function () {
+        //     return factory(App\Stock::class)->create()->symbol;
+        // },
         'stock_id' => function () {
             return factory(App\Stock::class)->create()->id;
         },

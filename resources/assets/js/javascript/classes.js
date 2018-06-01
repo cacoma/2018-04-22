@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 /*classe errors para tratar erro em forms
  */
 export class Errors {
@@ -15,17 +17,6 @@ export class Errors {
 
     }
   }
-//    all() {
-//     if (this.errors) {      
-//       var allErrors = [];
-//       for (let prop in this.errors) {
-//         if(this.errors.hasOwnProperty(prop)) {
-//           this.allErrors.push(prop + " = " + this.errors[prop]);
-//         }
-//       }
-//      return allErrors;
-//     }
-//   }
   //faz update dos erros que chegam do servidor
   record(errors) {
     this.errors = errors;
@@ -86,24 +77,16 @@ export class Form {
   }
   data() {
     let data = Object.assign({}, this);
-    //delete data.originalData;
-    //delete data.errors;
     return data;
   }
   reset() {
-    //this.errors.clear();
-    //this.modal.clear();
+
     this.errors.clear();
     for (let field in this) {
-      //console.log(field);
-      if (field != 'errors' && field != 'modal') {
-
+      if (field !== 'errors' && field !== 'modal') {
         this[field] = '';
-        //console.log('limpou '+field)
       }
     }
-    //this.errors = new Errors();
-    //this.modal = new Modal();
   }
   post(url) {
     return this.submit('post', url);
@@ -114,43 +97,32 @@ export class Form {
   submit(requestType, url) {
     this.modal.clear();
     return new Promise((resolve, reject) => {
-      document.getElementById("blur").classList.add("blur");
-      $(".sk-cube-grid").fadeIn("slow");
+      //document.getElementById("blur").classList.add("blur");
+      //$(".sk-cube-grid").fadeIn("slow");
+      loadingon();
       axios[requestType](url, this.data())
         .then(response => {
           this.onSuccess(response.data);
           resolve(response.data);
         })
         .catch(error => {
+          console.log(error);
           this.onFail(error.response.data);
           reject(error.response.data);
-        })
-    })
-    //     this.modal.clear();
-    //     document.getElementById("blur").classList.add("blur");
-    //     $( ".sk-cube-grid" ).fadeIn( "slow" );
-
-    // .then(this.onSuccess())
-    // .catch(error =>
-    //   this.form.errors.record(error.response.data.errors)
-    // )
+        });
+    });
   }
   onSuccess(data) {
-    //this.showModal();
-    //alert("investimento inserido");
-    //console.log('teste');
-    //console.log(response);
-    document.getElementById("blur").classList.remove("blur");
-    $(".sk-cube-grid").fadeOut("slow");
-    //this.modal.record(data);
+    //document.getElementById("blur").classList.remove("blur");
+    //$(".sk-cube-grid").fadeOut("slow");
+    loadingoff();
     flash(data.message);
-    //this.errors.clear();
-    //this.reset();
   }
 
   onFail(errors) {
-    document.getElementById("blur").classList.remove("blur");
-    $(".sk-cube-grid").fadeOut("slow");
+    //document.getElementById("blur").classList.remove("blur");
+    //$(".sk-cube-grid").fadeOut("slow");
+    loadingoff();
     console.log(errors);
     this.errors.record(errors.errors);
   }

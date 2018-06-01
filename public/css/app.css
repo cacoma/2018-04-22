@@ -10693,9 +10693,14 @@ a.text-dark:focus {
 }
 
 .navbar-cacoma {
-  background-color: #fff;
+  background-color: #eaeaea;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.main {
+  margin-top: 60px;
+  /* Add a top margin to avoid content overlay */
 }
 
 .tab-button {

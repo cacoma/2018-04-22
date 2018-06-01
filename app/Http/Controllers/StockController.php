@@ -187,6 +187,10 @@ class StockController extends Controller
         //dd($request);
         //Validator::make($request->all(), [
         $this->validate(request(), [
+                        'signal' => [
+                                        'required',
+                                        Rule::in(['buy', 'sell']),
+                                    ],
                         'symbol' => 'required|string|max:255|exists:stocks,symbol',
                         'quant' => 'required|numeric|min:1',
                         'price' => 'required|numeric|min:0.0001',
@@ -194,6 +198,7 @@ class StockController extends Controller
                         'date_invest' => 'required|before:tomorrow',
                         'broker_name' => 'required|exists:brokers,name',
                     ], [
+                        'signal.required' => 'Favor informar se é compra ou venda.',
                         'symbol.required' => 'O código da ação deve ser inserido.',
                         'symbol.exists' => 'O código da ação deve constar no sistema.',
                         'quant.required'  => 'A quantidade é necessária.',
@@ -211,6 +216,9 @@ class StockController extends Controller
 //                         ->withErrors($validator)
 //                         ->withInput();
 //         };
+        if ($request->signal === 'sell') {
+          $request->quant = 0 - $request->quant;
+        };
         //dd($request);
         $brokerid = DB::table('brokers')->where('name', $request->broker_name)->value('id');
         //$brokerid = $request->broker()->id;
@@ -230,7 +238,7 @@ class StockController extends Controller
         //dd($request->dateinvest,$brokerid,$stockid,$user->id);
         $invest = new Invest;
         $invest->type = 'stock';
-        $invest->symbol = strtoupper($request->symbol);
+        //$invest->symbol = strtoupper($request->symbol);
         $invest->quant = floatval($request->quant);
         $invest->price = $request->price;
         $invest->broker_fee = $request->broker_fee;
@@ -241,7 +249,7 @@ class StockController extends Controller
         //dd($invest);
         $invest->save();
 
-        Mail::to($request->user())->send(new InvestInserted($invest));
+        //Mail::to($request->user())->send(new InvestInserted($invest));
         return response()->json([
                               'type' => 'success',
                               'message' => 'O investimento foi inserido.|success'
@@ -309,7 +317,7 @@ class StockController extends Controller
         $stockid = DB::table('stocks')->where('symbol', $request->symbol)->value('id');
         //atualiza BD
         $investUpdate->type = 'stock';
-        $investUpdate->symbol = strtoupper($request->get('symbol'));
+        //$investUpdate->symbol = strtoupper($request->get('symbol'));
         $investUpdate->quant = $request->get('quant');
         $investUpdate->price = $request->get('price');
         $investUpdate->broker_fee = $request->get('broker_fee');
@@ -328,8 +336,9 @@ class StockController extends Controller
     {
         //
         $user = Auth::user();
-        if ($user->role_id == '1') {
-            $investDel = invest::findOrFail($id);
+        $investDel = invest::findOrFail($id);
+        if ($user->role_id == '1' || $user->id == $investDel->user_id) {
+            
             $investDel->delete();
             return response()->json([
                               'type' => 'success',

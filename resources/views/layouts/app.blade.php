@@ -25,26 +25,30 @@
       </script>
 </head>
 <body>
-  <div class="sk-cube-grid" id="sk-cube-grid" dusk="cubegrid">
-  <div class="sk-cube sk-cube1"></div>
-  <div class="sk-cube sk-cube2"></div>
-  <div class="sk-cube sk-cube3"></div>
-  <div class="sk-cube sk-cube4"></div>
-  <div class="sk-cube sk-cube5"></div>
-  <div class="sk-cube sk-cube6"></div>
-  <div class="sk-cube sk-cube7"></div>
-  <div class="sk-cube sk-cube8"></div>
-  <div class="sk-cube sk-cube9"></div>
-</div>
     <div id="app">
+         <div class="sk-cube-grid" id="sk-cube-grid" dusk="cubegrid">
+        <div class="sk-cube sk-cube1"></div>
+        <div class="sk-cube sk-cube2"></div>
+        <div class="sk-cube sk-cube3"></div>
+        <div class="sk-cube sk-cube4"></div>
+        <div class="sk-cube sk-cube5"></div>
+        <div class="sk-cube sk-cube6"></div>
+        <div class="sk-cube sk-cube7"></div>
+        <div class="sk-cube sk-cube8"></div>
+        <div class="sk-cube sk-cube9"></div>
+      </div>
+      <loading dusk="loading" id="loading"></loading>
+      <deleteconfirmation dusk="deleteconfirmation" id="deleteconfirmation"></deleteconfirmation>
+      <div id="blur" dusk="blur" class="blur">
 <!--   componente que mostra mensagens de erro     -->
-      <flash message="{{ session('flash') }}" dusk="flash"></flash> 
+      <flash message="{{ session('flash') }}" dusk="flash" id="flash" class="flash"></flash> 
 <!--       div para fazer "blur" na pagina quando necessario (carregamento de alguma página,  etc) -->
-      <div id="blur" dusk="blur">
+
        @include ('layouts.navbar')
-        <main class="py-4">
+        <div class="main">
             @yield('content')
-        </main>
+        </div>
+    </div>
     </div>
     </div>
 </body>

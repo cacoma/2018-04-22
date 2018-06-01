@@ -13,9 +13,9 @@
 Um novo investimento foi inserido!
 
 @component('mail::table')
-|        Tipo       |        Ticket       |     Quantidade     |        Preço          |           Data                                  |
-|:-----------------:|:-------------------:|:------------------:|:---------------------:|:-----------------------------------------------:|
-| {{$invest->type}} | {{$invest->symbol}} | {{$invest->quant}} | R$ {{$invest->price}} | {{$invest->date_invest->format('d/m/Y H:i:s')}} |
+| Operação        | Tipo              | Ticket              | Quantidade         | Preço                 | Data                                            |
+|-----------------|-------------------|---------------------|--------------------|-----------------------|-------------------------------------------------|
+| {{$invest->op}} | {{$invest->type}} | {{$invest->symbol}} | {{$invest->quant}} | R$ {{$invest->price}} | {{$invest->date_invest->format('d/m/Y H:i:s')}} |
 @endcomponent
 
 @component('mail::button', ['url' => 'https://cacoma.tk/invests'])

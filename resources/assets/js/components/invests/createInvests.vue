@@ -7,6 +7,7 @@
   <button
     v-for="tab in tabs"
     v-bind:key="tab.name"
+    v-bind:dusk="tab.name"
     v-bind:class="['tab-button', { active: currentTab.name === tab.name }]"
     v-on:click="currentTab = tab"
   >{{ tab.name }}</button>
@@ -26,7 +27,7 @@
   {
     name: 'Ações ',
     component: {
-      template: '<div><createinveststypestocks></createinveststypestocks></div>'
+      template: '<div><createinveststypestocks dusk="createinveststypestocks"></createinveststypestocks></div>'
     }
   },
   {

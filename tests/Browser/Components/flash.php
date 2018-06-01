@@ -1,37 +1,35 @@
 <?php
 
-namespace Tests\Browser\Pages;
+namespace Tests\Browser\Components;
 
 use Laravel\Dusk\Browser;
+use Laravel\Dusk\Component as BaseComponent;
 
-class WelcomePage extends Page
+class flash extends BaseComponent
 {
     /**
-     * Get the URL for the page.
+     * Get the root selector for the component.
      *
      * @return string
      */
-    public function url()
+    public function selector()
     {
-        return '/';
+        return '@flash';
     }
 
     /**
-     * Assert that the browser is on the page.
+     * Assert that the browser page contains the component.
      *
      * @param  Browser  $browser
      * @return void
      */
     public function assert(Browser $browser)
     {
-        //
-      $browser->assertPathIs($this->url())
-        ->assertSee('Cacoma');
-      
+        $browser->assertVisible($this->selector());
     }
 
     /**
-     * Get the element shortcuts for the page.
+     * Get the element shortcuts for the component.
      *
      * @return array
      */

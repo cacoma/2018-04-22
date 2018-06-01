@@ -4,7 +4,9 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-          <homecarousel dusk=homecarousel  :results="{{$results}}" :portperf="{{$portPerf}}" :portperfp="{{json_encode($portPerfP)}}" :pie="{{json_encode($pie)}}"></homecarousel>
+          <homescreen :invests="{{$invests}}" :monthlyquotes="{{$monthlyQuotes}}" :results="{{$results}}" :portperf="{{$portPerf}}" :portperfp="{{json_encode($portPerfP)}}" :pie="{{json_encode($pie)}}"></homescreen>
+
+<!--           <homecarousel dusk=homecarousel  :results="{{$results}}" :portperf="{{$portPerf}}" :portperfp="{{json_encode($portPerfP)}}" :pie="{{json_encode($pie)}}"></homecarousel> -->
 <!--             <div class="card">
                 <div class="card-header">Dashboard</div>
 

@@ -32,6 +32,11 @@ class InvestInserted extends Mailable
         $invest->price = number_format($invest->price, 2, ',', '.');
         $invest->quant = number_format($invest->quant, 0, ',', '.');
         //$invest->date_invest = ($invest->date_invest,"Y/m/d H:i:s");
+        if ($invest->quant < 0) {
+          $invest->op = 'Venda';
+        } else {
+          $invest->op = 'Compra';
+        }
     }
 
     /**

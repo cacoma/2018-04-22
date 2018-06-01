@@ -32,7 +32,7 @@ class HomeController extends Controller
          $pie = new \stdClass;
          $portPerfP = new \stdClass;
       
-//         $invests = Invest::with('stock')->where('user_id', $user->id)->get();
+         $invests = Invest::with('stock')->where('user_id', $user->id)->get();
       
       
         //pega todos os investimentos AGRUPADOS do usuario para chart de pie (pizza)
@@ -41,10 +41,10 @@ class HomeController extends Controller
           ->where('user_id', $user->id)->get();
        
       
-//         $monthlyQuotes = monthlyQuote::with('stock')
-//             ->where('stock_id', '<', '4')
-//                 ->whereDate('timestamp', '>', Carbon::now()->subMonth(12))
-//                       ->orderBy('timestamp', 'asc')->get();
+        $monthlyQuotes = monthlyQuote::with('stock')
+            ->where('stock_id', '<', '4')
+                ->whereDate('timestamp', '>', Carbon::now()->subMonth(12))
+                      ->orderBy('timestamp', 'asc')->get();
         
       
       //variavel que busca os dados de todas as acoes que o usuario tem, para chart
@@ -90,37 +90,37 @@ class HomeController extends Controller
         }
       
         //acerta a informacao de cotacoes mensais para cada ativo      
-//         foreach ($monthlyQuotes as $monthlyQuote) {
-//             //arruma o nome
-//             $monthlyQuote->stockName = $monthlyQuote->stock->symbol;
-//             //depois retira o objeto de dentro do objeto
-//             unset($monthlyQuote->stock);
-//             //funcao para gerar uma cor diferente para cada id diferente
-//             $hash = md5('cor' . $monthlyQuote->stock_id);
-//             $r = hexdec(substr($hash, 0, 2));
-//             $g = hexdec(substr($hash, 2, 2));
-//             $b = hexdec(substr($hash, 4, 2));
-//             $a = hexdec(substr($hash, 6, 2));
-//             $monthlyQuote->color = 'rgba(' . $r . ',' . $g . ',' . $b . ',' . $a . ')';
-//         }
+        foreach ($monthlyQuotes as $monthlyQuote) {
+            //arruma o nome
+            $monthlyQuote->stockName = $monthlyQuote->stock->symbol;
+            //depois retira o objeto de dentro do objeto
+            unset($monthlyQuote->stock);
+            //funcao para gerar uma cor diferente para cada id diferente
+            $hash = md5('cor' . $monthlyQuote->stock_id);
+            $r = hexdec(substr($hash, 0, 2));
+            $g = hexdec(substr($hash, 2, 2));
+            $b = hexdec(substr($hash, 4, 2));
+            $a = hexdec(substr($hash, 6, 2));
+            $monthlyQuote->color = 'rgba(' . $r . ',' . $g . ',' . $b . ',' . $a . ')';
+        }
         
         //foreach para tratar invests
-//         foreach ($invests as &$invest) {
-//             // retira o objeto, pegando valor antes
-//             $invest->stockName = $invest->stock->symbol;
-//             //retira o objeto de dentro do objeto, para renderizar corretamente
-//             unset($invest->stock);
-//             if ($invest->type == 'stock') {
-//                 $invest->type = 'Ação';
-//             }
-//             //funcao para gerar uma cor diferente para cada id diferente
-//             $hash = md5('cor' . $invest->stock_id);
-//             $r = hexdec(substr($hash, 0, 2));
-//             $g = hexdec(substr($hash, 2, 2));
-//             $b = hexdec(substr($hash, 4, 2));
-//             $a = hexdec(substr($hash, 6, 2));
-//             $invest->color = 'rgba(' . $r . ',' . $g . ',' . $b . ',' . $a . ')';
-//         }
+        foreach ($invests as &$invest) {
+            // retira o objeto, pegando valor antes
+            $invest->stockName = $invest->stock->symbol;
+            //retira o objeto de dentro do objeto, para renderizar corretamente
+            unset($invest->stock);
+            if ($invest->type == 'stock') {
+                $invest->type = 'Ação';
+            }
+            //funcao para gerar uma cor diferente para cada id diferente
+            $hash = md5('cor' . $invest->stock_id);
+            $r = hexdec(substr($hash, 0, 2));
+            $g = hexdec(substr($hash, 2, 2));
+            $b = hexdec(substr($hash, 4, 2));
+            $a = hexdec(substr($hash, 6, 2));
+            $invest->color = 'rgba(' . $r . ',' . $g . ',' . $b . ',' . $a . ')';
+        }
       
          //variaveis para modelar os dados para o vue-chartkick, em modo line e bar {dado:valor}
          $tempStockName = array();
@@ -168,8 +168,10 @@ class HomeController extends Controller
         $portPerfP = array_combine($tempStockName,$tempPercentage);
         
         return view('home')->with('results', $results)
+                              ->with('invests', $invests)
                               ->with('portPerf', $portPerf)
                                 ->with('portPerfP', $portPerfP)
+                                ->with('monthlyQuotes', $monthlyQuotes)
                                   ->with('pie',$pie);
     }
 }

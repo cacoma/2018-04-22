@@ -14,7 +14,7 @@ class CreateBrokersTable extends Migration
         Schema::create('brokers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('cpnj', 18);
+            $table->string('cnpj', 18);
             $table->timestamps();
         });
     }

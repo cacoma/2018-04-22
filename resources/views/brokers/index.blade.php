@@ -2,6 +2,6 @@
 
 @section('content')
 
-      <index :items="{{$brokers}}"></index>
+      <index></index>
 
 @endsection

@@ -5,7 +5,7 @@ namespace Tests\Browser\Pages;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Page as BasePage;
 
-class Login extends BasePage
+class Invests extends BasePage
 {
     /**
      * Get the URL for the page.
@@ -14,7 +14,7 @@ class Login extends BasePage
      */
     public function url()
     {
-        return '/login';
+        return '/invests';
     }
 
     /**
@@ -26,7 +26,7 @@ class Login extends BasePage
     public function assert(Browser $browser)
     {
         $browser->assertPathIs($this->url())
-          ->assertSee('Login');
+          ->assertSee('Investimentos');
     }
 
     /**
@@ -37,7 +37,7 @@ class Login extends BasePage
     public function elements()
     {
         return [
-            //'@email' => 'input[name=email]',
+            '@element' => '#selector',
         ];
     }
 }

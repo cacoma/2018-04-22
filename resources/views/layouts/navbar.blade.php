@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-light navbar-cacoma">
+<nav class="navbar navbar-expand-md navbar-light fixed-top border navbar-cacoma">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     Cacoma
@@ -17,7 +17,7 @@
                               <b-dropdown-item href="/invests/create">Adicionar</b-dropdown-item>
                             </b-nav-item-dropdown>
                   </b-navbar-nav> -->
-                        <navbaradmin :auth="{{ auth()->user() }}" :alerts="{{ json_encode(Session::all()) }}"></navbaradmin>
+                        <navbaradmin dusk="navbaradmin" :auth="{{ auth()->user() }}"></navbaradmin>
                 @endauth
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">

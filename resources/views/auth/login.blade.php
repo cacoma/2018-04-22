@@ -55,7 +55,7 @@
                                     {{ __('Login') }}
                                 </button>
 
-                                <a class="btn btn-link" href="{{ route('password.request') }}" dusk="loginpasswordforgot">
+                                <a dusk="loginpasswordforgot" class="btn btn-link" href="{{ route('password.request') }}" dusk="loginpasswordforgot">
                                     {{ __('Esqueceu sua senha?') }}
                                 </a>
                             </div>

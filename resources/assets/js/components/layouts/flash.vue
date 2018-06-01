@@ -1,15 +1,15 @@
 <template>
-<b-modal ref="flashModal" id="flashModal" hide-footer size="md" centered v-model="this.show" :header-bg-variant="this.headerBgVariant">
+<b-modal dusk="flashmodal" ref="flashModal" id="flashModal" hide-footer size="md" centered v-model="this.show" :header-bg-variant="this.headerBgVariant" no-close-on-backdrop no-close-on-esc hide-header-close>
   <div class="d-block text-center">
     <h5 v-text="this.title"></h5>
-        <div v-for="(value, key, index) in this.body">
+        <div v-for="(value, key, index) in this.body" v-if="isJsonTest">
           <h3>{{ key }} : {{ value }} </h3>
         </div>
-<!--         <h3 v-text="this.simpleBody"></h3>   -->
-
-<!--     <div v-for="this.bod in this.body">
-      <h3 v-text="this.bod"></h3>
-  </div> -->
+        
+      <div v-for="(value, key, index) in this.body" v-if="!isJsonTest">
+          <h3>{{ value }} </h3>
+        </div>
+<b-btn variant="outline-success" block @click="hide()">Ok</b-btn>
   </div>
 </b-modal>
 </template>
@@ -23,6 +23,8 @@ export default {
       body: {},
       title: '',
       headerBgVariant: 'secondary',
+      dusk: 'ok',
+      isJsonTest: false,
     }
   },
   created() {
@@ -50,6 +52,7 @@ export default {
             }
         });
       console.log("isJson");
+      this.isJsonTest = true;
       this.show = true;
       } else {
         console.log(message);
@@ -58,12 +61,13 @@ export default {
       this.headerBgVariant = myarr2[1];
       this.body.Servidor = myarr2[0];
       this.title = 'Aviso';
+      this.isJsonTest = false;
       console.log('notJson');
       }
 
-      setTimeout(() => {
-        this.hide()
-      }, 5000)
+//       setTimeout(() => {
+//         this.hide()
+//       }, 5000)
     },
     hide() {
           this.show = false;

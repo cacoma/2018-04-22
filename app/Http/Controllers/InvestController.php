@@ -40,11 +40,12 @@ class InvestController extends Controller
                 //retira o objeto de dentro do objeto, para renderizar corretamente
                 unset($value->dailyQuote);
                 //para passar o nome do broker
-                $value->broker_id = $value->broker->name;
+                $value->broker_name = $value->broker->name;
                 //retira o objeto de dentro do objeto, para renderizar corretamente
                 unset($value->broker);
                 //retira informacoes que nao queremos renderizar
                 unset($value->stock_id);
+                unset($value->broker_id);
 //                 if ($value->type == 'stock') {
 //                     $value->type = 'Ação';
 //                 }
@@ -84,12 +85,13 @@ class InvestController extends Controller
                 //retira o objeto de dentro do objeto, para renderizar corretamente
                 unset($value->dailyQuote);
                 //para passar o nome do broker
-                $value->broker_id = $value->broker->name;
+                $value->broker_name = $value->broker->name;
                 //retira o objeto de dentro do objeto, para renderizar corretamente
                 unset($value->broker);
                 //retira informacoes que nao queremos renderizar
                 unset($value->stock_id);
                 unset($value->user_id);
+                unset($value->broker_id);
                 //ajusta o nome do dado interno
 //                 if ($value->type == 'stock') {
 //                     $value->type = 'Ação';

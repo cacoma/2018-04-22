@@ -24,7 +24,7 @@ class UserController extends Controller
     public function index()
     {
       //if (Gate::allows('admin-only', auth()->user())) {
-      $user = Auth::user();
+      //$user = Auth::user();
         //dono e admin somente podem alterar
       //if ($user->role_id == '1') {
       if (Gate::allows('admin')) {
@@ -94,21 +94,23 @@ class UserController extends Controller
         $userUpdate = User::find($id);
         $user = Auth::user();
         //dono e admin somente podem alterar
-        if ($user->role_id == '1') {
+        if ($user->role_id == '1' || $user->id == $request->get('id')) {
             $this->validate(request(), [
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($userUpdate->email, 'email'),],
-                'role_id' => ['required'],
+              //  'role_id' => ['required'],
               ], [
               'name.required' => 'O nome do usuário deve ser inserido.',
               'email.unique' => 'O endereço de email não pode ser duplicado.',
               'email.required'  => 'O email é requerido.',
               'email.email'  => 'O email deve ser válido.',
-              'role_id.required'  => 'A permissão deve ser inserida.'
+              //'role_id.required'  => 'A permissão deve ser inserida.'
           ]);
             $userUpdate->name = $request->get('name');
             $userUpdate->email = $request->get('email');
-            $userUpdate->role_id = $request->get('role_id');
+            if ($user->role_id == '1') {
+              $userUpdate->role_id = $request->get('role_id');
+            }
             $userUpdate->save();
             return response()->json([
             'message' => 'Usuario atualizado com sucesso.|success'
@@ -148,17 +150,17 @@ class UserController extends Controller
         // }
         return redirect()->back()->with('flash', 'Usuarios devem ser desativados pela edição.|warning');
     }
-  
+
     //mostrar o profile para o usuario
-  
+
     public function profileshow()
     {
         //
       $user = Auth::user();
       return view('users.profileedit', compact('user'));
     }
-  
-    public function profileupdate(Request $request, $id)
+
+    public function profileupdate(Request $request)
       // public function update(Request $request)
       {
           //$userUpdate = User::find($id);
@@ -167,7 +169,8 @@ class UserController extends Controller
           if ($user->id == $request->get('id')) {
               $this->validate(request(), [
                   'name' => ['required', 'string', 'max:255'],
-                  'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($userUpdate->email, 'email'),],
+                  'email' => ['required', 'email', 'max:255',
+                  Rule::unique('users')->ignore($user->email, 'email'),],
                   //'role_id' => ['required'],
                 ], [
                 'name.required' => 'O nome do usuário deve ser inserido.',

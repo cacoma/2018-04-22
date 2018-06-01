@@ -13,7 +13,7 @@ class AddTotalToInvests extends Migration
     {
         Schema::table('invests', function (Blueprint $table) {
             //Adicionar campo calculado automaticamente com SQL RAW - Machado 09/04/2018 14:12hs
-            DB::statement('ALTER TABLE invests ADD total DECIMAL(18,4) AS (price * quant)');
+            DB::statement('ALTER TABLE invests ADD total DECIMAL(18,2) AS (price * quant)');
         });
     }
     /**
