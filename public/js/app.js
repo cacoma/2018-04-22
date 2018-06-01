@@ -104714,171 +104714,160 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */(function(moment) {function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
+/*jshint esversion: 6 */
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['results', 'portperf', 'portperfp', 'pie', 'invests', 'monthlyquotes'],
+  props: ['portperf', 'portperfp', 'pie', 'invests'],
   data: function data() {
-    var _ref;
-
-    return _ref = {
+    return {
       stocks: [],
       selected: null,
       chartData: [],
       datacollection: [],
-      Months: [],
+      datasets: [],
+      Days: [],
+      homeChart: [],
       Labels: [],
       Prices: [],
-      datasets: []
-    }, _defineProperty(_ref, 'Months', []), _defineProperty(_ref, 'homeChart', []), _defineProperty(_ref, 'Labels', []), _defineProperty(_ref, 'Prices', []), _defineProperty(_ref, 'Colors', []), _defineProperty(_ref, 'chart2', []), _defineProperty(_ref, 'enlargeItem', ''), _ref;
+      Colors: [],
+      chart2: [],
+      enlargeItem: ''
+    };
   },
 
   created: function created() {
-    //cria lista de stocks com seus ids para passar para chart especifico
-    //sortOptions() {
-    //this.stocks.push([...new Set(this.invests.map(item => ["text: "+ item.symbol,"value: " + item.stock_id].join(",")))]);
-    // this.stocks.push([...new Set(this.invests.map(item => item.symbol))]);
-    //      this.stocks.push(this.invests.map(item => item.symbol),this.invests.map(item => item.stock_id));
-    //console.log(this.stocks);
+    //cria lista de stocks com seus ids para passar para chart interativo
+    //simbolos (tickets) unicos
     var uniqueSymbol = [].concat(_toConsumableArray(new Set(this.invests.map(function (item) {
       return item.stockName;
     }))));
-    //console.log(uniqueSymbol);
+    //ids dos simbolos (tickets) unicos
     var uniqueStock_id = [].concat(_toConsumableArray(new Set(this.invests.map(function (item) {
       return item.stock_id;
     }))));
-    //console.log(uniqueStock_id);
+    //monta objeto com os dados acima
     for (var i = 0; i < uniqueSymbol.length; i++) {
       this.stocks.push({
         text: uniqueSymbol[i],
         value: uniqueStock_id[i]
       });
     }
-    this.Months = [].concat(_toConsumableArray(new Set(this.monthlyquotes.map(function (element) {
-      return moment(String(element.timestamp)).format('YYYY-MM');
-    }))));
-    var uniqueStockName = [].concat(_toConsumableArray(new Set(this.results.map(function (item) {
-      return item.stockName;
-    }))));
-    //console.log(uniqueSymbol);
-    var uniquePercentage2 = [].concat(_toConsumableArray(new Set(this.results.map(function (item) {
-      return item.percentage;
-    }))));
-    var uniqueColor2 = [].concat(_toConsumableArray(new Set(this.results.map(function (item) {
-      return item.color;
-    }))));
-    for (var i = 0; i < uniqueStockName.length; i++) {
-      this.chart2.push({
-        stockName: uniqueStockName[i],
-        perc: uniquePercentage2[i],
-        color: uniqueColor2[i]
-      });
-    }
-    //  this.datasets = this.monthlyquotes.reduce(function(cont, item) {
-    //       cont[item.stockName] = cont[item.stockName] || [];
-    //       cont[item.stockName].push(item);
-    //       //cont[item.stockName].data = { item.timestamp : item.close };
-    //       return cont;
-    //     }, Object.create(null));
-    //return this.stocks;
+    //pega os meses para o grafico interativo
+    //this.Months = [...new Set(this.monthlyquotes.map(element => moment(String(element.timestamp)).format('YYYY-MM')))];
+
+    // let uniqueStockName = [...new Set(this.results.map(item => item.stockName))];
+    //
+    // let uniquePercentage2 = [...new Set(this.results.map(item => item.percentage))];
+    //
+    // let uniqueColor2 = [...new Set(this.results.map(item => item.color))];
+    //
+    // for (let i = 0; i < uniqueStockName.length; i++) {
+    //   this.chart2.push({
+    //     stockName: uniqueStockName[i],
+    //     perc: uniquePercentage2[i],
+    //     color: uniqueColor2[i],
+    //   });
+    // }
   },
   methods: {
     showModal: function showModal(name) {
@@ -104888,30 +104877,32 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this = this;
 
       console.log(this.selected);
-      //this.chartData = [];
-      //this.datacollection = [];
-      this.Months = [];
+      this.Days = [];
       this.Labels = [];
       this.Prices = [];
-      axios.get('/api/getintchart', {
+      //this.chartData = [];
+      //this.datacollection = [];
+      axios.get('/api/daily/getintchart', {
         params: {
           query: this.selected
         }
-      }).then(function (response) {
-        return response.data;
-      }).then(function (data) {
-        Vue.set(_this, 'chartData', data);
-      }).then(function () {
+      })
+      // .then(response => response.data)
+      .then(function (response) {
+        //Vue.set(this, chartData, response.data);
+        _this.chartData = response.data;
+        // })
+        // .then(() => {
         if (_this.chartData) {
           _this.chartData.forEach(function (element) {
-            _this.Months.push(moment(String(element.timestamp)).format('YYYY-MM'));
+            _this.Days.push(moment(String(element.timestamp)).format('MM-DD'));
             _this.Prices.push(element.close);
           });
           _this.Labels = [].concat(_toConsumableArray(new Set(_this.chartData.map(function (item) {
             return item.stock_id;
           }))));
           _this.datacollection = {
-            labels: _this.Months,
+            labels: _this.Days,
             datasets: [{
               label: _this.Labels,
               backgroundColor: '#FC2525',
@@ -104927,8 +104918,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
       //.then(response => {
       //this.chartData = response.data;
-    },
-    testing: function testing() {}
+    }
   }
 });
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(0)))
@@ -104960,7 +104950,7 @@ var render = function() {
               _c("pie-chart", {
                 attrs: {
                   donut: false,
-                  prefix: "$",
+                  prefix: "R$",
                   thousands: ".",
                   decimal: ",",
                   data: this.pie,
@@ -105032,7 +105022,7 @@ var render = function() {
               attrs: {
                 header: "Histórico de ações na carteira",
                 "header-tag": "header",
-                title: "Mensal"
+                title: "Diário (ult. 30 dias)"
               }
             },
             [
@@ -105042,7 +105032,6 @@ var render = function() {
                   _c(
                     "b-form-select",
                     {
-                      on: { input: _vm.goChart },
                       model: {
                         value: _vm.selected,
                         callback: function($$v) {
@@ -105057,14 +105046,7 @@ var render = function() {
                         {
                           attrs: { slot: "first" },
                           domProps: { value: null },
-                          slot: "first",
-                          model: {
-                            value: _vm.selected,
-                            callback: function($$v) {
-                              _vm.selected = $$v
-                            },
-                            expression: "selected"
-                          }
+                          slot: "first"
                         },
                         [_vm._v("-- none --")]
                       ),
@@ -105122,14 +105104,7 @@ var render = function() {
                             {
                               attrs: { slot: "first" },
                               domProps: { value: null },
-                              slot: "first",
-                              model: {
-                                value: _vm.selected,
-                                callback: function($$v) {
-                                  _vm.selected = $$v
-                                },
-                                expression: "selected"
-                              }
+                              slot: "first"
                             },
                             [_vm._v("-- none --")]
                           ),
@@ -105156,8 +105131,8 @@ var render = function() {
                     ? _c("homechartint", {
                         attrs: {
                           "chart-data": _vm.datacollection,
-                          width: 400,
-                          height: 200
+                          width: 800,
+                          height: 400
                         }
                       })
                     : _vm._e()

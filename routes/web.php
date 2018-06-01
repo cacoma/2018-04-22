@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
 use App\Invest;
 use App\monthlyQuote;
+use App\DailyQuote;
+
 use Carbon\Carbon;
 
 /*
@@ -159,7 +161,7 @@ Route::get('/api/index/invests', function () {
     }
     return response()->json($invests);
 })->middleware('auth');
-Route::get('/api/getintchart', function() {
+Route::get('/api/monthly/getintchart', function() {
   $query = Input::get('query');
         $monthlyQuotes = monthlyQuote::with('stock')->where('stock_id', '=', $query)
           ->whereDate('timestamp', '>', Carbon::now()->subMonth(12))->orderBy('timestamp', 'asc')->get();
@@ -171,4 +173,17 @@ Route::get('/api/getintchart', function() {
             //ajusta as datas pro formato certo
         }
 return response()->json($monthlyQuotes);
+})->middleware('auth');
+Route::get('/api/daily/getintchart', function() {
+  $query = Input::get('query');
+        $dailyQuotes = dailyQuote::with('stock')->where('stock_id', '=', $query)
+          ->whereDate('timestamp', '>', Carbon::now()->subMonth(1))->orderBy('timestamp', 'asc')->get();
+        foreach ($dailyQuotes as &$dailyQuote) {
+            //arruma o nome
+            $dailyQuote->stock_id = $dailyQuote->stock->symbol;
+            //depois retira o objeto de dentro do objeto
+            unset($dailyQuote->stock);
+            //ajusta as datas pro formato certo
+        }
+return response()->json($dailyQuotes);
 })->middleware('auth');

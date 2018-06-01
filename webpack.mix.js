@@ -24,3 +24,13 @@ mix.js(['resources/assets/js/app.js' ,
   'resources/assets/js/jquery/jquery.js'],
 	 'public/js')
    .sass('resources/assets/sass/app.scss', 'public/css');
+
+mix.browserSync('https://cacoma.tk');
+
+// mix.browserSync({
+// 	proxy: "https://cacoma.tk",
+// 	https: {
+// 		key: "/var/www/html/privkey.pem",
+// 		cert: "/var/www/html/fullchain.pem"
+// 	}
+// });
