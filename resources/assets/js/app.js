@@ -14,7 +14,7 @@ import racaz from './javascript/js.js';
 //import Errors from './javascript/classErrors.js';
 import VueCharts from 'vue-chartjs';
 import VueChartkick from 'vue-chartkick';
-import Chart from 'chart.js'
+import Chart from 'chart.js';
 
 Vue.use(money, {
   precision: 4
@@ -23,7 +23,7 @@ Vue.use(VueTheMask);
 Vue.use(BootstrapVue);
 Vue.use(racaz);
 //Vue.use(Errors);
-Vue.use(VueChartkick, {adapter: Chart})
+Vue.use(VueChartkick, {adapter: Chart});
 
 require('./bootstrap');
 
@@ -48,6 +48,9 @@ window.create = (item) => {
 window.createTypeStocks = (item) => {
     window.events.$emit('createTypeStocks',item);
 };
+window.createTypeTreasuries = (item) => {
+    window.events.$emit('createTypeTreasuries',item);
+};
 window.deleteconfirmation = (item) => {
     window.events.$emit('deleteconfirmation',item);
 };
@@ -66,8 +69,10 @@ Vue.component('navbaradmin', require('./components/layouts/navbaradmin.vue'));
 Vue.component('homecarousel', require('./components/layouts/homecarousel.vue'));
 //Vue.component('homechart', require('./components/layouts/homechart.vue'));
 Vue.component('index', require('./components/index.vue'));
+Vue.component('consolidatedinvests', require('./components/invests/consolidatedInvests.vue'));
 Vue.component('createinvests', require('./components/invests/createInvests.vue'));
 Vue.component('createinveststypestocks', require('./components/invests/createTypeStocks.vue'));
+Vue.component('createinveststypetreasuries', require('./components/invests/createTypeTreasuries.vue'));
 //Vue.component('createstock', require('./components/stocks/createStock.vue'));
 Vue.component('create', require('./components/create.vue'));
 Vue.component('createquotes', require('./components/quotes/createquotes.vue'));
@@ -82,8 +87,8 @@ Vue.component('enlarge', require('./components/layouts/enlarge.vue')); //compone
 Vue.component('moldura', require('./components/layouts/moldura.vue')); //componente aumentar tamanho de itens selecionados
 
 //https://forum.vuejs.org/t/eventhub-with-vueify/1375/3
-const bus = new Vue()
-Vue.prototype.$bus = bus
+const bus = new Vue();
+Vue.prototype.$bus = bus;
 
 const app = new Vue({
     el: '#app'

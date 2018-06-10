@@ -1,12 +1,11 @@
 <template>
-<!-- <b-modal ref="modalEditRow" size="lg" hide-footer title="" v-model="this.show" no-close-on-backdrop no-close-on-esc hide-header-close> -->
 <div class="container-fluid justify-content-center" v-if="this.show">
   <b-alert variant="danger" dismissible :show="this.form.errors.any()" @dismissed="showDismissibleAlert=false">
     <div v-for="(value, key, index) in this.form.errors.errors">
       {{ index + 1 }}. {{ this.racaz.columnName(key) }}: {{ value[0] }}
     </div>
   </b-alert>
-  <b-form @submit="onSubmit" @reset="onReset" @input="form.errors.clear($event.target.name)" id="createtypestockform" dusk="createtypestockform">
+  <b-form @submit="onSubmit" @reset="onReset" @input="form.errors.clear($event.target.name)" id="createtypetreasurieform" dusk="createtypetreasurieform">
     <b-form-row v-if="!this.editMode">
       <b-col>
         <b-form-group label="Operação de: ">
@@ -18,23 +17,23 @@
     </b-form-row>
     <b-form-row>
       <b-col>
-        <b-form-group id="symbollabel" label="Código da ação:" label-for="symbol">
-          <b-tooltip ref="tooltipSymbol" v-show="tipSymbol" target="symbol" placement="topright">
-            <strong v-text="tipSymbol"></strong>
+        <b-form-group id="codelabel" label="Código do titulo:" label-for="code">
+          <b-tooltip ref="tooltipCode" v-show="tipCode" target="code" placement="topright">
+            <strong v-text="tipCode"></strong>
           </b-tooltip>
-          <input type="text" list="liststocks" placeholder="AAAA#.SA" v-model="form.symbol" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('symbol') }" name="symbol" id="symbol" ref="symbol" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira o stock')"
+          <input type="text" list="listtreasuries" placeholder="Código da título" v-model="form.code" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('code') }" name="code" id="code" ref="code" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira o treasury')"
             required>
-          <datalist id="liststocks">
-                   <option v-for="result in results" v-bind:value="result.symbol">{{ result.symbol}}</option>
+          <datalist id="listtreasuries">
+                   <option v-for="result in results" v-bind:value="result.code">{{ result.code }}</option>
                 </datalist>
-          <p class="text-danger" v-if="form.errors.has('symbol')" v-text="form.errors.get('symbol')">
+          <p class="text-danger" v-if="form.errors.has('code')" v-text="form.errors.get('code')">
           </p>
 
           </b-tooltip>
         </b-form-group>
       </b-col>
       <b-col>
-        <b-form-group id="datelabel" label="Data do investimento:" label-for="date_invest">
+        <b-form-group id="datelabel" label="Data do investimento" label-for="date_invest">
           <datepicker id="date_invest" name="date_invest" v-model="form.date_invest" input-class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('date_invest') }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a data do investimento.')"
             placeholder="Clique aqui para inserir a data." format="dd/MM/yyyy" :disabledDates="this.disabledDates" required dusk="datepicker">
           </datepicker>
@@ -60,7 +59,7 @@
     <!--   segunda linha -->
     <b-form-row>
       <b-col>
-        <b-form-group id="pricelabel" label="Preço da ação:" label-for="price">
+        <b-form-group id="pricelabel" label="Preço do titulo" label-for="price">
           <b-input-group prepend="R$">
             <money id="price" name="price" v-model="form.price" v-bind="money" class="form-input input-lg form-control" v-bind:class="{ 'is-invalid': form.errors.has('price') }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira o preco')"
               required>
@@ -72,7 +71,7 @@
       </b-col>
       <b-col>
         <b-form-group id="quantlabel" label="Quantidade:" label-for="quant">
-          <b-form-input v-nodecimals id="quant" name="quant" type="number" v-model="form.quant" v-bind:class="{ 'is-invalid': form.errors.has('quant') }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a quantidade.')" required>
+          <b-form-input v-twodecimals id="quant" name="quant" v-model="form.quant" v-bind:class="{ 'is-invalid': form.errors.has('quant') }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a quantidade.')" required>
           </b-form-input>
           <p class="text-danger" v-if="form.errors.has('quant')" v-text="form.errors.get('quant')">
           </p>
@@ -90,9 +89,19 @@
         </b-form-group>
       </b-col>
       <b-col>
+        <b-form-group id="ratelabel" label="Taxa:" label-for="rate">
+          <b-input-group append="%">
+            <b-form-input v-twodecimals id="rate" name="rate" v-model="form.rate" v-bind:class="{ 'is-invalid': form.errors.has('rate') }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a taxa de retorno.')" required>
+            </b-form-input>
+            <p class="text-danger" v-if="form.errors.has('rate')" v-text="form.errors.get('rate')">
+            </p>
+          </b-input-group>
+        </b-form-group>
+      </b-col>
+      <b-col>
         <b-form-group id="totallabel" label="Total:" label-for="total">
           <b-input-group prepend="R$">
-            <money id="total" :value="total" v-bind="money" class="form-input input-lg form-control" disabled dusk="createtypestocktotal">
+            <money id="total" :value="total" v-bind="money" class="form-input input-lg form-control" disabled dusk="createtypetreasurytotal">
             </money>
           </b-input-group>
         </b-form-group>
@@ -100,7 +109,7 @@
     </b-form-row>
     <b-row align-h="end">
       <b-col md="6" offset-md="1">
-        <b-button type="submit" variant="success" :disabled="form.errors.any()" dusk="createtypestocksubmit"> {{ this.editMode ? 'Atualizar' : 'Inserir' }}</b-button>
+        <b-button type="submit" variant="success" :disabled="form.errors.any()" dusk="createtypetreasuriesubmit"> {{ this.editMode ? 'Atualizar' : 'Inserir' }}</b-button>
         <b-button type="reset" variant="danger" v-if="this.Slug2 !== 'create'">{{ 'Fechar' }}</b-button>
         <b-button variant="primary" @click="formReset" dusk="createformreset">{{ 'Limpar' }}</b-button>
       </b-col>
@@ -123,25 +132,17 @@ export default {
   components: {
     Datepicker
   },
-  //props: ['data'],
-  //   props: {
-  //   editMode: {
-  //     default: false,
-  //     type: Boolean
-  //     },
-  //     data: {
-  //     default: null
-  //     }
-  //   },
+
   data() {
     return {
       form: new Form({
         signal: 'buy',
-        symbol: '',
+        code: '',
         date_invest: '',
         broker_name: '',
         price: '',
         quant: '',
+        rate: '',
         broker_fee: '',
       }),
       money: {
@@ -156,7 +157,7 @@ export default {
       show: false,
       disabledDates: racaz.dateInvestLimit.disabledDates,
       tipBroker: 'Procurar corretora',
-      tipSymbol: 'Procurar ação',
+      tipCode: 'Procurar título',
       optionsSignal: [{
           text: 'Compra',
           value: 'buy'
@@ -171,15 +172,14 @@ export default {
     }
   },
   watch: {
-    // whenever symbol changes, this function will run
-    'form.symbol': function(newSymbol, oldSymbol) {
-      this.debouncedFormSymbol();
+    // whenever code changes, this function will run
+    'form.code': function(newCode, oldCode) {
+      this.debouncedFormCode();
     },
   },
   created: function() {
-    window.events.$on('createTypeStocks', (item) => this.populateData(item));
+    window.events.$on('createTypeTreasuries', (item) => this.populateData(item));
     this.$bus.$on('formHide', () => this.show = false);
-
     // _.debounce is a function provided by lodash to limit how
     // often a particularly expensive operation can be run.
     // In this case, we want to limit how often we access
@@ -187,7 +187,7 @@ export default {
     // finished typing before making the ajax request. To learn
     // more about the _.debounce function (and its cousin
     // _.throttle), visit: https://lodash.com/docs#debounce
-    this.debouncedFormSymbol = _.debounce(this.autoComplete, 500);
+    this.debouncedFormCode = _.debounce(this.autoComplete, 500);
     this.autoCompleteBroker();
 
   },
@@ -202,18 +202,18 @@ export default {
     onSubmit(evt) {
       evt.preventDefault();
       if (!this.editMode) {
-        this.form.post('/stocks/investstore')
+        this.form.post('/treasuries/investstore')
           .then(data => {
             console.log('promise success ' + data);
             this.tipBroker = 'Procurar corretora';
-            this.tipSymbol = 'Procurar ação';
+            this.tipCode = 'Procurar título';
             this.show = false;
             this.$bus.$emit('updateindexedit', this.form);
             this.$bus.$emit('enlargeclose');
           })
           .catch(errors => console.log('promise error' + errors));
       } else {
-        this.form.patch('/stocks/invests/' + this.form.id)
+        this.form.patch('/treasuries/invests/' + this.form.id)
           .then(data => {
             this.show = false;
             this.$bus.$emit('enlargeclose');
@@ -231,13 +231,13 @@ export default {
         this.formReset();
         this.form.signal = 'buy';
         this.tipBroker = 'Procurar corretora';
-        this.tipSymbol = 'Procurar ação';
+        this.tipCode = 'Procurar título';
         /* Reset our form values */
         /* Trick to reset/clear native browser form validation state */
-        //this.show = false;
+        // this.show = false;
         this.$bus.$emit('enlargeclose');
       } else {
-        //this.show = false;
+        // this.show = false;
         this.$bus.$emit('enlargeclose');
       }
     },
@@ -259,7 +259,7 @@ export default {
         this.form.reset();
         this.form.signal = 'buy';
         this.tipBroker = 'Procurar corretora';
-        this.tipSymbol = 'Procurar ação';
+        this.tipCode = 'Procurar título';
         this.editMode = false;
         this.show = true;
       }
@@ -277,15 +277,15 @@ export default {
     },
     //busca as acoes
     autoComplete() {
-      this.tipSymbol = 'Procurando...';
-      axios.get('/api/searchstocks', {
+      this.tipCode = 'Procurando...';
+      axios.get('/api/searchtreasuries', {
           params: {
-            query: this.form.symbol
+            query: this.form.code
           }
         }).then(response => {
           this.$nextTick(function() {
             this.results = response.data;
-            this.tipSymbol = 'Ok';
+            this.tipCode = 'Ok';
             console.log("buscou" + response.data);
           });
         })
@@ -295,17 +295,17 @@ export default {
     },
   },
   directives: {
-    focus: {
-      // definição da diretiva
-      inserted: function(el) {
-        el.focus();
-      }
-    },
-    nodecimals: {
+    twodecimals: {
       bind(el, arg) {
-        el.value = parseInt(el.value);
+        //const regex = "[^0-9$.,]";
+        //el.value = racaz.currFormatter.format(el.value);
+        el.value = racaz.numberForm.format(el.value.replace(",", "."));
         el.addEventListener('keyup', () => {
-          el.value = parseInt(el.value);
+          el.value = el.value.replace(/[^0-9$.,]/g, '').replace(/(\..*)\./g, '$1').replace(/(?!^)-/g, '');
+        });
+        el.addEventListener('blur', () => {
+          //el.value = racaz.currFormatter.format(el.value);
+          el.value = racaz.numberForm.format(el.value.replace(",", "."));
         });
       }
     },

@@ -2,6 +2,6 @@
 
 @section('content')
 
-  <create></create>
+<moldura><create></create></moldura>
 
 @endsection

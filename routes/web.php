@@ -48,12 +48,24 @@ Route::patch('/stocks/{id}', 'StockController@update');
 Route::delete('/stocks/{id}/destroy', 'StockController@destroy');
 Route::resource('stocks', 'StockController');
 
+//investimentos em titulos
+Route::post('/treasuries/investstore', 'TreasuryController@investstore'); //investimentos de acoes
+Route::get('/treasuries/invests/{id}/edit', 'TreasuryController@investedit'); //editar investimento tipo stock
+Route::patch('/treasuries/invests/{id}', 'TreasuryController@investupdate'); //atualizar investimento tipo stock
+Route::delete('/treasuries/invests/{id}/destroy', 'TreasuryController@investdestroy'); //apagar investimento tipo stock
+//titulos
+Route::post('/treasuries/store', 'TreasuryController@store');
+Route::patch('/treasuries/{id}', 'TreasuryController@update');
+Route::delete('/treasuries/{id}/destroy', 'TreasuryController@destroy');
+Route::resource('treasuries', 'TreasuryController');
+
 Route::resource('monthlyquotes', 'MonthlyQuoteController');
 
 Route::get('/dailyquotes/massinsert', 'DailyQuoteController@massinsert');
 Route::post('/dailyquotes/store', 'DailyQuoteController@store');
 Route::resource('dailyquotes', 'DailyQuoteController');
 
+Route::view('/consolidated', 'invests.consolidated');
 Route::resource('invests', 'InvestController');
 
 //rota de teste de mailable
@@ -72,6 +84,12 @@ Route::get('/api/searchstocks', function () {
     $query = Input::get('query');
     $stocks = DB::table('stocks')->where('symbol', 'like', $query.'%')->get();
     return response()->json($stocks);
+})->middleware('auth');
+//listagem de titulos do tesouro
+Route::get('/api/searchtreasuries', function () {
+    $query = Input::get('query');
+    $treasuries = DB::table('treasuries')->where('code', 'like', $query.'%')->get();
+    return response()->json($treasuries);
 })->middleware('auth');
 //listagem de corretoras
 Route::get('/api/searchbrokers', function () {
@@ -103,6 +121,10 @@ Route::get('/api/index/stocks', function () {
     $stocks = DB::table('stocks')->get();
     return response()->json($stocks);
 })->middleware('auth');
+Route::get('/api/index/treasuries', function () {
+    $treasuries = DB::table('treasuries')->get();
+    return response()->json($treasuries);
+})->middleware('auth');
 Route::get('/api/index/users', function () {
     $user = Auth::user();
     //dono e admin somente podem alterar
@@ -115,16 +137,27 @@ Route::get('/api/index/users', function () {
 })->middleware('auth');
 Route::get('/api/index/invests', function () {
     $user = Auth::user();
-    if ($user->role_id == '1') {
+    if ($user->role_id === 1) {
         $invests = Invest::with(['dailyQuote' => function ($query) {
             $query->orderBy('timestamp', 'desc');
-        }, 'broker', 'user', 'stock'])->get();
+        },
+        'treasury',
+        'broker', 'user', 'stock'])->get();
     } else {
         $invests = Invest::with(['dailyQuote' => function ($query) {
             $query->orderBy('timestamp', 'desc');
-        }, 'broker', 'stock'])->where('user_id', $user->id)->get();
+        },
+        'treasury',
+        'broker', 'stock'])->where('user_id', $user->id)->get();
     };
-    foreach ($invests as $key => $value) {
+    foreach ($invests as $key => &$value) {
+
+        //tratamento para broker
+        $value->broker_name = $value->broker->name;
+        unset($value->broker);
+        unset($value->broker_id);
+
+        //tratamento para stocks
         //para passar o nome do broker
         $value->symbol = $value->stock->symbol;
         //retira o objeto do stock
@@ -138,15 +171,21 @@ Route::get('/api/index/invests', function () {
         };
         //retira o objeto de dentro do objeto, para renderizar corretamente
         unset($value->dailyQuote);
-        $value->broker_name = $value->broker->name;
-        unset($value->broker);
         //retira informacoes que nao queremos renderizar
         unset($value->stock_id);
-        if ($user->role_id != '1') {
+        if ($user->role_id !== 1) {
             unset($value->user_id);
-        };
-        //unset($value->user_id);
-        unset($value->broker_id);
+            unset($value->id);
+        } else {
+            $value->username = $user->name;
+            unset($value->user);
+        }
+
+        //tratamento para treasuries
+        unset($value->treasury_id);
+        unset($value->treasury);
+
+        //tratamento para cores e %
         $value->percentage = ($value->quote / $value->price - 1);
         if ($value->price >= $value->quote) {
             $field = array('percentage' => 'danger');
@@ -161,29 +200,35 @@ Route::get('/api/index/invests', function () {
     }
     return response()->json($invests);
 })->middleware('auth');
-Route::get('/api/monthly/getintchart', function() {
-  $query = Input::get('query');
-        $monthlyQuotes = monthlyQuote::with('stock')->where('stock_id', '=', $query)
+Route::get('/api/monthly/getintchart', function () {
+    $query = Input::get('query');
+    $monthlyQuotes = monthlyQuote::with('stock')->where('stock_id', '=', $query)
           ->whereDate('timestamp', '>', Carbon::now()->subMonth(12))->orderBy('timestamp', 'asc')->get();
-        foreach ($monthlyQuotes as &$monthlyQuote) {
-            //arruma o nome
-            $monthlyQuote->stock_id = $monthlyQuote->stock->symbol;
-            //depois retira o objeto de dentro do objeto
-            unset($monthlyQuote->stock);
-            //ajusta as datas pro formato certo
-        }
-return response()->json($monthlyQuotes);
+    foreach ($monthlyQuotes as &$monthlyQuote) {
+        //arruma o nome
+        $monthlyQuote->stock_id = $monthlyQuote->stock->symbol;
+        //depois retira o objeto de dentro do objeto
+        unset($monthlyQuote->stock);
+        //ajusta as datas pro formato certo
+    }
+    return response()->json($monthlyQuotes);
 })->middleware('auth');
-Route::get('/api/daily/getintchart', function() {
-  $query = Input::get('query');
-        $dailyQuotes = dailyQuote::with('stock')->where('stock_id', '=', $query)
+Route::get('/api/daily/getintchart', function () {
+    $query = Input::get('query');
+    $dailyQuotes = dailyQuote::with('stock')->where('stock_id', '=', $query)
           ->whereDate('timestamp', '>', Carbon::now()->subMonth(1))->orderBy('timestamp', 'asc')->get();
-        foreach ($dailyQuotes as &$dailyQuote) {
-            //arruma o nome
-            $dailyQuote->stock_id = $dailyQuote->stock->symbol;
-            //depois retira o objeto de dentro do objeto
-            unset($dailyQuote->stock);
-            //ajusta as datas pro formato certo
-        }
-return response()->json($dailyQuotes);
+    foreach ($dailyQuotes as &$dailyQuote) {
+        //arruma o nome
+        $dailyQuote->stock_id = $dailyQuote->stock->symbol;
+        //depois retira o objeto de dentro do objeto
+        unset($dailyQuote->stock);
+        //ajusta as datas pro formato certo
+    }
+    return response()->json($dailyQuotes);
+})->middleware('auth');
+//busca dados dos investimentos consolidados
+Route::get('/api/consolidated', function () {
+    $user = Auth::user();
+    $consolidated = DB::table('consolidated')->where('user_id', $user->id)->get();
+    return response()->json($consolidated);
 })->middleware('auth');

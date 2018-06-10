@@ -22,95 +22,100 @@ class InvestController extends Controller
     }
     public function index()
     {
-        $user = Auth::user();
-        if ($user->role_id == '1') {
-            //$invests = Invest::with(['monthlyQuote', 'broker'])->get();
-          //$invests = Invest::with(['monthlyQuote' => function ($query) {
-          $invests = Invest::with(['dailyQuote' => function ($query) {
-                $query->orderBy('timestamp', 'desc');
-                //$query->first();
-            }, 'broker'])->get();
-            foreach ($invests as $key => $value) {
-                //se existir, insere o valor da cotacao dos ultimo mes, caso não, vai zerado
-                 if(isset($value->dailyQuote[0]->close)){
-                $value->quote = $value->dailyQuote[0]->close;
-                } else {
-                  $value->quote = 0;
-                }
-                //retira o objeto de dentro do objeto, para renderizar corretamente
-                unset($value->dailyQuote);
-                //para passar o nome do broker
-                $value->broker_name = $value->broker->name;
-                //retira o objeto de dentro do objeto, para renderizar corretamente
-                unset($value->broker);
-                //retira informacoes que nao queremos renderizar
-                unset($value->stock_id);
-                unset($value->broker_id);
-//                 if ($value->type == 'stock') {
-//                     $value->type = 'Ação';
+//         $user = Auth::user();
+//         if ($user->role_id === 1) {
+//             //$invests = Invest::with(['monthlyQuote', 'broker'])->get();
+//           //$invests = Invest::with(['monthlyQuote' => function ($query) {
+//           $invests = Invest::with(['dailyQuote' => function ($query) {
+//                 $query->orderBy('timestamp', 'desc');
+//                 //$query->first();
+//             }, 'broker'])->get();
+//             foreach ($invests as $key => &$value) {
+//                 //se existir, insere o valor da cotacao dos ultimo mes, caso não, vai zerado
+//                  if(isset($value->dailyQuote[0]->close)){
+//                 $value->quote = $value->dailyQuote[0]->close;
+//                 } else {
+//                   $value->quote = 0;
 //                 }
-                //calcula porcentagem e insere dado no objeto
-                $value->percentage = ($value->quote / $value->price - 1);
-                if ($value->price >= $value->quote) {
-                    $field = array('percentage' => 'danger');
-                    $value->_cellVariants = (object) array_merge((array)$value->_cellVariants, (array)$field);
-                } elseif ($value->price == $value->quote) {
-                    $field = array('percentage' => 'info');
-                    $value->_cellVariants = (object) array_merge((array)$value->_cellVariants, (array)$field);
-                } else {
-                    $field = array('percentage' => 'success');
-                    $value->_cellVariants = (object) array_merge((array)$value->_cellVariants, (array)$field);
-                }
-            }
-            return view('invests.index')->with('invests', $invests);
+//                 //retira o objeto de dentro do objeto, para renderizar corretamente
+//                 unset($value->dailyQuote);
+//                 //para passar o nome do broker
+//                 $value->broker_name = $value->broker->name;
+//                 //retira o objeto de dentro do objeto, para renderizar corretamente
+//                 unset($value->broker);
+//                 //retira informacoes que nao queremos renderizar
+//                 unset($value->stock_id);
+//                 unset($value->broker_id);
+//                 //pega o user
+//                 $value->username = $value->user->name;
+//                 //retira o objeto user
+//                 unset($value->user);
+// //                 if ($value->type == 'stock') {
+// //                     $value->type = 'Ação';
+// //                 }
+//                 //calcula porcentagem e insere dado no objeto
+//                 $value->percentage = ($value->quote / $value->price - 1);
+//                 if ($value->price >= $value->quote) {
+//                     $field = array('percentage' => 'danger');
+//                     $value->_cellVariants = (object) array_merge((array)$value->_cellVariants, (array)$field);
+//                 } elseif ($value->price == $value->quote) {
+//                     $field = array('percentage' => 'info');
+//                     $value->_cellVariants = (object) array_merge((array)$value->_cellVariants, (array)$field);
+//                 } else {
+//                     $field = array('percentage' => 'success');
+//                     $value->_cellVariants = (object) array_merge((array)$value->_cellVariants, (array)$field);
+//                 }
+//             }
+            return view('invests.index');
+            //->with('invests', $invests);
         //return view('invests.index')->with('invests', $invests);
-        } else {
-            //essa query abaixo busca dados da tabela dos investimentos e das cotas mensais de cada ativo, e relaciona as duas.
-            //depois ele puxa somente os registros que o timestamp, que eh a data real do fechamento, e puxa somente dos ultimos dois meses e a ultima por primeiro.
-            //isso se faz para caso nao tenha sido inserido o valor neste mes ainda
-            //alem desse relacionamento ele traz somente os investimentos que o id é o do usuario registrado
-            //daily$invests = Invest::with(['monthlyQuote' => function ($query) {
-            $invests = Invest::with(['dailyQuote' => function ($query) {
-                $query->orderBy('timestamp', 'desc');
-                 //$query->first();
-            }, 'broker'])->where('user_id', $user->id)->get();
-          //$invests = Invest::with(['monthlyQuote', 'broker'])->where('user_id', $user->id)->get();
-            foreach ($invests as $key => $value) {
-                //se existir, insere o valor da cotacao dos ultimo mes, caso não, vai zerado
-                if(isset($value->dailyQuote[0]->close)){
-                $value->quote = $value->dailyQuote[0]->close;
-                } else {
-                  $value->quote = 0;
-                }
-                //retira o objeto de dentro do objeto, para renderizar corretamente
-                unset($value->dailyQuote);
-                //para passar o nome do broker
-                $value->broker_name = $value->broker->name;
-                //retira o objeto de dentro do objeto, para renderizar corretamente
-                unset($value->broker);
-                //retira informacoes que nao queremos renderizar
-                unset($value->stock_id);
-                unset($value->user_id);
-                unset($value->broker_id);
-                //ajusta o nome do dado interno
-//                 if ($value->type == 'stock') {
-//                     $value->type = 'Ação';
+//         } else {
+//             //essa query abaixo busca dados da tabela dos investimentos e das cotas mensais de cada ativo, e relaciona as duas.
+//             //depois ele puxa somente os registros que o timestamp, que eh a data real do fechamento, e puxa somente dos ultimos dois meses e a ultima por primeiro.
+//             //isso se faz para caso nao tenha sido inserido o valor neste mes ainda
+//             //alem desse relacionamento ele traz somente os investimentos que o id é o do usuario registrado
+//             //daily$invests = Invest::with(['monthlyQuote' => function ($query) {
+//             $invests = Invest::with(['dailyQuote' => function ($query) {
+//                 $query->orderBy('timestamp', 'desc');
+//                  //$query->first();
+//             }, 'broker'])->where('user_id', $user->id)->get();
+//           //$invests = Invest::with(['monthlyQuote', 'broker'])->where('user_id', $user->id)->get();
+//             foreach ($invests as $key => &$value) {
+//                 //se existir, insere o valor da cotacao dos ultimo mes, caso não, vai zerado
+//                 if(isset($value->dailyQuote[0]->close)){
+//                 $value->quote = $value->dailyQuote[0]->close;
+//                 } else {
+//                   $value->quote = 0;
 //                 }
-                //cria a variavel percentage e atribui valor
-                $value->percentage = ($value->quote / $value->price - 1);
-                if ($value->price >= $value->quote) {
-                    $field = array('percentage' => 'danger');
-                    $value->_cellVariants = (object) array_merge((array)$value->_cellVariants, (array)$field);
-                } elseif ($value->price == $value->quote) {
-                    $field = array('percentage' => 'info');
-                    $value->_cellVariants = (object) array_merge((array)$value->_cellVariants, (array)$field);
-                } else {
-                    $field = array('percentage' => 'success');
-                    $value->_cellVariants = (object) array_merge((array)$value->_cellVariants, (array)$field);
-                }
-            }
-            return view('invests.index')->with('invests', $invests);
-        }
+//                 //retira o objeto de dentro do objeto, para renderizar corretamente
+//                 unset($value->dailyQuote);
+//                 //para passar o nome do broker
+//                 $value->broker_name = $value->broker->name;
+//                 //retira o objeto de dentro do objeto, para renderizar corretamente
+//                 unset($value->broker);
+//                 //retira informacoes que nao queremos renderizar
+//                 unset($value->stock_id);
+//                 unset($value->user_id);
+//                 unset($value->broker_id);
+//                 //ajusta o nome do dado interno
+// //                 if ($value->type == 'stock') {
+// //                     $value->type = 'Ação';
+// //                 }
+//                 //cria a variavel percentage e atribui valor
+//                 $value->percentage = ($value->quote / $value->price - 1);
+//                 if ($value->price >= $value->quote) {
+//                     $field = array('percentage' => 'danger');
+//                     $value->_cellVariants = (object) array_merge((array)$value->_cellVariants, (array)$field);
+//                 } elseif ($value->price == $value->quote) {
+//                     $field = array('percentage' => 'info');
+//                     $value->_cellVariants = (object) array_merge((array)$value->_cellVariants, (array)$field);
+//                 } else {
+//                     $field = array('percentage' => 'success');
+//                     $value->_cellVariants = (object) array_merge((array)$value->_cellVariants, (array)$field);
+//                 }
+//             }
+//             return view('invests.index')->with('invests', $invests);
+//         }
     }
     /**
      * Show the form for creating a new resource.
@@ -180,31 +185,31 @@ class InvestController extends Controller
         $invest = Invest::find($id);
         $user = Auth::user();
         //dono e admin somente podem alterar
-        if ($user->id == $invest->user_id || $user->role_id == '1') {
+        if ($user->id === $invest->user_id || $user->role_id === 1) {
             $invest->delete();
             return redirect('invests')->with('success', 'Invest deletado');
         } else {
             return back()->with('error', 'O invest nao pode ser deletado');
         }
     }
-    public function indexinvests()
-    {
-        $user = Auth::user();
-        if ($user->role_id == '1') {
-            $invests = Invest::with(['monthlyQuote' => function ($query) {
-                $query->whereDate('timestamp', '>', Carbon::now()->subMonth(2))->latest();
-            }, 'broker'])->get();
-            return \Response::json($invests);
-        } else {
-
-            //essa query abaixo busca dados da tabela dos investimentos e das cotas mensais de cada ativo, e relaciona as duas.
-            //depois ele puxa somente os registros que o timestamp, que eh a data real do fechamento, e puxa somente dos ultimos dois meses e a ultima por primeiro.
-            //isso se faz para caso nao tenha sido inserido o valor neste mes ainda
-            //alem desse relacionamento ele traz somente os investimentos que o id é o do usuario registrado
-            $invests = Invest::with(['monthlyQuote' => function ($query) {
-                $query->whereDate('timestamp', '>', Carbon::now()->subMonth(2))->latest();
-            }])->where('user_id', $user->id)->get();
-            return \Response::json($invests);
-        }
-    }
+    // public function indexinvests()
+    // {
+    //     $user = Auth::user();
+    //     if ($user->role_id == '1') {
+    //         $invests = Invest::with(['monthlyQuote' => function ($query) {
+    //             $query->whereDate('timestamp', '>', Carbon::now()->subMonth(2))->latest();
+    //         }, 'broker'])->get();
+    //         return \Response::json($invests);
+    //     } else {
+    //
+    //         //essa query abaixo busca dados da tabela dos investimentos e das cotas mensais de cada ativo, e relaciona as duas.
+    //         //depois ele puxa somente os registros que o timestamp, que eh a data real do fechamento, e puxa somente dos ultimos dois meses e a ultima por primeiro.
+    //         //isso se faz para caso nao tenha sido inserido o valor neste mes ainda
+    //         //alem desse relacionamento ele traz somente os investimentos que o id é o do usuario registrado
+    //         $invests = Invest::with(['monthlyQuote' => function ($query) {
+    //             $query->whereDate('timestamp', '>', Carbon::now()->subMonth(2))->latest();
+    //         }])->where('user_id', $user->id)->get();
+    //         return \Response::json($invests);
+    //     }
+    // }
 }

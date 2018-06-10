@@ -19,13 +19,22 @@ racaz = function() {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   };
+  const decimalOptions = {
+    style: 'decimal',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  };
   const currFormatter = new Intl.NumberFormat(locale, options);
+
+  const numberForm = new Intl.NumberFormat(locale, decimalOptions);
 
   const percentageOptions = {
     style: 'percent',
     minimumFractionDigits: 3,
     maximumFractionDigits: 3
   };
+
+
   const percFormatter = new Intl.NumberFormat(locale, percentageOptions);
 
 
@@ -69,6 +78,14 @@ racaz = function() {
     ["upToDate", "Atualiz. anteriormente"],
     ["stock_name", "Ação"],
     ["profile", "Perfil"],
+    ["treasuries", "Titulos"],
+    ["due_date", "Vencimento"],
+    ["coupon", "Juros semestrais"],
+    ["coupon_date", "Prim. pag. de juros"],
+    ["coupon_date2", "Seg. pag. de juros"],
+    ["code", "Código"],
+    ["0", "Não"],
+    ["1", "Sim"],
   ];
 
   //variaveis para utilizar no vue datepicker, com a finalidade de limitar a quantidade de datas que podem ser utilizadas
@@ -126,7 +143,7 @@ racaz = function() {
       for (let value of data) {
         //value = value.replace(/[.\W\d]/g,'');
         //aqui ele formata as datas
-        if (value === "timestamp" || value === "date_invest" || value === "data") {
+        if (value === "timestamp" || value === "date_invest" || value === "data" || value === "due_date") {
           fields.push({
             key: value,
             label: racaz.columnName(value),
@@ -180,6 +197,20 @@ racaz = function() {
               return racaz.columnName(value);
             }
           });
+        } else if (value === "coupon") {
+          fields.push({
+            key: value,
+            label: racaz.columnName(value),
+            sortable: true,
+            formatter: (value) => {
+              //return racaz.columnName(value);
+              if (value === 0) {
+                return 'Não';
+              } else {
+                return 'Sim';
+              }
+            }
+          });
           //o item _cellVariants nao é renderizado
         } else if (value === "_cellVariants" || value === "created_at" || value === "updated_at" || value === "redirect" || value === "user_id") {
           // faz nada
@@ -224,39 +255,58 @@ racaz = function() {
     }
   };
   unformtt = function(data) {
-      //depois ele vai fazer o tratamento dos dados apresentados, trazendo para formatos de apresentacao
-      if (Array.isArray(data)) {
-        //aqui ele formata as datas
-        if (data[0] === "timestamp" || data[0] === "date_invest") {
-          //data[1] = moment(String(data[1])).format('DD/MM/YYYY hh:mm');
-          data[1] = moment(data[1]).format("YYYY-DD-MM");
-          //aqui formata os precos
-        } else if (data[0] === "open" || data[0] === "high" || data[0] === "low" || data[0] === "close" || data[0] === "price" || data[0] === "quote" || data[0] === "broker_fee" || data[0] === "total") {
-          data[1] = currFormatterNeu(parseFloat(data[1]));
-          //aqui traz volume para valor inteiro, sem fracao
-        } else if (data[0] === "volume" || data[0] === "quant") {
-          data[1] = parseFloat(data[1]).toFixed(0);
-          //o item _cellVariants nao é renderizado
-        } else if (data[0] === "percentage") {
-          data[1] = percFormatter.format(data[1]);
-          //o item _cellVariants nao é renderizado
-        } else if (data[0] === "created_at" || data[0] === "updated_at") {
-          //data[1] = moment(String(data[1])).format('DD/MM/YYYY hh:mm');
-          data[1] = moment(data[1]).format("YYYY-DD-MM HH:mm:ss");
-        } else {
-          console.log('Nao formatado pelo unformtt, mas sucesso' + data);
-        }
-        return data[1];
+    //depois ele vai fazer o tratamento dos dados apresentados, trazendo para formatos de apresentacao
+    if (Array.isArray(data)) {
+      //aqui ele formata as datas
+      if (data[0] === "timestamp" || data[0] === "date_invest") {
+        //data[1] = moment(String(data[1])).format('DD/MM/YYYY hh:mm');
+        data[1] = moment(data[1]).format("YYYY-DD-MM");
+        //aqui formata os precos
+      } else if (data[0] === "open" || data[0] === "high" || data[0] === "low" || data[0] === "close" || data[0] === "price" || data[0] === "quote" || data[0] === "broker_fee" || data[0] === "total") {
+        data[1] = currFormatterNeu(parseFloat(data[1]));
+        //aqui traz volume para valor inteiro, sem fracao
+      } else if (data[0] === "volume" || data[0] === "quant") {
+        data[1] = parseFloat(data[1]).toFixed(0);
+        //o item _cellVariants nao é renderizado
+      } else if (data[0] === "percentage") {
+        data[1] = percFormatter.format(data[1]);
+        //o item _cellVariants nao é renderizado
+      } else if (data[0] === "created_at" || data[0] === "updated_at") {
+        //data[1] = moment(String(data[1])).format('DD/MM/YYYY hh:mm');
+        data[1] = moment(data[1]).format("YYYY-DD-MM HH:mm:ss");
       } else {
-        console.log('Nao formatado pelo unformtt, nao eh array ' + data);
+        console.log('Nao formatado pelo unformtt, mas sucesso' + data);
       }
-    };
+      return data[1];
+    } else {
+      console.log('Nao formatado pelo unformtt, nao eh array ' + data);
+    }
+  };
 
-    //traz para
-    //   currFormatterNeu = function (n, currency) {
-    //     return currency + " " + n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,");
-    //     }
-    //currFormatterNeu = (n) => n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,");
+  function round(value, exp) {
+    if (typeof exp === 'undefined' || +exp === 0)
+      return Math.round(value);
+
+    value = +value;
+    exp = +exp;
+
+    if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0))
+      return NaN;
+
+    // Shift
+    value = value.toString().split('e');
+    value = Math.round(+(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp)));
+
+    // Shift back
+    value = value.toString().split('e');
+    return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
+  }
+
+  //traz para
+  //   currFormatterNeu = function (n, currency) {
+  //     return currency + " " + n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,");
+  //     }
+  //currFormatterNeu = (n) => n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,");
 
   return {
     "capitalizeFirstLetter": capitalizeFirstLetter,
@@ -269,6 +319,8 @@ racaz = function() {
     "unformtt": unformtt,
     "dateInvestLimit": dateInvestLimit,
     "currFormatter": currFormatter,
+    "numberForm": numberForm,
+    "round": round,
   };
 
 }();

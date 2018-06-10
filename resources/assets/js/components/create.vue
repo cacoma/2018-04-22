@@ -17,6 +17,10 @@
               <b-form-input v-if="key == 'symbol'" v-mask="['AAAA#.AA','AAAA##.AA']" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="value" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')"
                 oninvalid="this.setCustomValidity('Insira esta informação.')" required :dusk="key">
               </b-form-input>
+              <!--              code -->
+              <b-form-input v-if="key == 'code'" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="value" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')"
+                oninvalid="this.setCustomValidity('Insira esta informação.')" required :dusk="key">
+              </b-form-input>
               <!--           type -->
               <b-form-input v-if="key == 'type'" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="key" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira esta informação.')"
                 required :dusk="key">
@@ -41,6 +45,33 @@
                 <option value="1">Admin</option>
                 <option value="2">Usuário</option>
               </b-form-select>
+              <!-- vencimento -->
+              <b-form-input v-if="key == 'due_date'" type="date" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="key" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira esta informação.')"
+                required :dusk="key">
+              </b-form-input>
+              <!-- coupon semestral -->
+              <b-form-select v-if="key == 'coupon'" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="key" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" class="mb-3" :dusk="key">
+                <option value="" disabled>Por favor, escolha um.</option>
+                <option value="0">Não</option>
+                <option value="1">Sim</option>
+              </b-form-select>
+              <!-- datas pagamento do coupon -->
+              <span v-if="hasCoupon === '1'">
+              <b-form-input v-if="key == 'coupon_date'" v-mask="['##/##']" placeholder="dd/mm" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="key" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" onchange="setCustomValidity('')"
+                oninvalid="this.setCustomValidity('Insira esta informação.')" required :dusk="key">
+              </b-form-input>
+              <b-form-input v-if="key == 'coupon_date2'" v-mask="['##/##']" placeholder="dd/mm" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="key" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" onchange="setCustomValidity('')"
+                oninvalid="this.setCustomValidity('Insira esta informação.')" required :dusk="key">
+              </b-form-input>
+              </span>
+              <span v-else>
+              <b-form-input v-if="key == 'coupon_date'"
+                disabled>
+              </b-form-input>
+              <b-form-input v-if="key == 'coupon_date2'"
+                disabled>
+              </b-form-input>
+              </span>
               <p class="text-danger" v-if="form.errors.has(key)" v-text="form.errors.get(key)" dusk="createerrorsdisplay">
               </p>
             </b-form-group>
@@ -48,9 +79,10 @@
         </b-form-group>
       </b-col>
       <b-row align-h="end">
-        <b-col md="4" offset-md="1">
+        <b-col md="6" offset-md="1">
           <b-button type="submit" variant="success" :disabled="this.form.errors.any()" dusk="createsubmit">{{ this.editMode ? 'Atualizar' : 'Inserir' }}</b-button>
-          <b-button type="reset" variant="danger" dusk="createreset">{{ 'Fechar' }}</b-button>
+          <b-button type="reset" variant="danger" dusk="createreset" v-if="this.Slug2 !== 'create'">{{ 'Fechar' }}</b-button>
+          <b-button variant="primary" @click="formReset" dusk="createformreset">{{ 'Limpar' }}</b-button>
         </b-col>
       </b-row>
     </b-form>
@@ -72,8 +104,10 @@ export default {
       show: false,
       slug: racaz.slug,
       Slug: racaz.columnName(racaz.pathArray[1]),
+      Slug2: racaz.columnName(racaz.pathArray[2]),
       pathArray: racaz.pathArray,
-      editMode: false
+      editMode: false,
+      hasCoupon: '',
     }
   },
   created: function() {
@@ -81,11 +115,22 @@ export default {
     if (this.data){
       this.populateData(this.data);
     }
+    // else {
+    //   this.populateData();
+    // }
   },
-  computed: {},
+  computed: {
+
+  },
   methods: {
     updateData(key) {
       Vue.set(this.form, [key], this.$refs[key][0].localValue);
+      //let field = document.getElementById(key);
+      //field.setCustomValidity('');
+      if (key == 'coupon') {
+      this.hasCoupon = this.$refs[key][0].localValue;
+      console.log('chamou updateDataSelect');
+      }
     },
     onSubmit(evt) {
       evt.preventDefault();
@@ -118,7 +163,8 @@ export default {
     onReset(evt) {
       evt.preventDefault();
       if (!this.editMode) {
-        this.form.reset();
+        //this.form.reset();
+        this.formReset();
         /* Reset our form values */
         /* Trick to reset/clear native browser form validation state */
         // this.show = false;
@@ -127,6 +173,9 @@ export default {
         // this.show = false;
         this.$bus.$emit('enlargeclose');
       }
+    },
+    formReset(){
+      this.form.reset();
     },
     populateData(value) {
       if (value) {

@@ -1,12 +1,10 @@
 <template>
 <div class="container-fluid justify-content-center" v-if="loaded === true">
-<!--   <div class="card"> -->
-  <b-card :header="this.Slug"
-          header-tag="header"
-          title="">
-<!--     <div class="card-header"></div> -->
-<!--     <div class="card-body"> -->
-<p class="card-text">
+  <!--   <div class="card"> -->
+  <b-card :header="this.Slug" header-tag="header" title="">
+    <!--     <div class="card-header"></div> -->
+    <!--     <div class="card-body"> -->
+    <p class="card-text">
       <b-row>
         <b-col md="6" class="my-1">
           <b-button size="sm" @click.stop="allDetails()">
@@ -15,9 +13,15 @@
           <b-button v-if="slug != 'invests'" size="sm" @click.stop="this.enlarge('create')">
             Criar {{Slug}}
           </b-button>
-          <b-button v-if="slug == 'invests'" size="sm" @click.stop="this.enlarge('createTypeStocks')">
+          <!--           <b-button v-if="slug == 'invests'" size="sm" @click.stop="this.enlarge('createTypeStocks')">
             Criar {{Slug}}
-          </b-button>
+          </b-button> -->
+          <b-dropdown size="sm" v-if="slug == 'invests'" right text="Criar investimento:">
+            <b-dropdown-item @click.stop="this.enlarge('createTypeStocks')">Ações</b-dropdown-item>
+            <b-dropdown-item @click.stop="this.enlarge('createTypeTreasuries')">Titulos do tesouro</b-dropdown-item>
+            <b-dropdown-divider></b-dropdown-divider>
+            <b-dropdown-item disabled>CDB</b-dropdown-item>
+          </b-dropdown>
         </b-col>
       </b-row>
       <b-row>
@@ -75,14 +79,15 @@
       <enlarge>
         <create></create>
         <createinveststypestocks></createinveststypestocks>
+        <createinveststypetreasuries></createinveststypetreasuries>
       </enlarge>
       <!-- <enlarge> -->
-        <!-- <createinvests></createinvests> -->
+      <!-- <createinvests></createinvests> -->
       <!-- </enlarge> -->
-<!--     </div> -->
-</p>
-</b-card>
-<!--   </div> -->
+      <!--     </div> -->
+    </p>
+  </b-card>
+  <!--   </div> -->
 </div>
 </template>
 

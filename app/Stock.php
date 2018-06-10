@@ -25,6 +25,11 @@ class stock extends Model
     {
         return $this->hasMany(dailyQuotes::Class,'id','stock_id');
     }
+  
+  public function intradayQuotes()
+    {
+        return $this->hasMany(dailyQuotes::Class,'id','stock_id');
+    }
     
   public function invests()
     {

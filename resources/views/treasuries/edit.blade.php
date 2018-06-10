@@ -2,7 +2,6 @@
 
 @section('content')
 
-<moldura><create></create></moldura>
-   
+  <create :data="{{$treasury}}"></create>
 
 @endsection

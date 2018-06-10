@@ -19,7 +19,7 @@
 
      </div>
      </div>
-     </div> 
+     </div>
      </div>
   </template>
   <script>
@@ -27,19 +27,19 @@
   {
     name: 'Ações ',
     component: {
-      template: '<div><createinveststypestocks dusk="createinveststypestocks"></createinveststypestocks></div>'
+      template: '<div><moldura><createinveststypestocks dusk="createinveststypestocks"></createinveststypestocks></moldura></div>'
+    }
+  },
+  {
+    name: 'Títulos do tesouro ',
+    component: {
+      template: '<div><moldura><createinveststypetreasuries dusk="createinveststypetreasuries"></createinveststypetreasuries> </moldura></div>'
     }
   },
   {
     name: 'CDBs ',
     component: {
-      template: '<div>CDBs</div>'
-    }
-  },
-  {
-    name: 'Renda Fixa ',
-    component: {
-      template: '<div>Renda fixa</div>',
+      template: '<div>CDBs</div>',
     }
   }
 ]

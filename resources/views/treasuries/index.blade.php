@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+    
+      <index :items="{{$treasuries}}"></index>
 
-      <index></index>
 @endsection

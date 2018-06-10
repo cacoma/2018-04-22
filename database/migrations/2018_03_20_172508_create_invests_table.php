@@ -15,9 +15,11 @@ class CreateInvestsTable extends Migration
         Schema::create('invests', function (Blueprint $table) {
             $table->increments('id');
             $table->string('type');
-            $table->integer('stock_id')->unsigned();
+            $table->integer('stock_id')->unsigned()->default(0);
+            $table->integer('treasury_id')->unsigned()->default(0);
             $table->decimal('price', 12, 2);
             $table->decimal('quant', 12, 2);
+            $table->decimal('rate', 12, 2);
             $table->timestamps();
             $table->integer('user_id')->unsigned();
             $table->dateTime('date_invest');
@@ -25,6 +27,7 @@ class CreateInvestsTable extends Migration
             $table->integer('broker_id')->unsigned();
             //foreign keys
             $table->foreign('stock_id')->references('id')->on('stocks');
+            $table->foreign('treasury_id')->references('id')->on('treasuries');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('broker_id')->references('id')->on('brokers');
         });

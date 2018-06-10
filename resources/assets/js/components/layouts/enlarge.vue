@@ -26,16 +26,16 @@
 
 <script>
 export default {
-  props: ['passed'],
+//  props: ['passed'],
   data() {
     return {
       show: false,
     }
   },
   created() {
-    if (this.passed) {
-      this.enlarge(this.passed);
-    }
+    // if (this.passed) {
+    //   this.enlarge(this.passed);
+    // }
   },
   mounted: function() {
     window.events.$on('enlarge', (type, incoming) => this.enlarge(type, incoming));
@@ -56,6 +56,10 @@ export default {
         console.log(info);
         createTypeStocks(info);
         this.show = true;
+      } else if (type == 'createTypeTreasuries'){
+        console.log(info);
+        createTypeTreasuries(info);
+        this.show = true;
       } else {
       console.log('acessou enlarge, sem dados');
       //console.log(type . info);
@@ -67,7 +71,8 @@ export default {
     },
       hide() {
           this.show = false;
-          this.slotData = '';
+          this.$bus.$emit('formHide');
+          //this.slotData = '';
     },
   }
 }

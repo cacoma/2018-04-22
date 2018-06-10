@@ -29,6 +29,6 @@ class CreateViewConsolidated extends Migration
     public function down()
     {
         //Remover view dos investimentos consolidados - Machado 29/05/2018 20:55hs
-        // Schema::dropIfExists('consolidated');
+        // DB::statement('DROP VIEW IF EXISTS pizza');
     }
 }
