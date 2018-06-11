@@ -242,7 +242,8 @@ class TreasuryController extends Controller
         //$invest->symbol = strtoupper($request->symbol);
         $invest->quant = floatval($request->quant);
         $invest->price = $request->price;
-        $invest->rate = floatval($request->rate);
+        //$invest->rate = floatval($request->rate);
+        $invest->rate = $request->rateFloat;
         $invest->broker_fee = $request->broker_fee;
         $invest->date_invest = new Carbon($request->date_invest);
         $invest->user_id = $user->id;
@@ -307,7 +308,7 @@ class TreasuryController extends Controller
             //$brokerid = $request->broker()->id;
             $treasuryid = DB::table('treasuries')->where('code', $request->code)->value('id');
             //atualiza BD
-            $investUpdate->type = 'stock';
+            $investUpdate->type = 'treasury';
             //$investUpdate->symbol = strtoupper($request->get('symbol'));
             $investUpdate->quant = $request->get('quant');
             $investUpdate->price = $request->get('price');

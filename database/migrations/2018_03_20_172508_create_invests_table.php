@@ -15,8 +15,8 @@ class CreateInvestsTable extends Migration
         Schema::create('invests', function (Blueprint $table) {
             $table->increments('id');
             $table->string('type');
-            $table->integer('stock_id')->unsigned()->default(0);
-            $table->integer('treasury_id')->unsigned()->default(0);
+            $table->integer('stock_id')->nullable();
+            $table->integer('treasury_id')->nullable();
             $table->decimal('price', 12, 2);
             $table->decimal('quant', 12, 2);
             $table->decimal('rate', 12, 2);

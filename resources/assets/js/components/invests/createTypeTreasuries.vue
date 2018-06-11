@@ -143,6 +143,7 @@ export default {
         price: '',
         quant: '',
         rate: '',
+        rateFloat: '',
         broker_fee: '',
       }),
       money: {
@@ -196,7 +197,18 @@ export default {
     total: function() {
       // `this` points to the vm instance
       return (this.form.price * this.form.quant) + this.form.broker_fee;
+    },
+    toRateFloat: function() {
+      //alternativa para mostrar valor com "," dentro do input e levar um float para o banco de dados MELHORAR!
+      //return this.form.rate.replace(",", ".");
+      if (this.form.rate) {
+         //this.form.rateFloat = parseFloat(this.form.rate.replace(",", "."));
+         //this.form.rateFloat = Number(Math.round(parseFloat(this.form.rate.replace(",", "."))+'e2')+'e-2');
+         this.form.rateFloat = Number(Math.round(parseFloat(this.form.rate.replace(",", "."))+'e2')+'e-2');
+      } else {
+        this.form.rate = 0.00;
     }
+    },
   },
   methods: {
     onSubmit(evt) {
@@ -297,14 +309,13 @@ export default {
   directives: {
     twodecimals: {
       bind(el, arg) {
-        //const regex = "[^0-9$.,]";
-        //el.value = racaz.currFormatter.format(el.value);
         el.value = racaz.numberForm.format(el.value.replace(",", "."));
         el.addEventListener('keyup', () => {
-          el.value = el.value.replace(/[^0-9$.,]/g, '').replace(/(\..*)\./g, '$1').replace(/(?!^)-/g, '');
+          //el.value = el.value.replace(/[^0-9$.,]/g, '').replace(/(\..*)\./g, '$1').replace(/(?!^)-/g, '');
+          var output = el.value.replace(/[^0-9.,]/g, '').replace(/(\..*)\./g, '').replace(/(?!^)-/g, '').split(/[.,]/g);
+          el.value = output.shift() + (output.length ? ',' : '') + output.join('');
         });
         el.addEventListener('blur', () => {
-          //el.value = racaz.currFormatter.format(el.value);
           el.value = racaz.numberForm.format(el.value.replace(",", "."));
         });
       }

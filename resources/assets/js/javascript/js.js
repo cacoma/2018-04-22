@@ -79,6 +79,7 @@ racaz = function() {
     ["stock_name", "Ação"],
     ["profile", "Perfil"],
     ["treasuries", "Titulos"],
+    ["treasury", "Titulo"],
     ["due_date", "Vencimento"],
     ["coupon", "Juros semestrais"],
     ["coupon_date", "Prim. pag. de juros"],
@@ -86,6 +87,7 @@ racaz = function() {
     ["code", "Código"],
     ["0", "Não"],
     ["1", "Sim"],
+    ["rate", "Taxa"],
   ];
 
   //variaveis para utilizar no vue datepicker, com a finalidade de limitar a quantidade de datas que podem ser utilizadas
@@ -178,7 +180,7 @@ racaz = function() {
             }
           });
           //acerta a forma de apresentar porcentagem
-        } else if (value === "percentage") {
+        } else if (value === "percentage" || value === "rate") {
           fields.push({
             key: value,
             label: racaz.columnName(value),
