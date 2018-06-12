@@ -36797,7 +36797,7 @@ racaz = function () {
               label: racaz.columnName(value.replace(/[.\W\d]/g, '')),
               sortable: true,
               formatter: function formatter(value) {
-                return parseFloat(value).toFixed(0);
+                return parseFloat(value).toFixed(2);
               }
             });
             //acerta a forma de apresentar porcentagem
@@ -100516,6 +100516,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 var items = {};
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -100955,20 +100960,55 @@ var render = function() {
                             _vm._v(" "),
                             _vm.slug == "invests"
                               ? _c(
-                                  "b-button",
-                                  {
-                                    attrs: { size: "sm" },
-                                    on: {
-                                      click: function($event) {
-                                        $event.stopPropagation()
-                                        this.enlarge(
-                                          "createTypeStocks",
-                                          row.item
+                                  "div",
+                                  [
+                                    row.item.type === "stock"
+                                      ? _c(
+                                          "b-button",
+                                          {
+                                            attrs: { size: "sm" },
+                                            on: {
+                                              click: function($event) {
+                                                $event.stopPropagation()
+                                                this.enlarge(
+                                                  "createTypeStocks",
+                                                  row.item
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _vm._v(
+                                              "\n          Editar stock\n        "
+                                            )
+                                          ]
                                         )
-                                      }
-                                    }
-                                  },
-                                  [_vm._v("\n          Editar\n        ")]
+                                      : _vm._e(),
+                                    _vm._v(" "),
+                                    row.item.type === "treasury"
+                                      ? _c(
+                                          "b-button",
+                                          {
+                                            attrs: { size: "sm" },
+                                            on: {
+                                              click: function($event) {
+                                                $event.stopPropagation()
+                                                this.enlarge(
+                                                  "createTypeTreasuries",
+                                                  row.item
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _vm._v(
+                                              "\n          Editar treasury\n        "
+                                            )
+                                          ]
+                                        )
+                                      : _vm._e()
+                                  ],
+                                  1
                                 )
                               : _vm._e(),
                             _vm._v(" "),
@@ -102728,6 +102768,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         broker_name: '',
         price: '',
         quant: '',
+        quantFloat: '',
         rate: '',
         rateFloat: '',
         broker_fee: ''
@@ -102797,6 +102838,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.form.rateFloat = Number(Math.round(parseFloat(this.form.rate.replace(",", ".")) + 'e2') + 'e-2');
       } else {
         this.form.rate = 0.00;
+      }
+      if (this.form.quant) {
+        //this.form.quantFloat = parseFloat(this.form.quant.replace(",", "."));
+        //this.form.quantFloat = Number(Math.round(parseFloat(this.form.quant.replace(",", "."))+'e2')+'e-2');
+        this.form.quantFloat = Number(Math.round(parseFloat(this.form.quant.replace(",", ".")) + 'e2') + 'e-2');
+      } else {
+        this.form.quant = 0.00;
       }
     }
   },

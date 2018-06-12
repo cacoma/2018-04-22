@@ -61,10 +61,18 @@ class HomeController extends Controller
             $tempCS = array();
 
             //acerta o nome do stock
-            $portPer->name = $portPer->stock->symbol;
+            if (isset($portPer->stock)) {
+                $portPer->name = $portPer->stock->symbol;
 
-            //depois retira o objeto de dentro do objeto
-            unset($portPer->stock);
+                //depois retira o objeto de dentro do objeto
+                unset($portPer->stock);
+            }
+            if (isset($portPer->treasury)) {
+                $portPer->name = $portPer->treasury->code;
+
+                //depois retira o objeto de dentro do objeto
+                unset($portPer->treasury);
+            }
 
             //busca as cotacoes dos ultimos 12 meses para cada acao que o usuario possui em carteira
 //           $portPer->temp = monthlyQuote::where('stock_id', '=', $portPer->stock_id)
@@ -107,11 +115,13 @@ class HomeController extends Controller
         //foreach para tratar invests
         foreach ($invests as &$invest) {
             // retira o objeto, pegando valor antes
-            $invest->stockName = $invest->stock->symbol;
-            //retira o objeto de dentro do objeto, para renderizar corretamente
-            unset($invest->stock);
-            if ($invest->type == 'stock') {
-                $invest->type = 'Ação';
+            if (isset($invest->stock)) {
+                $invest->stockName = $invest->stock->symbol;
+                //retira o objeto de dentro do objeto, para renderizar corretamente
+                unset($invest->stock);
+                if ($invest->type == 'stock') {
+                    $invest->type = 'Ação';
+                }
             }
             //funcao para gerar uma cor diferente para cada id diferente
             $hash = md5('cor' . $invest->stock_id);
@@ -123,49 +133,74 @@ class HomeController extends Controller
         }
 
         //variaveis para modelar os dados para o vue-chartkick, em modo line e bar {dado:valor}
-        $tempStockName = array();
-        $tempTotal = array();
-        $tempPercentage = array();
+        // $tempStockName = array();
+        // $tempTotal = array();
+        // $tempPercentage = array();
 
         //foreach para tratar results e inserir dados no pie
-        foreach ($results as &$result) {
+        // foreach ($results as &$result) {
+        //
+        //     //pega as ultimas cotacoes mensais da acao
+        //     $result->lastQuote = dailyQuote::where('stock_id', '=', $result->stock_id)
+        //     //$result->lastQuote = monthlyQuote::where('stock_id', '=', $result->stock_id)
+        //     //$result->quote = monthlyQuote::where('stock_id', '=', $result->stock_id)
+        //         //->whereDate('timestamp', '>', Carbon::now()->subMonth(2))
+        //               ->orderBy('timestamp', 'desc')
+        //                 ->first();
+        //     //pega a ultima ultima (caso nao tenha atualizado por ultimo)
+        //
+        //     if (isset($invest->stock)){
+        //     $result->quote = $result->lastQuote->close;
+        //     //retira objeto nao necessario
+        //     //unset($result->lastQuote);
+        //     //faz o calculo do total atualizado
+        //     $result->totalUpdated = floatval(preg_replace("/[^-0-9\.]/", "", $result->quote)) * floatval(preg_replace("/[^-0-9\.]/", "", $result->quant));
+        //     //faz o calculo de % de ganho ou perda
+        //     $result->percentage = (floatval(preg_replace("/[^-0-9\.]/", "", $result->totalUpdated)) / floatval(preg_replace("/[^-0-9\.]/", "", $result->total)) - 1)*100;
+        //     //trata o nome
+        //     $result->stockName = $result->stock->symbol;
+        //     //retira o objeto nao mais necessário
+        //     unset($result->stock);
+        //     //funcao para gerar uma cor diferente para cada id diferente
+        //     $hash = md5('cor' . $result->stock_id);
+        //     $r = hexdec(substr($hash, 0, 2));
+        //     $g = hexdec(substr($hash, 2, 2));
+        //     $b = hexdec(substr($hash, 4, 2));
+        //     $a = hexdec(substr($hash, 6, 2));
+        //     $result->color = 'rgba(' . $r . ',' . $g . ',' . $b . ',' . $a . ')';
+        //
+        //     array_push($tempStockName, $result->stockName);
+        //     array_push($tempTotal, $result->total);
+        //     array_push($tempPercentage, number_format((float)$result->percentage, 2, '.', ''));
+        //     //array_push($tempPercentage, $result->percentage);
+        //     }
+        // }
+        // //combinacao de arrays para criar uma nova no modelo do vue-chartkick {dado:valor}
+        // $pie = array_combine($tempStockName, $tempTotal);
+        //$portPerfP = array_combine($tempStockName, $tempPercentage);
 
-            //pega as ultimas cotacoes mensais da acao
-            $result->lastQuote = dailyQuote::where('stock_id', '=', $result->stock_id)
-            //$result->lastQuote = monthlyQuote::where('stock_id', '=', $result->stock_id)
-            //$result->quote = monthlyQuote::where('stock_id', '=', $result->stock_id)
-                //->whereDate('timestamp', '>', Carbon::now()->subMonth(2))
-                      ->orderBy('timestamp', 'desc')
-                        ->first();
-            //pega a ultima ultima (caso nao tenha atualizado por ultimo)
+        $today = Carbon::today();
+        $pizzas = DB::select("SELECT * FROM `pizza` WHERE user_id = :user_id AND atual = :today", ['user_id' => $user->id, 'today' => $today->toDateString()]);
 
-            $result->quote = $result->lastQuote->close;
-            //retira objeto nao necessario
-            //unset($result->lastQuote);
-            //faz o calculo do total atualizado
-            $result->totalUpdated = floatval(preg_replace("/[^-0-9\.]/", "", $result->quote)) * floatval(preg_replace("/[^-0-9\.]/", "", $result->quant));
-            //faz o calculo de % de ganho ou perda
-            $result->percentage = (floatval(preg_replace("/[^-0-9\.]/", "", $result->totalUpdated)) / floatval(preg_replace("/[^-0-9\.]/", "", $result->total)) - 1)*100;
-            //trata o nome
-            $result->stockName = $result->stock->symbol;
-            //retira o objeto nao mais necessário
-            unset($result->stock);
-            //funcao para gerar uma cor diferente para cada id diferente
-            $hash = md5('cor' . $result->stock_id);
-            $r = hexdec(substr($hash, 0, 2));
-            $g = hexdec(substr($hash, 2, 2));
-            $b = hexdec(substr($hash, 4, 2));
-            $a = hexdec(substr($hash, 6, 2));
-            $result->color = 'rgba(' . $r . ',' . $g . ',' . $b . ',' . $a . ')';
+        $pie = array();
+        $portPerfP = array();
+        $portPerfPTotalInvest = array();
+        //$portPerfPPrice = array();
 
-            array_push($tempStockName, $result->stockName);
-            array_push($tempTotal, $result->total);
-            array_push($tempPercentage, number_format((float)$result->percentage, 2, '.', ''));
-            //array_push($tempPercentage, $result->percentage);
+        foreach ($pizzas as &$pizza) {
+            if (isset($pie[$pizza->symbol])) {
+                $pie[$pizza->symbol] = $pie[$pizza->symbol] + $pizza->total_atual;
+                $portPerfPTotalInvest[$pizza->symbol] = $portPerfPTotalInvest[$pizza->symbol] + $pizza->total;
+            } else {
+                $pie[$pizza->symbol] = $pizza->total_atual;
+                $portPerfPTotalInvest[$pizza->symbol] = $pizza->total;
+            }
         }
-        //combinacao de arrays para criar uma nova no modelo do vue-chartkick {dado:valor}
-        $pie = array_combine($tempStockName, $tempTotal);
-        $portPerfP = array_combine($tempStockName, $tempPercentage);
+
+        foreach ($pie as $key => $value) {
+          $portPerfP[$key] = ($pie[$key] / $portPerfPTotalInvest[$key] - 1) * 100;
+        }
+
 
         return view('home')  ->with('invests', $invests)
                               ->with('portPerf', $portPerf)

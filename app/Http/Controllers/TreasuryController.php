@@ -202,13 +202,14 @@ class TreasuryController extends Controller
     public function investstore(Request $request)
     {
         $user = Auth::user();
+        $invest->quant = floatval(preg_replace(',','.',preg_replace('.', '',$request->quant)));
         $this->validate(request(), [
                       'signal' => [
                                       'required',
                                       Rule::in(['buy', 'sell']),
                                   ],
                       'code' => 'required|string|max:25|exists:treasuries,code',
-                      'quant' => 'required',
+                      'quant' => 'required|numeric|min:0.01',
                       'price' => 'required|numeric|min:0.0001',
                       'broker_fee' => 'required|numeric|min:0',
                       'date_invest' => 'required|before:tomorrow',
@@ -240,7 +241,7 @@ class TreasuryController extends Controller
         $invest = new Invest;
         $invest->type = 'treasury';
         //$invest->symbol = strtoupper($request->symbol);
-        $invest->quant = floatval($request->quant);
+        $invest->quant = $request->quant;
         $invest->price = $request->price;
         //$invest->rate = floatval($request->rate);
         $invest->rate = $request->rateFloat;
@@ -267,7 +268,7 @@ class TreasuryController extends Controller
         //$invest->broker_fee = strtr($invest->broker_fee, array('.' => ','));
         $invest->broker_fee = floatval($invest->broker_fee);
         $invest->rate = floatval($invest->rate);
-        $invest->quant = floatval($invest->quant);
+        $invest->quant = floatval(preg_replace(',','.',preg_replace('.', '',$request->quant)));
         return view('treasuries.treasuryinvestedit', compact('invest', 'id'));
         //return redirect('invests')->with('success', 'Foi ao lugar certo.');
     }
@@ -279,13 +280,14 @@ class TreasuryController extends Controller
         $userid = $request->user()->id;
         $user = Auth::user();
         if ($userid === $user->id || $user->role_id === 1) {
+            //$request->quant = floatval(preg_replace('/[,]/','.',preg_replace('/[.]/', '',$request->quant)));
             $this->validate(request(), [
-            'code' => 'required|string|max:25|unique:treasuries,code',
-            'quant' => 'required|numeric|min:1',
+            'code' => 'required|string|max:25|exists:treasuries,code',
+            'quant' => 'required',
             'price' => 'required|numeric|min:0.0001',
             'broker_fee' => 'required|numeric|min:0',
             'date_invest' => 'required|before:tomorrow',
-            'rate' => 'required|numeric|min:0',
+            'rate' => 'required',
             'broker_name' => 'required|exists:brokers,name',
         ], [
             'signal.required' => 'Favor informar se é compra ou venda.',
@@ -310,11 +312,12 @@ class TreasuryController extends Controller
             //atualiza BD
             $investUpdate->type = 'treasury';
             //$investUpdate->symbol = strtoupper($request->get('symbol'));
-            $investUpdate->quant = $request->get('quant');
-            $investUpdate->price = $request->get('price');
-            $investUpdate->broker_fee = $request->get('broker_fee');
-            $investUpdate->rate = $request->get('rate');
-            $investUpdate->date_invest = new Carbon($request->get('date_invest'));
+            //$investUpdate->quant = $request->quant;
+            $investUpdate->quant = floatval(preg_replace('/[,]/','.',preg_replace('/[.]/', '',$request->quant)));
+            $investUpdate->price = floatval($request->price);
+            $investUpdate->broker_fee = floatval($request->broker_fee);
+            $investUpdate->rate = $request->rateFloat;
+            $investUpdate->date_invest = new Carbon($request->date_invest);
             $investUpdate->user_id = $userid;
             $investUpdate->treasury_id = $treasuryid;
             $investUpdate->broker_id = $brokerid;

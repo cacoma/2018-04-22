@@ -142,6 +142,7 @@ export default {
         broker_name: '',
         price: '',
         quant: '',
+        quantFloat: '',
         rate: '',
         rateFloat: '',
         broker_fee: '',
@@ -208,7 +209,14 @@ export default {
       } else {
         this.form.rate = 0.00;
     }
-    },
+      if (this.form.quant) {
+         //this.form.quantFloat = parseFloat(this.form.quant.replace(",", "."));
+         //this.form.quantFloat = Number(Math.round(parseFloat(this.form.quant.replace(",", "."))+'e2')+'e-2');
+         this.form.quantFloat = Number(Math.round(parseFloat(this.form.quant.replace(",", "."))+'e2')+'e-2');
+      } else {
+        this.form.quant = 0.00;
+    }
+    }
   },
   methods: {
     onSubmit(evt) {

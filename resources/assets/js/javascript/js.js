@@ -176,7 +176,7 @@ racaz = function() {
             label: racaz.columnName(value.replace(/[.\W\d]/g, '')),
             sortable: true,
             formatter: (value) => {
-              return parseFloat(value).toFixed(0);
+              return parseFloat(value).toFixed(2);
             }
           });
           //acerta a forma de apresentar porcentagem

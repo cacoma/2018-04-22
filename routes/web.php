@@ -157,13 +157,23 @@ Route::get('/api/index/invests', function () {
         unset($value->broker);
         unset($value->broker_id);
 
-        if (isset($value->symbol)){
+        if (isset($value->stock)){
         //tratamento para stocks
         //para passar o nome do broker
         $value->symbol = $value->stock->symbol;
         //retira o objeto do stock
         unset($value->stock);
         }
+      
+        if (isset($value->treasury)){
+        //tratamento para treasury
+        //para passar o nome do broker
+        $value->code = $value->treasury->code;
+        $value->rate = $value->rate / 100;
+        //retira o objeto do treasury
+        unset($value->treasury);
+        }
+        
         //retira o objeto de dentro do objeto, para renderizar corretamente
         //se existir, insere o valor da cotacao dos ultimo mes, caso não, vai zerado
         if (isset($value->dailyQuote[0]->close)) {

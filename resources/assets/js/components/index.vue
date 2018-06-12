@@ -52,9 +52,14 @@
         <b-button v-if="slug != 'invests'" size="sm" @click.stop="this.enlarge('create',row.item)">
           Editar
         </b-button>
-        <b-button v-if="slug == 'invests'" size="sm" @click.stop="this.enlarge('createTypeStocks',row.item)">
-          Editar
+         <div v-if="slug == 'invests'">
+        <b-button v-if="row.item.type === 'stock'" size="sm" @click.stop="this.enlarge('createTypeStocks',row.item)">
+          Editar stock
+        </b-button>        
+        <b-button v-if="row.item.type === 'treasury'" size="sm" @click.stop="this.enlarge('createTypeTreasuries',row.item)">
+          Editar treasury
         </b-button>
+        </div>
         <b-button v-if="slug != 'users'" size="sm" @click.stop="this.deleteconfirmation(row.item)">
           Excluir
         </b-button>
