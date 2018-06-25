@@ -36680,7 +36680,7 @@ racaz = function () {
 
   var percFormatter = new Intl.NumberFormat(locale, percentageOptions);
 
-  var columnDesc = [["id", 'ID'], ["name", 'Nome'], ["email", 'E-mail'], ["role_id", 'Permissão'], ["created_at", "Criado em"], ["updated_at", "Atual. em"], ["timestamp", "Data do reg."], ["symbol", "Ticket"], ["stock_id", "Ticket"], ["type", "Tipo"], ["cnpj", "CNPJ"], ["open", "Abertura"], ["volume", "Volume"], ["price", "Preço"], ["low", "Baixa"], ["high", "Alta"], ["close", "Fecham"], ["date_invest", "Data inv."], ["broker_fee", "Corretagem"], ["broker_id", "Corretora"], ["broker", "Corretora"], ["quote", "Cotação"], ["quant", "Quant."], ["user_id", "Usuario"], ["total", "Total"], ["percentage", "%"], ["invests", "Investimentos"], ["stocks", "Ações"], ["stock", "Ação"], ["brokers", "Corretoras"], ["broker_name", "Corretora"], ["users", "Usuário"], ["monthlyquotes", "Cotações mensais"], ["dailyquotes", "Cotações diarias"], ["fail", "Falha"], ["success", "Sucesso"], ["upToDate", "Atualiz. anteriormente"], ["stock_name", "Ação"], ["profile", "Perfil"], ["treasuries", "Titulos"], ["treasury", "Titulo"], ["due_date", "Vencimento"], ["coupon", "Juros semestrais"], ["coupon_date", "Prim. pag. de juros"], ["coupon_date2", "Seg. pag. de juros"], ["code", "Código"], ["0", "Não"], ["1", "Sim"], ["rate", "Taxa"]];
+  var columnDesc = [["id", 'ID'], ["name", 'Nome'], ["email", 'E-mail'], ["role_id", 'Permissão'], ["created_at", "Criado em"], ["updated_at", "Atual. em"], ["timestamp", "Data do reg."], ["symbol", "Ticket"], ["stock_id", "Ticket"], ["type", "Tipo"], ["cnpj", "CNPJ"], ["open", "Abertura"], ["volume", "Volume"], ["price", "Preço"], ["low", "Baixa"], ["high", "Alta"], ["close", "Fecham"], ["date_invest", "Data inv."], ["broker_fee", "Corretagem"], ["broker_id", "Corretora"], ["broker", "Corretora"], ["quote", "Cotação"], ["quant", "Quant."], ["user_id", "Usuario"], ["total", "Total"], ["percentage", "%"], ["invests", "Investimentos"], ["stocks", "Ações"], ["stock", "Ação"], ["brokers", "Corretoras"], ["broker_name", "Corretora"], ["users", "Usuário"], ["monthlyquotes", "Cotações mensais"], ["dailyquotes", "Cotações diarias"], ["fail", "Falha"], ["success", "Sucesso"], ["upToDate", "Atualiz. anteriormente"], ["stock_name", "Ação"], ["profile", "Perfil"], ["treasuries", "Titulos"], ["treasury", "Titulo"], ["due_date", "Vencimento"], ["coupon", "Juros semestrais"], ["coupon_date", "Prim. pag. de juros"], ["coupon_date2", "Seg. pag. de juros"], ["code", "Código"], ["0", "Não"], ["1", "Sim"], ["rate", "Taxa"], ["avgprice", "Preço médio"], ["sumquant", "Quantidade"]];
 
   //variaveis para utilizar no vue datepicker, com a finalidade de limitar a quantidade de datas que podem ser utilizadas
 
@@ -36780,7 +36780,7 @@ racaz = function () {
               }
             });
             //aqui formata os precos
-          } else if (value === "open" || value === "high" || value === "low" || value === "close" || value === "price" || value === "quote" || value === "broker_fee" || value === "total" || value === "1. open" || value === "2. high" || value === "3. low" || value === "4. close") {
+          } else if (value === "open" || value === "high" || value === "low" || value === "close" || value === "price" || value === "quote" || value === "broker_fee" || value === "total" || value === "1. open" || value === "2. high" || value === "3. low" || value === "4. close" || value === "avgprice") {
             fields.push({
               key: value,
               label: racaz.columnName(value.replace(/[.\W\d]/g, '')),
@@ -36797,17 +36797,27 @@ racaz = function () {
               label: racaz.columnName(value.replace(/[.\W\d]/g, '')),
               sortable: true,
               formatter: function formatter(value) {
-                return parseFloat(value).toFixed(2);
+                //return parseFloat(value).toFixed(2);
+                return numberForm.format(value);
               }
             });
             //acerta a forma de apresentar porcentagem
-          } else if (value === "percentage" || value === "rate") {
+          } else if (value === "percentage") {
             fields.push({
               key: value,
               label: racaz.columnName(value),
               sortable: true,
               formatter: function formatter(value) {
                 return percFormatter.format(value);
+              }
+            });
+          } else if (value === "rate") {
+            fields.push({
+              key: value,
+              label: racaz.columnName(value),
+              sortable: true,
+              formatter: function formatter(value) {
+                return percFormatter.format(value / 100);
               }
             });
             //ajusta o nome do investimento
@@ -51862,6 +51872,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+//import Puppeteer from 'puppeteer';
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_3_v_money___default.a, {
     precision: 4
@@ -51869,6 +51880,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_3_v_mo
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_vue_the_mask___default.a);
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_bootstrap_vue__["a" /* default */]);
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_4__javascript_js_js___default.a);
+//Vue.use(puppeteer);
 //Vue.use(Errors);
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_6_vue_chartkick__["a" /* default */], { adapter: __WEBPACK_IMPORTED_MODULE_7_chart_js___default.a });
 
@@ -51932,6 +51944,9 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('homechartint', __webpack_
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('homechart', __webpack_require__(450)); //componente para tela home
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('enlarge', __webpack_require__(452)); //componente aumentar tamanho de itens selecionados
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('moldura', __webpack_require__(455)); //componente aumentar tamanho de itens selecionados
+
+
+//Vue.component('treasuryscrape', require('./components/scraping/treasuryscrape.vue')); //componente para fazer scrape dos valores do tesouro nacional
 
 //https://forum.vuejs.org/t/eventhub-with-vueify/1375/3
 var bus = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a();
@@ -99980,6 +99995,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['auth'],
@@ -100090,7 +100106,13 @@ var render = function() {
                   _vm._v(" "),
                   _c("b-dropdown-item", { attrs: { href: "/monthlyquotes" } }, [
                     _vm._v("Mensais")
-                  ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "b-dropdown-item",
+                    { attrs: { href: "/treasuryquotes/scrp" } },
+                    [_vm._v("Titulos scrp")]
+                  )
                 ],
                 1
               )
@@ -101214,30 +101236,53 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+var items = {};
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      consolidated: {}
+      consolidated: {},
+      isBusy: false,
+      items: [],
+      fields: [],
+      total: 0
     };
   },
 
   created: function created() {
-    this.fetchConsolidatedInvests();
+    this.provideData();
+
+    console.log('entrou');
+    //this.fetchConsolidatedInvests();
   },
+  mounted: function mounted() {},
   methods: {
-    fetchConsolidatedInvests: function fetchConsolidatedInvests() {
+    provideData: function provideData() {
       var _this = this;
 
-      axios.get('/api/consolidated/').then(function (response) {
-        for (var k in response.data) {
-          if (typeof response.data[k] !== 'function') {
-            Vue.set(_this.consolidated, [k], response.data[k]);
-          }
-        }
-        console.log('no erro!');
+      this.isBusy = true;
+      var promise = axios.get('/api/consolidated/');
+
+      return promise.then(function (response) {
+        _this.fields = racaz.fieldsFiller(Object.keys(response.data[0]));
+        _this.items = response.data;
+        // Here we could override the busy state, setting isBusy to false
+        _this.isBusy = false;
+        _this.totalizator();
+        return _this.items;
       }).catch(function (error) {
-        console.log('erro!');
+        // Here we could override the busy state, setting isBusy to false
+        // this.isBusy = false
+        // Returning an empty array, allows table to correctly handle busy state in case of error
+        console.log(error);
+        return [];
       });
+    },
+    totalizator: function totalizator() {
+      var _this2 = this;
+
+      this.total = racaz.currFormatter.format(Object.keys(this.items).reduce(function (sum, key) {
+        return sum + parseFloat(_this2.items[key].total);
+      }, 0));
     }
   }
 });
@@ -101254,82 +101299,61 @@ var render = function() {
     "moldura",
     [
       _c(
-        "b-list-group",
-        _vm._l(this.consolidated, function(value, key, index) {
-          return _c(
-            "div",
+        "b-card",
+        { attrs: { "no-body": "" } },
+        [
+          _c(
+            "b-tabs",
+            { attrs: { card: "" } },
             [
               _c(
-                "b-list-group-item",
-                {
-                  staticClass: "flex-column align-items-start",
-                  attrs: { href: "#" }
-                },
+                "b-tab",
+                { attrs: { title: "Resumo consolidado", active: "" } },
                 [
-                  _c(
-                    "div",
-                    { staticClass: "d-flex w-80 justify-content-between" },
-                    [
-                      _c("h5", { staticClass: "mb-1" }, [
-                        _vm._v(_vm._s(value.symbol))
-                      ]),
-                      _vm._v(" "),
-                      _c("small", { staticClass: "text-muted" }, [
-                        _vm._v(
-                          "Valor médio: " +
-                            _vm._s(
-                              this.racaz.currFormatter.format(value.avgprice)
-                            ) +
-                            " "
-                        )
-                      ])
-                    ]
-                  ),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("b-table", {
+                    attrs: {
+                      striped: "",
+                      hover: "",
+                      busy: _vm.isBusy,
+                      items: _vm.items,
+                      fields: _vm.fields
+                    },
+                    on: {
+                      "update:busy": function($event) {
+                        _vm.isBusy = $event
+                      }
+                    }
+                  }),
                   _vm._v(" "),
                   _c(
-                    "p",
-                    { staticClass: "mb-1" },
+                    "b-list-group",
                     [
-                      _c(
-                        "b-list-group",
-                        [
-                          _c("b-list-group-item", { attrs: { href: "#" } }, [
-                            _vm._v(
-                              "Quantidade: " + _vm._s(parseInt(value.sumquant))
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("b-list-group-item", { attrs: { href: "#" } }, [
-                            _vm._v(
-                              "Preço médio: " +
-                                _vm._s(
-                                  this.racaz.currFormatter.format(
-                                    value.avgprice
-                                  )
-                                )
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("b-list-group-item", { attrs: { href: "#" } }, [
-                            _vm._v(
-                              "Total: " +
-                                _vm._s(
-                                  this.racaz.currFormatter.format(value.total)
-                                )
-                            )
-                          ])
-                        ],
-                        1
-                      )
+                      _c("b-list-group-item", { staticClass: "text-right" }, [
+                        _vm._v("Total: " + _vm._s(_vm.total))
+                      ])
                     ],
                     1
                   )
-                ]
-              )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("b-tab", { attrs: { title: "Outros resumos" } }, [
+                _c("br"),
+                _vm._v("I'm the second tab content\n  ")
+              ]),
+              _vm._v(" "),
+              _c("b-tab", { attrs: { title: "disabled", disabled: "" } }, [
+                _c("br"),
+                _vm._v("Disabled tab!\n  ")
+              ])
             ],
             1
           )
-        })
+        ],
+        1
       )
     ],
     1
@@ -101769,17 +101793,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           console.log('promise success ' + data);
           _this2.tipBroker = 'Procurar corretora';
           _this2.tipSymbol = 'Procurar ação';
-          _this2.show = false;
-          _this2.$bus.$emit('updateindexedit', _this2.form);
-          _this2.$bus.$emit('enlargeclose');
+          if (_this2.Slug2 !== 'create') {
+            _this2.show = false;
+            _this2.$bus.$emit('updateindexedit', _this2.form);
+            _this2.$bus.$emit('enlargeclose');
+          } else {}
         }).catch(function (errors) {
           return console.log('promise error' + errors);
         });
       } else {
         this.form.patch('/stocks/invests/' + this.form.id).then(function (data) {
-          _this2.show = false;
-          _this2.$bus.$emit('enlargeclose');
-          _this2.$bus.$emit('updateindexedit', _this2.form);
+          if (_this2.Slug2 !== 'create') {
+            _this2.show = false;
+            _this2.$bus.$emit('enlargeclose');
+            _this2.$bus.$emit('updateindexedit', _this2.form);
+          } else {}
         }).catch(function (errors) {
           console.log('promise update fail');
         });
@@ -102041,6 +102069,7 @@ var render = function() {
                               type: "text",
                               list: "liststocks",
                               placeholder: "AAAA#.SA",
+                              autocomplete: "off",
                               name: "symbol",
                               id: "symbol",
                               oninput: "setCustomValidity('')",
@@ -102112,6 +102141,7 @@ var render = function() {
                             attrs: {
                               id: "date_invest",
                               name: "date_invest",
+                              autocomplete: "off",
                               "input-class": "form-control",
                               oninput: "setCustomValidity('')",
                               oninvalid:
@@ -102203,6 +102233,7 @@ var render = function() {
                               type: "text",
                               list: "listbrokers",
                               placeholder: "Corretora",
+                              autocomplete: "off",
                               name: "broker_name",
                               id: "broker_name",
                               oninput: "setCustomValidity('')",
@@ -102748,6 +102779,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /*jshint esversion: 6 */
 
@@ -102828,24 +102861,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     total: function total() {
       // `this` points to the vm instance
       return this.form.price * this.form.quant + this.form.broker_fee;
-    },
-    toRateFloat: function toRateFloat() {
-      //alternativa para mostrar valor com "," dentro do input e levar um float para o banco de dados MELHORAR!
-      //return this.form.rate.replace(",", ".");
-      if (this.form.rate) {
-        //this.form.rateFloat = parseFloat(this.form.rate.replace(",", "."));
-        //this.form.rateFloat = Number(Math.round(parseFloat(this.form.rate.replace(",", "."))+'e2')+'e-2');
-        this.form.rateFloat = Number(Math.round(parseFloat(this.form.rate.replace(",", ".")) + 'e2') + 'e-2');
-      } else {
-        this.form.rate = 0.00;
-      }
-      if (this.form.quant) {
-        //this.form.quantFloat = parseFloat(this.form.quant.replace(",", "."));
-        //this.form.quantFloat = Number(Math.round(parseFloat(this.form.quant.replace(",", "."))+'e2')+'e-2');
-        this.form.quantFloat = Number(Math.round(parseFloat(this.form.quant.replace(",", ".")) + 'e2') + 'e-2');
-      } else {
-        this.form.quant = 0.00;
-      }
     }
   },
   methods: {
@@ -102858,17 +102873,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           console.log('promise success ' + data);
           _this2.tipBroker = 'Procurar corretora';
           _this2.tipCode = 'Procurar título';
-          _this2.show = false;
-          _this2.$bus.$emit('updateindexedit', _this2.form);
-          _this2.$bus.$emit('enlargeclose');
+          if (_this2.Slug2 !== 'create') {
+
+            _this2.show = false;
+            _this2.$bus.$emit('updateindexedit', _this2.form);
+            _this2.$bus.$emit('enlargeclose');
+          } else {}
         }).catch(function (errors) {
           return console.log('promise error' + errors);
         });
       } else {
         this.form.patch('/treasuries/invests/' + this.form.id).then(function (data) {
-          _this2.show = false;
-          _this2.$bus.$emit('enlargeclose');
-          _this2.$bus.$emit('updateindexedit', _this2.form);
+          if (_this2.Slug2 !== 'create') {
+            _this2.show = false;
+            _this2.$bus.$emit('updateindexedit', _this2.form);
+            _this2.$bus.$emit('enlargeclose');
+          } else {}
         }).catch(function (errors) {
           console.log('promise update fail');
         });
@@ -102951,7 +102971,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   directives: {
     twodecimals: {
       bind: function bind(el, arg) {
+        if (el.value === "") {
+          el.value = 0.00;
+        }
         el.value = racaz.numberForm.format(el.value.replace(",", "."));
+        //el.value = Number(Math.round(parseFloat(el.value.replace(",", ".")) + 'e2') + 'e-2');
         el.addEventListener('keyup', function () {
           //el.value = el.value.replace(/[^0-9$.,]/g, '').replace(/(\..*)\./g, '$1').replace(/(?!^)-/g, '');
           var output = el.value.replace(/[^0-9.,]/g, '').replace(/(\..*)\./g, '').replace(/(?!^)-/g, '').split(/[.,]/g);
@@ -102959,8 +102983,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         });
         el.addEventListener('blur', function () {
           el.value = racaz.numberForm.format(el.value.replace(",", "."));
+          //el.value = Number(Math.round(parseFloat(el.value.replace(",", ".")) + 'e2') + 'e-2');
         });
       }
+    }
+  },
+  filters: {
+    twodez: function twodez(value) {
+      if (!value) return '';
+      value = value.toString().replace(/[^0-9.,]/g, '').replace(/(\..*)\./g, '').replace(/(?!^)-/g, '').split(/[.,]/g);
+      return racaz.numberForm.format(value.replace(",", "."));
     }
   }
 });
@@ -103132,6 +103164,7 @@ var render = function() {
                               type: "text",
                               list: "listtreasuries",
                               placeholder: "Código da título",
+                              autocomplete: "off",
                               name: "code",
                               id: "code",
                               oninput: "setCustomValidity('')",
@@ -103199,6 +103232,7 @@ var render = function() {
                             attrs: {
                               id: "date_invest",
                               name: "date_invest",
+                              autocomplete: "nope",
                               "input-class": "form-control",
                               oninput: "setCustomValidity('')",
                               oninvalid:
@@ -103290,6 +103324,7 @@ var render = function() {
                               type: "text",
                               list: "listbrokers",
                               placeholder: "Corretora",
+                              autocomplete: "off",
                               name: "broker_name",
                               id: "broker_name",
                               oninput: "setCustomValidity('')",
@@ -103431,29 +103466,35 @@ var render = function() {
                           }
                         },
                         [
-                          _c("b-form-input", {
-                            directives: [
-                              { name: "twodecimals", rawName: "v-twodecimals" }
-                            ],
-                            class: {
-                              "is-invalid": _vm.form.errors.has("quant")
-                            },
-                            attrs: {
-                              id: "quant",
-                              name: "quant",
-                              oninput: "setCustomValidity('')",
-                              oninvalid:
-                                "this.setCustomValidity('Insira a quantidade.')",
-                              required: ""
-                            },
-                            model: {
-                              value: _vm.form.quant,
-                              callback: function($$v) {
-                                _vm.$set(_vm.form, "quant", $$v)
+                          _c(
+                            "money",
+                            _vm._b(
+                              {
+                                staticClass: "form-input input-lg form-control",
+                                class: {
+                                  "is-invalid": _vm.form.errors.has("quant")
+                                },
+                                attrs: {
+                                  id: "quant",
+                                  name: "quant",
+                                  oninput: "setCustomValidity('')",
+                                  oninvalid:
+                                    "this.setCustomValidity('Insira a quantidade.')",
+                                  required: ""
+                                },
+                                model: {
+                                  value: _vm.form.quant,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "quant", $$v)
+                                  },
+                                  expression: "form.quant"
+                                }
                               },
-                              expression: "form.quant"
-                            }
-                          }),
+                              "money",
+                              _vm.money,
+                              false
+                            )
+                          ),
                           _vm._v(" "),
                           _vm.form.errors.has("quant")
                             ? _c("p", {
@@ -103559,32 +103600,36 @@ var render = function() {
                             "b-input-group",
                             { attrs: { append: "%" } },
                             [
-                              _c("b-form-input", {
-                                directives: [
+                              _c(
+                                "money",
+                                _vm._b(
                                   {
-                                    name: "twodecimals",
-                                    rawName: "v-twodecimals"
-                                  }
-                                ],
-                                class: {
-                                  "is-invalid": _vm.form.errors.has("rate")
-                                },
-                                attrs: {
-                                  id: "rate",
-                                  name: "rate",
-                                  oninput: "setCustomValidity('')",
-                                  oninvalid:
-                                    "this.setCustomValidity('Insira a taxa de retorno.')",
-                                  required: ""
-                                },
-                                model: {
-                                  value: _vm.form.rate,
-                                  callback: function($$v) {
-                                    _vm.$set(_vm.form, "rate", $$v)
+                                    staticClass:
+                                      "form-input input-lg form-control",
+                                    class: {
+                                      "is-invalid": _vm.form.errors.has("rate")
+                                    },
+                                    attrs: {
+                                      id: "rate",
+                                      name: "rate",
+                                      oninput: "setCustomValidity('')",
+                                      oninvalid:
+                                        "this.setCustomValidity('Insira a taxa de retorno.')",
+                                      required: ""
+                                    },
+                                    model: {
+                                      value: _vm.form.rate,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.form, "rate", $$v)
+                                      },
+                                      expression: "form.rate"
+                                    }
                                   },
-                                  expression: "form.rate"
-                                }
-                              }),
+                                  "money",
+                                  _vm.money,
+                                  false
+                                )
+                              ),
                               _vm._v(" "),
                               _vm.form.errors.has("rate")
                                 ? _c("p", {
@@ -107587,7 +107632,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   mounted: function mounted() {
     //chama os componentes para criar algo novo, do zero
-    if (this.slug === 'invests') {
+    if (this.slug === 'invests' && this.Slug2 === 'create') {
       console.log('invests');
       createTypeStocks();
       createTypeTreasuries();
@@ -107596,7 +107641,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       //create();
     };
     //caso seja usado para criar algum elemento sem modal, no caminho de http
-    if (this.Slug2 === 'create') {
+    if (this.slug !== 'invests' && this.Slug2 === 'create') {
       console.log('invests');
       create();
     }

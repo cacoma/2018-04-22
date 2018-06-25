@@ -87,6 +87,7 @@ class massInsertionDailyQuotes extends Command
 //         $progress->setBarWidth(50);
 
         foreach ($stockids as &$stockid) {
+          sleep(2);
             //primeiro testa se tem algum registro, se nao houver insere todos os dados
             if (DB::table('daily_quotes')->where('stock_id', $stockid->id)->doesntExist()) {
                 $progress->setMessage('Importando do zero o stock: ');

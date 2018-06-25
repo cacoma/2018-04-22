@@ -17,7 +17,7 @@ export default {
   },
   mounted: function() {
     //chama os componentes para criar algo novo, do zero
-    if (this.slug === 'invests') {
+    if (this.slug === 'invests' && this.Slug2 === 'create') {
       console.log('invests');
       createTypeStocks();
       createTypeTreasuries();
@@ -26,7 +26,7 @@ export default {
       //create();
     };
     //caso seja usado para criar algum elemento sem modal, no caminho de http
-    if (this.Slug2 === 'create') {
+    if (this.slug !== 'invests' && this.Slug2 === 'create') {
       console.log('invests');
       create();
     }

@@ -21,7 +21,7 @@
           <b-tooltip ref="tooltipCode" v-show="tipCode" target="code" placement="topright">
             <strong v-text="tipCode"></strong>
           </b-tooltip>
-          <input type="text" list="listtreasuries" placeholder="Código da título" v-model="form.code" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('code') }" name="code" id="code" ref="code" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira o treasury')"
+          <input type="text" list="listtreasuries" placeholder="Código da título" v-model="form.code" autocomplete="off" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('code') }" name="code" id="code" ref="code" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira o treasury')"
             required>
           <datalist id="listtreasuries">
                    <option v-for="result in results" v-bind:value="result.code">{{ result.code }}</option>
@@ -34,7 +34,7 @@
       </b-col>
       <b-col>
         <b-form-group id="datelabel" label="Data do investimento" label-for="date_invest">
-          <datepicker id="date_invest" name="date_invest" v-model="form.date_invest" input-class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('date_invest') }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a data do investimento.')"
+          <datepicker id="date_invest" name="date_invest" v-model="form.date_invest" autocomplete="nope" input-class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('date_invest') }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a data do investimento.')"
             placeholder="Clique aqui para inserir a data." format="dd/MM/yyyy" :disabledDates="this.disabledDates" required dusk="datepicker">
           </datepicker>
           <p class="text-danger" v-if="form.errors.has('date_invest')" v-text="form.errors.get('date_invest')">
@@ -46,7 +46,7 @@
           <b-tooltip ref="tooltipBroker" target="broker_name" v-show="tipBroker" placement="topright">
             <strong v-text="tipBroker"></strong>
           </b-tooltip>
-          <input type="text" list="listbrokers" placeholder="Corretora" v-model="form.broker_name" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('broker_name') }" name="broker_name" id="broker_name" ref="broker_name" oninput="setCustomValidity('')"
+          <input type="text" list="listbrokers" placeholder="Corretora" v-model="form.broker_name" autocomplete="off" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('broker_name') }" name="broker_name" id="broker_name" ref="broker_name" oninput="setCustomValidity('')"
             oninvalid="this.setCustomValidity('Insira a corretora')" required>
           <datalist id="listbrokers">
                    <option v-for="resultbroker in resultbrokers" v-bind:value="resultbroker.name" class="text-light bg-dark">{{resultbroker.name}}</option>
@@ -71,8 +71,8 @@
       </b-col>
       <b-col>
         <b-form-group id="quantlabel" label="Quantidade:" label-for="quant">
-          <b-form-input v-twodecimals id="quant" name="quant" v-model="form.quant" v-bind:class="{ 'is-invalid': form.errors.has('quant') }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a quantidade.')" required>
-          </b-form-input>
+          <money id="quant" name="quant" v-model="form.quant" v-bind="money" class="form-input input-lg form-control"  v-bind:class="{ 'is-invalid': form.errors.has('quant') }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a quantidade.')" required>
+          </money>
           <p class="text-danger" v-if="form.errors.has('quant')" v-text="form.errors.get('quant')">
           </p>
         </b-form-group>
@@ -91,8 +91,10 @@
       <b-col>
         <b-form-group id="ratelabel" label="Taxa:" label-for="rate">
           <b-input-group append="%">
-            <b-form-input v-twodecimals id="rate" name="rate" v-model="form.rate" v-bind:class="{ 'is-invalid': form.errors.has('rate') }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a taxa de retorno.')" required>
-            </b-form-input>
+            <money id="rate" name="rate" v-model="form.rate" v-bind="money" class="form-input input-lg form-control"  v-bind:class="{ 'is-invalid': form.errors.has('rate') }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a taxa de retorno.')" required>
+            </money>            
+<!--             <input v-twodecimals id="rate" name="rate" v-model="form.rate" class="form-input input-lg form-control"  v-bind:class="{ 'is-invalid': form.errors.has('rate') }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a taxa de retorno.')" required>
+            </input> -->
             <p class="text-danger" v-if="form.errors.has('rate')" v-text="form.errors.get('rate')">
             </p>
           </b-input-group>
@@ -199,24 +201,6 @@ export default {
       // `this` points to the vm instance
       return (this.form.price * this.form.quant) + this.form.broker_fee;
     },
-    toRateFloat: function() {
-      //alternativa para mostrar valor com "," dentro do input e levar um float para o banco de dados MELHORAR!
-      //return this.form.rate.replace(",", ".");
-      if (this.form.rate) {
-         //this.form.rateFloat = parseFloat(this.form.rate.replace(",", "."));
-         //this.form.rateFloat = Number(Math.round(parseFloat(this.form.rate.replace(",", "."))+'e2')+'e-2');
-         this.form.rateFloat = Number(Math.round(parseFloat(this.form.rate.replace(",", "."))+'e2')+'e-2');
-      } else {
-        this.form.rate = 0.00;
-    }
-      if (this.form.quant) {
-         //this.form.quantFloat = parseFloat(this.form.quant.replace(",", "."));
-         //this.form.quantFloat = Number(Math.round(parseFloat(this.form.quant.replace(",", "."))+'e2')+'e-2');
-         this.form.quantFloat = Number(Math.round(parseFloat(this.form.quant.replace(",", "."))+'e2')+'e-2');
-      } else {
-        this.form.quant = 0.00;
-    }
-    }
   },
   methods: {
     onSubmit(evt) {
@@ -227,17 +211,24 @@ export default {
             console.log('promise success ' + data);
             this.tipBroker = 'Procurar corretora';
             this.tipCode = 'Procurar título';
-            this.show = false;
+              if(this.Slug2 !== 'create'){
+                
+                this.show = false;
             this.$bus.$emit('updateindexedit', this.form);
             this.$bus.$emit('enlargeclose');
+              } else {
+              }
           })
           .catch(errors => console.log('promise error' + errors));
       } else {
         this.form.patch('/treasuries/invests/' + this.form.id)
           .then(data => {
-            this.show = false;
-            this.$bus.$emit('enlargeclose');
+          if(this.Slug2 !== 'create'){
+                this.show = false;
             this.$bus.$emit('updateindexedit', this.form);
+            this.$bus.$emit('enlargeclose');
+              } else {
+              }
           })
           .catch(errors => {
             console.log('promise update fail');
@@ -317,7 +308,12 @@ export default {
   directives: {
     twodecimals: {
       bind(el, arg) {
+        if (el.value === "")
+          {
+            el.value = 0.00
+          }
         el.value = racaz.numberForm.format(el.value.replace(",", "."));
+        //el.value = Number(Math.round(parseFloat(el.value.replace(",", ".")) + 'e2') + 'e-2');
         el.addEventListener('keyup', () => {
           //el.value = el.value.replace(/[^0-9$.,]/g, '').replace(/(\..*)\./g, '$1').replace(/(?!^)-/g, '');
           var output = el.value.replace(/[^0-9.,]/g, '').replace(/(\..*)\./g, '').replace(/(?!^)-/g, '').split(/[.,]/g);
@@ -325,9 +321,17 @@ export default {
         });
         el.addEventListener('blur', () => {
           el.value = racaz.numberForm.format(el.value.replace(",", "."));
+          //el.value = Number(Math.round(parseFloat(el.value.replace(",", ".")) + 'e2') + 'e-2');
         });
       }
     },
+  },
+  filters: {
+  twodez: function (value) {
+    if (!value) return '';
+    value = value.toString().replace(/[^0-9.,]/g, '').replace(/(\..*)\./g, '').replace(/(?!^)-/g, '').split(/[.,]/g);
+    return racaz.numberForm.format(value.replace(",", "."));
   }
+}
 }
 </script>

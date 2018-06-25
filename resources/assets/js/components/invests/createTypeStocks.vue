@@ -22,7 +22,7 @@
           <b-tooltip ref="tooltipSymbol" v-show="tipSymbol" target="symbol" placement="topright">
             <strong v-text="tipSymbol"></strong>
           </b-tooltip>
-          <input type="text" list="liststocks" placeholder="AAAA#.SA" v-model="form.symbol" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('symbol') }" name="symbol" id="symbol" ref="symbol" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira o stock')"
+          <input type="text" list="liststocks" placeholder="AAAA#.SA" v-model="form.symbol" autocomplete="off" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('symbol') }" name="symbol" id="symbol" ref="symbol" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira o stock')"
             required>
           <datalist id="liststocks">
                    <option v-for="result in results" v-bind:value="result.symbol">{{ result.symbol}}</option>
@@ -35,7 +35,7 @@
       </b-col>
       <b-col>
         <b-form-group id="datelabel" label="Data do investimento:" label-for="date_invest">
-          <datepicker id="date_invest" name="date_invest" v-model="form.date_invest" input-class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('date_invest') }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a data do investimento.')"
+          <datepicker id="date_invest" name="date_invest" v-model="form.date_invest" autocomplete="off" input-class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('date_invest') }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a data do investimento.')"
             placeholder="Clique aqui para inserir a data." format="dd/MM/yyyy" :disabledDates="this.disabledDates" required dusk="datepicker">
           </datepicker>
           <p class="text-danger" v-if="form.errors.has('date_invest')" v-text="form.errors.get('date_invest')">
@@ -47,7 +47,7 @@
           <b-tooltip ref="tooltipBroker" target="broker_name" v-show="tipBroker" placement="topright">
             <strong v-text="tipBroker"></strong>
           </b-tooltip>
-          <input type="text" list="listbrokers" placeholder="Corretora" v-model="form.broker_name" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('broker_name') }" name="broker_name" id="broker_name" ref="broker_name" oninput="setCustomValidity('')"
+          <input type="text" list="listbrokers" placeholder="Corretora" v-model="form.broker_name" autocomplete="off" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('broker_name') }" name="broker_name" id="broker_name" ref="broker_name" oninput="setCustomValidity('')"
             oninvalid="this.setCustomValidity('Insira a corretora')" required>
           <datalist id="listbrokers">
                    <option v-for="resultbroker in resultbrokers" v-bind:value="resultbroker.name" class="text-light bg-dark">{{resultbroker.name}}</option>
@@ -207,17 +207,23 @@ export default {
             console.log('promise success ' + data);
             this.tipBroker = 'Procurar corretora';
             this.tipSymbol = 'Procurar ação';
-            this.show = false;
+           if(this.Slug2 !== 'create'){
+                this.show = false;
             this.$bus.$emit('updateindexedit', this.form);
             this.$bus.$emit('enlargeclose');
+              } else {
+              }
           })
           .catch(errors => console.log('promise error' + errors));
       } else {
         this.form.patch('/stocks/invests/' + this.form.id)
           .then(data => {
-            this.show = false;
+          if(this.Slug2 !== 'create'){
+                this.show = false;
             this.$bus.$emit('enlargeclose');
             this.$bus.$emit('updateindexedit', this.form);
+              } else {
+              }
           })
           .catch(errors => {
             console.log('promise update fail');

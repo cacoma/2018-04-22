@@ -15,6 +15,7 @@ import racaz from './javascript/js.js';
 import VueCharts from 'vue-chartjs';
 import VueChartkick from 'vue-chartkick';
 import Chart from 'chart.js';
+//import Puppeteer from 'puppeteer';
 
 Vue.use(money, {
   precision: 4
@@ -22,6 +23,7 @@ Vue.use(money, {
 Vue.use(VueTheMask);
 Vue.use(BootstrapVue);
 Vue.use(racaz);
+//Vue.use(puppeteer);
 //Vue.use(Errors);
 Vue.use(VueChartkick, {adapter: Chart});
 
@@ -85,6 +87,9 @@ Vue.component('homechartint', require('./components/layouts/homechartint.vue'));
 Vue.component('homechart', require('./components/layouts/homechart.vue')); //componente para tela home
 Vue.component('enlarge', require('./components/layouts/enlarge.vue')); //componente aumentar tamanho de itens selecionados
 Vue.component('moldura', require('./components/layouts/moldura.vue')); //componente aumentar tamanho de itens selecionados
+
+
+//Vue.component('treasuryscrape', require('./components/scraping/treasuryscrape.vue')); //componente para fazer scrape dos valores do tesouro nacional
 
 //https://forum.vuejs.org/t/eventhub-with-vueify/1375/3
 const bus = new Vue();

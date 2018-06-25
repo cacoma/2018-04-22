@@ -88,6 +88,8 @@ racaz = function() {
     ["0", "Não"],
     ["1", "Sim"],
     ["rate", "Taxa"],
+    ["avgprice", "Preço médio"],
+    ["sumquant", "Quantidade"],
   ];
 
   //variaveis para utilizar no vue datepicker, com a finalidade de limitar a quantidade de datas que podem ser utilizadas
@@ -158,7 +160,7 @@ racaz = function() {
         } else if (value === "open" || value === "high" || value === "low" ||
           value === "close" || value === "price" || value === "quote" ||
           value === "broker_fee" || value === "total" ||
-          value === "1. open" || value === "2. high" || value === "3. low" || value === "4. close"
+          value === "1. open" || value === "2. high" || value === "3. low" || value === "4. close" || value === "avgprice"
         ) {
           fields.push({
             key: value,
@@ -176,17 +178,27 @@ racaz = function() {
             label: racaz.columnName(value.replace(/[.\W\d]/g, '')),
             sortable: true,
             formatter: (value) => {
-              return parseFloat(value).toFixed(2);
+              //return parseFloat(value).toFixed(2);
+              return numberForm.format(value);
             }
           });
           //acerta a forma de apresentar porcentagem
-        } else if (value === "percentage" || value === "rate") {
+        } else if (value === "percentage") {
           fields.push({
             key: value,
             label: racaz.columnName(value),
             sortable: true,
             formatter: (value) => {
               return percFormatter.format(value);
+            }
+          });
+        } else if (value === "rate") {
+          fields.push({
+            key: value,
+            label: racaz.columnName(value),
+            sortable: true,
+            formatter: (value) => {
+              return percFormatter.format(value/100);
             }
           });
           //ajusta o nome do investimento

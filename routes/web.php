@@ -65,6 +65,10 @@ Route::get('/dailyquotes/massinsert', 'DailyQuoteController@massinsert');
 Route::post('/dailyquotes/store', 'DailyQuoteController@store');
 Route::resource('dailyquotes', 'DailyQuoteController');
 
+//treasury quotes
+Route::resource('/treasuryquotes/scrp', 'TreasuryQuoteController@scrp');
+Route::resource('treasuryquotes', 'TreasuryQuoteController');
+
 Route::view('/consolidated', 'invests.consolidated');
 Route::resource('invests', 'InvestController');
 
@@ -168,8 +172,8 @@ Route::get('/api/index/invests', function () {
         if (isset($value->treasury)){
         //tratamento para treasury
         //para passar o nome do broker
-        $value->code = $value->treasury->code;
-        $value->rate = $value->rate / 100;
+        $value->symbol = $value->treasury->code;
+        //$value->rate = $value->rate / 10;
         //retira o objeto do treasury
         unset($value->treasury);
         }
@@ -242,5 +246,36 @@ Route::get('/api/daily/getintchart', function () {
 Route::get('/api/consolidated', function () {
     $user = Auth::user();
     $consolidated = DB::table('consolidated')->where('user_id', $user->id)->get();
+    foreach ($consolidated as $consol){
+    if ($user->role_id !== 1) {
+      unset($consol->name);
+      unset($consol->stock_id);
+      unset($consol->user_id);
+    }
+    }
     return response()->json($consolidated);
+})->middleware('auth');
+Route::get('/api/daily/getintchart', function () {
+    $query = Input::get('query');
+    $dailyQuotes = dailyQuote::with('stock')->where('stock_id', '=', $query)
+          ->whereDate('timestamp', '>', Carbon::now()->subMonth(1))->orderBy('timestamp', 'asc')->get();
+    foreach ($dailyQuotes as &$dailyQuote) {
+        //arruma o nome
+        $dailyQuote->stock_id = $dailyQuote->stock->symbol;
+        //depois retira o objeto de dentro do objeto
+        unset($dailyQuote->stock);
+        //ajusta as datas pro formato certo
+    }
+    return response()->json($dailyQuotes);
+})->middleware('auth');
+//busca se há alguma
+Route::get('/api/treasurycheck/{date}', function ($date) {
+    //$user = Auth::user();
+  if (isset($date)){
+    $dataParsed = Carbon::parse($date);
+    $checkForTreasuryData = DB::table('treasury_quotes')->where('timestamp', '<',  $date)->exists();
+ return response()->json($checkForTreasuryData);
+  }else {
+    return response()->json(false);
+  }
 })->middleware('auth');

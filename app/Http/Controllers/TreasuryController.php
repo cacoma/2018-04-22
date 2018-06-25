@@ -202,7 +202,7 @@ class TreasuryController extends Controller
     public function investstore(Request $request)
     {
         $user = Auth::user();
-        $invest->quant = floatval(preg_replace(',','.',preg_replace('.', '',$request->quant)));
+        //$invest->quant = floatval(preg_replace(',', '.', preg_replace('.', '', $request->quant)));
         $this->validate(request(), [
                       'signal' => [
                                       'required',
@@ -244,7 +244,7 @@ class TreasuryController extends Controller
         $invest->quant = $request->quant;
         $invest->price = $request->price;
         //$invest->rate = floatval($request->rate);
-        $invest->rate = $request->rateFloat;
+        $invest->rate = $request->rate;
         $invest->broker_fee = $request->broker_fee;
         $invest->date_invest = new Carbon($request->date_invest);
         $invest->user_id = $user->id;
@@ -268,7 +268,7 @@ class TreasuryController extends Controller
         //$invest->broker_fee = strtr($invest->broker_fee, array('.' => ','));
         $invest->broker_fee = floatval($invest->broker_fee);
         $invest->rate = floatval($invest->rate);
-        $invest->quant = floatval(preg_replace(',','.',preg_replace('.', '',$request->quant)));
+        $invest->quant = $request->quant;
         return view('treasuries.treasuryinvestedit', compact('invest', 'id'));
         //return redirect('invests')->with('success', 'Foi ao lugar certo.');
     }
@@ -283,7 +283,7 @@ class TreasuryController extends Controller
             //$request->quant = floatval(preg_replace('/[,]/','.',preg_replace('/[.]/', '',$request->quant)));
             $this->validate(request(), [
             'code' => 'required|string|max:25|exists:treasuries,code',
-            'quant' => 'required',
+            'quant' => 'required|numeric|min:0.01',
             'price' => 'required|numeric|min:0.0001',
             'broker_fee' => 'required|numeric|min:0',
             'date_invest' => 'required|before:tomorrow',
@@ -313,10 +313,10 @@ class TreasuryController extends Controller
             $investUpdate->type = 'treasury';
             //$investUpdate->symbol = strtoupper($request->get('symbol'));
             //$investUpdate->quant = $request->quant;
-            $investUpdate->quant = floatval(preg_replace('/[,]/','.',preg_replace('/[.]/', '',$request->quant)));
+            $investUpdate->quant = $request->quant;
             $investUpdate->price = floatval($request->price);
             $investUpdate->broker_fee = floatval($request->broker_fee);
-            $investUpdate->rate = $request->rateFloat;
+            $investUpdate->rate = $request->rate;
             $investUpdate->date_invest = new Carbon($request->date_invest);
             $investUpdate->user_id = $userid;
             $investUpdate->treasury_id = $treasuryid;

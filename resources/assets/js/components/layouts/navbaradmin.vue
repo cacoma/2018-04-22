@@ -16,6 +16,7 @@
     <b-nav-item-dropdown text="Cotações" right v-if="this.auth.role_id === 1">
       <b-dropdown-item href="/dailyquotes">Diárias</b-dropdown-item>
       <b-dropdown-item href="/monthlyquotes">Mensais</b-dropdown-item>
+      <b-dropdown-item href="/treasuryquotes/scrp">Titulos scrp</b-dropdown-item>
     </b-nav-item-dropdown>
   </b-navbar-nav>
 </div>

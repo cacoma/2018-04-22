@@ -1,51 +1,73 @@
 <template>
 <moldura>
-<b-list-group >
-<div v-for="(value, key, index) in this.consolidated">
-  <b-list-group-item href="#" class="flex-column align-items-start">
-    <div class="d-flex w-80 justify-content-between">
-      <h5 class="mb-1">{{ value.symbol }}</h5>
-      <small class="text-muted">Valor médio: {{this.racaz.currFormatter.format(value.avgprice)}} </small>
-    </div>
-    <p class="mb-1">
-      <b-list-group>
-        <b-list-group-item href="#">Quantidade: {{parseInt(value.sumquant)}}</b-list-group-item>
-        <b-list-group-item href="#">Preço médio: {{this.racaz.currFormatter.format(value.avgprice)}}</b-list-group-item>
-        <b-list-group-item href="#">Total: {{this.racaz.currFormatter.format(value.total)}}</b-list-group-item>
-      </b-list-group>
-    </p>
-    <!-- <small class="text-muted">Donec id elit non mi porta.</small> -->
-  </b-list-group-item>
+<b-card no-body>
+  <b-tabs card>
+  <b-tab title="Resumo consolidado" active>
+    <br>
+    <b-table striped hover :busy.sync="isBusy" :items="items" :fields="fields"></b-table>
+  <b-list-group>
+  <b-list-group-item class="text-right">Total: {{total}}</b-list-group-item>
+<!--   <b-list-group-item active v-text="this.racaz.currFormatter.format(this.total)"></b-list-group-item> -->
+  </b-list-group>
+  </b-tab>
+  <b-tab title="Outros resumos" >
+    <br>I'm the second tab content
+  </b-tab>
+  <b-tab title="disabled" disabled>
+    <br>Disabled tab!
+  </b-tab>
+</b-tabs>
 
-</div>
-</b-list-group>
-</moldura>
+</b-card>
+  </moldura>
 </template>
 <script>
+let items = {};
 export default {
   data() {
     return {
       consolidated: {},
+      isBusy: false,
+      items: [],
+      fields: [],
+      total: 0,
     }
   },
   created: function() {
-    this.fetchConsolidatedInvests();
+    this.provideData();
+
+        console.log('entrou');
+    //this.fetchConsolidatedInvests();
+  },
+  mounted: function() {
   },
   methods: {
-    fetchConsolidatedInvests() {
-      axios.get('/api/consolidated/')
-      .then((response) => {
-          for (let k in response.data) {
-            if (typeof response.data[k] !== 'function') {
-              Vue.set(this.consolidated, [k], response.data[k]);
-            }
-          }
-          console.log('no erro!');
+    provideData() {
+      this.isBusy = true;
+      let promise = axios.get('/api/consolidated/')
+
+      return promise.then((response) => {
+          this.fields = racaz.fieldsFiller(Object.keys(response.data[0]));
+          this.items = response.data;
+          // Here we could override the busy state, setting isBusy to false
+          this.isBusy = false;
+          this.totalizator();
+          return (this.items);
         })
         .catch(error => {
-            console.log('erro!');
-          })
-        },
+          // Here we could override the busy state, setting isBusy to false
+          // this.isBusy = false
+          // Returning an empty array, allows table to correctly handle busy state in case of error
+        console.log(error);
+          return []
+        })
+    },
+    totalizator() {
+          this.total = racaz.currFormatter.format(Object.keys(this.items).reduce((sum, key)  => {
+                  return sum + parseFloat(this.items[key].total);
+                  }, 0));
+    }
       }
     }
 </script>
+
