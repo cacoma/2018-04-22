@@ -19,6 +19,7 @@
           <b-dropdown size="sm" v-if="slug == 'invests'" right text="Criar investimento:">
             <b-dropdown-item @click.stop="this.enlarge('createTypeStocks')">Ações</b-dropdown-item>
             <b-dropdown-item @click.stop="this.enlarge('createTypeTreasuries')">Titulos do tesouro</b-dropdown-item>
+            <b-dropdown-item @click.stop="this.enlarge('createTypeSecurities')">Renda fixa</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
             <b-dropdown-item disabled>CDB</b-dropdown-item>
           </b-dropdown>
@@ -54,10 +55,13 @@
         </b-button>
          <div v-if="slug == 'invests'">
         <b-button v-if="row.item.type === 'stock'" size="sm" @click.stop="this.enlarge('createTypeStocks',row.item)">
-          Editar stock
+          Editar ação
         </b-button>        
         <b-button v-if="row.item.type === 'treasury'" size="sm" @click.stop="this.enlarge('createTypeTreasuries',row.item)">
-          Editar treasury
+          Editar título
+        </b-button>        
+        <b-button v-if="row.item.type === 'security'" size="sm" @click.stop="this.enlarge('createTypeSecurities',row.item)">
+          Editar renda fixa
         </b-button>
         </div>
         <b-button v-if="slug != 'users'" size="sm" @click.stop="this.deleteconfirmation(row.item)">
@@ -85,6 +89,7 @@
         <create></create>
         <createinveststypestocks></createinveststypestocks>
         <createinveststypetreasuries></createinveststypetreasuries>
+        <createinveststypesecurities></createinveststypesecurities>
       </enlarge>
       <!-- <enlarge> -->
       <!-- <createinvests></createinvests> -->

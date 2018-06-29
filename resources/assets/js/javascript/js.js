@@ -90,6 +90,17 @@ racaz = function() {
     ["rate", "Taxa"],
     ["avgprice", "Preço médio"],
     ["sumquant", "Quantidade"],
+    ["index", "Índice"],
+    ["ir", "IR"],
+    ["name", "Nome"],
+    ["securities", "Renda fixa"],
+    ["security", "Renda fixa"],
+    ["liquidity", "Liquidez"],
+    ["fgc", "FGC"],
+    ["issuer_name", "Emissor"],
+    ["issuer", "Emissor"],
+    ["issuers", "Emissores"],
+    ["inv", "Invest."],
   ];
 
   //variaveis para utilizar no vue datepicker, com a finalidade de limitar a quantidade de datas que podem ser utilizadas
@@ -198,7 +209,7 @@ racaz = function() {
             label: racaz.columnName(value),
             sortable: true,
             formatter: (value) => {
-              return percFormatter.format(value/100);
+              return percFormatter.format(value / 100);
             }
           });
           //ajusta o nome do investimento
@@ -211,7 +222,7 @@ racaz = function() {
               return racaz.columnName(value);
             }
           });
-        } else if (value === "coupon") {
+        } else if (value === "coupon" || value === "fgc") {
           fields.push({
             key: value,
             label: racaz.columnName(value),
@@ -226,7 +237,7 @@ racaz = function() {
             }
           });
           //o item _cellVariants nao é renderizado
-        } else if (value === "_cellVariants" || value === "created_at" || value === "updated_at" || value === "redirect" || value === "user_id") {
+        } else if (value === "_cellVariants" || value === "created_at" || value === "updated_at" || value === "redirect" || value === "user_id" || value === "issuer_id" || value === "security_id" || value === "name" || value === "code" || value === "symbol") {
           // faz nada
         } else {
           fields.push({

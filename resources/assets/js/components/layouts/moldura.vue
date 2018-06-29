@@ -21,6 +21,7 @@ export default {
       console.log('invests');
       createTypeStocks();
       createTypeTreasuries();
+      createTypeSecurities();
     } else {
       console.log('not invests');
       //create();

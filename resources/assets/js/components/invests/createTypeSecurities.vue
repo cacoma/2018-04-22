@@ -5,7 +5,7 @@
       {{ index + 1 }}. {{ this.racaz.columnName(key) }}: {{ value[0] }}
     </div>
   </b-alert>
-  <b-form @submit="onSubmit" @reset="onReset" @input="form.errors.clear($event.target.name)" id="createtypetreasuryform" dusk="createtypetreasurieform">
+  <b-form @submit="onSubmit" @reset="onReset" @input="form.errors.clear($event.target.name)" id="createtypesecurityform" dusk="createtypesecurityform">
     <b-form-row v-if="!this.editMode">
       <b-col>
         <b-form-group label="Operação de: ">
@@ -17,16 +17,16 @@
     </b-form-row>
     <b-form-row>
       <b-col>
-        <b-form-group id="codelabel" label="Código do titulo:" label-for="code">
-          <b-tooltip ref="tooltipCode" v-show="tipCode" target="code" placement="topright">
-            <strong v-text="tipCode"></strong>
+        <b-form-group id="namelabel" label="Código do titulo:" label-for="name">
+          <b-tooltip ref="tooltipname" v-show="tipname" target="name" placement="topright">
+            <strong v-text="tipname"></strong>
           </b-tooltip>
-          <input type="text" list="listtreasuries" placeholder="Código da título" v-model="form.code" autocomplete="off" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('code') }" name="code" id="code" ref="code" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira o treasury')"
+          <input type="text" list="listsecurity" placeholder="Código da título" v-model="form.name" autocomplete="off" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('name') }" name="name" id="name" ref="name" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira o security')"
             required>
-          <datalist id="listtreasuries">
-                   <option v-for="result in results" v-bind:value="result.code">{{ result.code }}</option>
+          <datalist id="listsecurity">
+                   <option v-for="result in results" v-bind:value="result.name">{{ result.name }}</option>
                 </datalist>
-          <p class="text-danger" v-if="form.errors.has('code')" v-text="form.errors.get('code')">
+          <p class="text-danger" v-if="form.errors.has('name')" v-text="form.errors.get('name')">
           </p>
 
           </b-tooltip>
@@ -54,6 +54,20 @@
           <p class="text-danger" v-if="form.errors.has('broker_name')" v-text="form.errors.get('broker_name')">
           </p>
         </b-form-group>
+      </b-col>      
+    <b-col>
+        <b-form-group id="issuerlabel" label="Emissor:" label-for="issuer_name">
+          <b-tooltip ref="tooltipBroker" target="issuer_name" v-show="tipissuer" placement="topright">
+            <strong v-text="tipBroker"></strong>
+          </b-tooltip>
+          <input type="text" list="listissuers" placeholder="Corretora" v-model="form.issuer_name" autocomplete="off" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('issuer_name') }" name="issuer_name" id="issuer_name" ref="issuer_name" oninput="setCustomValidity('')"
+            oninvalid="this.setCustomValidity('Insira o emissor.')" required>
+          <datalist id="listissuers">
+                   <option v-for="resultissuer in resultissuers" v-bind:value="resultissuer.name" class="text-light bg-dark">{{resultissuer.name}}</option>
+            </datalist>
+          <p class="text-danger" v-if="form.errors.has('issuer_name')" v-text="form.errors.get('issuer_name')">
+          </p>
+        </b-form-group>
       </b-col>
     </b-form-row>
     <!--   segunda linha -->
@@ -71,8 +85,10 @@
       </b-col>
       <b-col>
         <b-form-group id="quantlabel" label="Quantidade:" label-for="quant">
-          <money id="quant" name="quant" v-model="form.quant" v-bind="money" class="form-input input-lg form-control"  v-bind:class="{ 'is-invalid': form.errors.has('quant') }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a quantidade.')" required>
-          </money>
+<!--           <money id="quant" name="quant" v-model="form.quant" v-bind="money" class="form-input input-lg form-control"  v-bind:class="{ 'is-invalid': form.errors.has('quant') }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a quantidade.')" required>
+          </money> -->
+          <input type="number" min="1" step="1" id="quant" name="quant" v-model="form.quant" class="form-input input-lg form-control"  v-bind:class="{ 'is-invalid': form.errors.has('quant') }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira a quantidade.')" required>
+  </input>
           <p class="text-danger" v-if="form.errors.has('quant')" v-text="form.errors.get('quant')">
           </p>
         </b-form-group>
@@ -103,7 +119,7 @@
       <b-col>
         <b-form-group id="totallabel" label="Total:" label-for="total">
           <b-input-group prepend="R$">
-            <money id="total" :value="total" v-bind="money" class="form-input input-lg form-control" disabled dusk="createtypetreasurytotal">
+            <money id="total" :value="total" v-bind="money" class="form-input input-lg form-control" disabled dusk="createtypesecuritytotal">
             </money>
           </b-input-group>
         </b-form-group>
@@ -111,7 +127,7 @@
     </b-form-row>
     <b-row align-h="end">
       <b-col md="6" offset-md="1">
-        <b-button type="submit" variant="success" :disabled="form.errors.any()" dusk="createtypetreasurysubmit"> {{ this.editMode ? 'Atualizar' : 'Inserir' }}</b-button>
+        <b-button type="submit" variant="success" :disabled="form.errors.any()" dusk="createtypesecurityubmit"> {{ this.editMode ? 'Atualizar' : 'Inserir' }}</b-button>
         <b-button type="reset" variant="danger" v-if="this.Slug2 !== 'create'">{{ 'Fechar' }}</b-button>
         <b-button variant="primary" @click="formReset" dusk="createformreset">{{ 'Limpar' }}</b-button>
       </b-col>
@@ -139,9 +155,10 @@ export default {
     return {
       form: new Form({
         signal: 'buy',
-        code: '',
+        name: '',
         date_invest: '',
         broker_name: '',
+        issuer_name: '',
         price: '',
         quant: '',
         rate: '',
@@ -160,7 +177,8 @@ export default {
       show: false,
       disabledDates: racaz.dateInvestLimit.disabledDates,
       tipBroker: 'Procurar corretora',
-      tipCode: 'Procurar título',
+      tipname: 'Procurar título',
+      tipissuer: 'Procurar emissor',
       optionsSignal: [{
           text: 'Compra',
           value: 'buy'
@@ -175,13 +193,13 @@ export default {
     }
   },
   watch: {
-    // whenever code changes, this function will run
-    'form.code': function(newCode, oldCode) {
-      this.debouncedFormCode();
+    // whenever name changes, this function will run
+    'form.name': function(newname, oldname) {
+      this.debouncedFormname();
     },
   },
   created: function() {
-    window.events.$on('createTypeTreasuries', (item) => this.populateData(item));
+    window.events.$on('createTypeSecurities', (item) => this.populateData(item));
     this.$bus.$on('formHide', () => this.show = false);
     // _.debounce is a function provided by lodash to limit how
     // often a particularly expensive operation can be run.
@@ -190,8 +208,9 @@ export default {
     // finished typing before making the ajax request. To learn
     // more about the _.debounce function (and its cousin
     // _.throttle), visit: https://lodash.com/docs#debounce
-    this.debouncedFormCode = _.debounce(this.autoComplete, 500);
+    this.debouncedFormname = _.debounce(this.autoComplete, 500);
     this.autoCompleteBroker();
+    this.autoCompleteIssuer();
 
   },
   computed: {
@@ -205,11 +224,12 @@ export default {
     onSubmit(evt) {
       evt.preventDefault();
       if (!this.editMode) {
-        this.form.post('/treasuries/investstore')
+        this.form.post('/securities/investstore')
           .then(data => {
             console.log('promise success ' + data);
             this.tipBroker = 'Procurar corretora';
-            this.tipCode = 'Procurar título';
+            this.tipname = 'Procurar título';
+            this.tipissuer = 'Procurar emissor';
               if(this.Slug2 !== 'create'){
                 
                 this.show = false;
@@ -220,7 +240,7 @@ export default {
           })
           .catch(errors => console.log('promise error' + errors));
       } else {
-        this.form.patch('/treasuries/invests/' + this.form.id)
+        this.form.patch('/securities/invests/' + this.form.id)
           .then(data => {
           if(this.Slug2 !== 'create'){
                 this.show = false;
@@ -241,7 +261,8 @@ export default {
         this.formReset();
         this.form.signal = 'buy';
         this.tipBroker = 'Procurar corretora';
-        this.tipCode = 'Procurar título';
+        this.tipname = 'Procurar título';
+        this.tipissuer = 'Procurar emissor';
         /* Reset our form values */
         /* Trick to reset/clear native browser form validation state */
         // this.show = false;
@@ -269,7 +290,8 @@ export default {
         this.form.reset();
         this.form.signal = 'buy';
         this.tipBroker = 'Procurar corretora';
-        this.tipCode = 'Procurar título';
+        this.tipname = 'Procurar título';
+        this.tipissuer = 'Procurar emissor';
         this.editMode = false;
         this.show = true;
       }
@@ -284,18 +306,29 @@ export default {
           console.log('buscou corretoras');
           console.log(error.response);
         });
+    },    
+    //busca os emissores
+    autoCompleteIssuer() {
+      axios.get('/api/issuers', {})
+        .then(response => {
+          this.resultissuers = response.data;
+        })
+        .catch(error => {
+          console.log('buscou emissores');
+          console.log(error.response);
+        });
     },
     //busca os titulos
     autoComplete() {
-      this.tipCode = 'Procurando...';
-      axios.get('/api/searchtreasuries', {
+      this.tipname = 'Procurando...';
+      axios.get('/api/searchsecurities', {
           params: {
-            query: this.form.code
+            query: this.form.name
           }
         }).then(response => {
           this.$nextTick(function() {
             this.results = response.data;
-            this.tipCode = 'Ok';
+            this.tipname = 'Ok';
             console.log("buscou" + response.data);
           });
         })
@@ -305,32 +338,32 @@ export default {
     },
   },
   directives: {
-    twodecimals: {
-      bind(el, arg) {
-        if (el.value === "")
-          {
-            el.value = 0.00
-          }
-        el.value = racaz.numberForm.format(el.value.replace(",", "."));
-        //el.value = Number(Math.round(parseFloat(el.value.replace(",", ".")) + 'e2') + 'e-2');
-        el.addEventListener('keyup', () => {
-          //el.value = el.value.replace(/[^0-9$.,]/g, '').replace(/(\..*)\./g, '$1').replace(/(?!^)-/g, '');
-          var output = el.value.replace(/[^0-9.,]/g, '').replace(/(\..*)\./g, '').replace(/(?!^)-/g, '').split(/[.,]/g);
-          el.value = output.shift() + (output.length ? ',' : '') + output.join('');
-        });
-        el.addEventListener('blur', () => {
-          el.value = racaz.numberForm.format(el.value.replace(",", "."));
-          //el.value = Number(Math.round(parseFloat(el.value.replace(",", ".")) + 'e2') + 'e-2');
-        });
-      }
-    },
+//     twodecimals: {
+//       bind(el, arg) {
+//         if (el.value === "")
+//           {
+//             el.value = 0.00
+//           }
+//         el.value = racaz.numberForm.format(el.value.replace(",", "."));
+//         //el.value = Number(Math.round(parseFloat(el.value.replace(",", ".")) + 'e2') + 'e-2');
+//         el.addEventListener('keyup', () => {
+//           //el.value = el.value.replace(/[^0-9$.,]/g, '').replace(/(\..*)\./g, '$1').replace(/(?!^)-/g, '');
+//           var output = el.value.replace(/[^0-9.,]/g, '').replace(/(\..*)\./g, '').replace(/(?!^)-/g, '').split(/[.,]/g);
+//           el.value = output.shift() + (output.length ? ',' : '') + output.join('');
+//         });
+//         el.addEventListener('blur', () => {
+//           el.value = racaz.numberForm.format(el.value.replace(",", "."));
+//           //el.value = Number(Math.round(parseFloat(el.value.replace(",", ".")) + 'e2') + 'e-2');
+//         });
+//       }
+//     },
   },
   filters: {
-  twodez: function (value) {
-    if (!value) return '';
-    value = value.toString().replace(/[^0-9.,]/g, '').replace(/(\..*)\./g, '').replace(/(?!^)-/g, '').split(/[.,]/g);
-    return racaz.numberForm.format(value.replace(",", "."));
-  }
+//   twodez: function (value) {
+//     if (!value) return '';
+//     value = value.toString().replace(/[^0-9.,]/g, '').replace(/(\..*)\./g, '').replace(/(?!^)-/g, '').split(/[.,]/g);
+//     return racaz.numberForm.format(value.replace(",", "."));
+//   }
 }
 }
 </script>

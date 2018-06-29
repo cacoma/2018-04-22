@@ -5,9 +5,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\Broker;
 use App\MonthlyQuote;
+use App\TreasuryQuote;
 use App\DailyQuote;
 use App\Stock;
 use App\Treasury;
+use App\Issuer;
+use App\Security;
 
 class invest extends Model
 {
@@ -29,6 +32,11 @@ class invest extends Model
   public function broker()
     {
         return $this->belongsTo(broker::Class,'broker_id','id');
+    }  
+  
+  public function issuer()
+    {
+        return $this->belongsTo(Issuer::Class,'issuer_id','id');
     }
 
     public function stock()
@@ -39,11 +47,21 @@ class invest extends Model
     public function treasury()
     {
         return $this->belongsTo(treasury::Class);
+    }    
+  
+  public function security()
+    {
+        return $this->belongsTo(security::Class);
     }
 
     public function monthlyQuote()
     {
         return $this->hasMany(monthlyQuote::Class, 'stock_id', 'stock_id');
+    }    
+  
+    public function treasuryQuote()
+    {
+        return $this->hasMany(treasuryQuote::Class, 'treasury_id', 'treasury_id');
     }
   public function dailyQuote()
     {

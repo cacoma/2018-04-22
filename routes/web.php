@@ -37,11 +37,18 @@ Route::post('/brokers/store', 'BrokerController@store');
 Route::patch('/brokers/{id}', 'BrokerController@update');
 Route::delete('/brokers/{id}/destroy', 'BrokerController@destroy');
 Route::resource('brokers', 'BrokerController');
+
+Route::post('/issuers/store', 'IssuerController@store');
+Route::patch('/issuers/{id}', 'IssuerController@update');
+Route::delete('/issuers/{id}/destroy', 'IssuerController@destroy');
+Route::resource('issuers', 'IssuerController');
+
 //investimentos em acoes
 Route::post('/stocks/investstore', 'StockController@investstore'); //investimentos de acoes
 Route::get('/stocks/invests/{id}/edit', 'StockController@investedit'); //editar investimento tipo stock
 Route::patch('/stocks/invests/{id}', 'StockController@investupdate'); //atualizar investimento tipo stock
 Route::delete('/stocks/invests/{id}/destroy', 'StockController@investdestroy'); //apagar investimento tipo stock
+
 //acoes
 Route::post('/stocks/store', 'StockController@store');//
 Route::patch('/stocks/{id}', 'StockController@update');
@@ -49,15 +56,26 @@ Route::delete('/stocks/{id}/destroy', 'StockController@destroy');
 Route::resource('stocks', 'StockController');
 
 //investimentos em titulos
-Route::post('/treasuries/investstore', 'TreasuryController@investstore'); //investimentos de acoes
-Route::get('/treasuries/invests/{id}/edit', 'TreasuryController@investedit'); //editar investimento tipo stock
-Route::patch('/treasuries/invests/{id}', 'TreasuryController@investupdate'); //atualizar investimento tipo stock
-Route::delete('/treasuries/invests/{id}/destroy', 'TreasuryController@investdestroy'); //apagar investimento tipo stock
+Route::post('/treasuries/investstore', 'TreasuryController@investstore'); //investimentos de titulos
+Route::get('/treasuries/invests/{id}/edit', 'TreasuryController@investedit'); //editar investimento tipo treasuries
+Route::patch('/treasuries/invests/{id}', 'TreasuryController@investupdate'); //atualizar investimento tipo treasuries
+Route::delete('/treasuries/invests/{id}/destroy', 'TreasuryController@investdestroy'); //apagar investimento tipo treasuries
 //titulos
 Route::post('/treasuries/store', 'TreasuryController@store');
 Route::patch('/treasuries/{id}', 'TreasuryController@update');
 Route::delete('/treasuries/{id}/destroy', 'TreasuryController@destroy');
 Route::resource('treasuries', 'TreasuryController');
+
+//investimentos em renda fixa
+Route::post('/securities/investstore', 'SecurityController@investstore'); //investimentos de renda fixa
+Route::get('/securities/invests/{id}/edit', 'SecurityController@investedit'); //editar investimento tipo securities
+Route::patch('/securities/invests/{id}', 'SecurityController@investupdate'); //atualizar investimento tipo securities
+Route::delete('/securities/invests/{id}/destroy', 'SecurityController@investdestroy'); //apagar investimento tipo securities
+//renda fixa
+Route::post('/securities/store', 'SecurityController@store');//
+Route::patch('/securities/{id}', 'SecurityController@update');
+Route::delete('/securities/{id}/destroy', 'SecurityController@destroy');
+Route::resource('securities', 'SecurityController');
 
 Route::resource('monthlyquotes', 'MonthlyQuoteController');
 
@@ -95,15 +113,31 @@ Route::get('/api/searchtreasuries', function () {
     $treasuries = DB::table('treasuries')->where('code', 'like', $query.'%')->get();
     return response()->json($treasuries);
 })->middleware('auth');
+//listagem de renda fia
+Route::get('/api/searchsecurities', function () {
+    $query = Input::get('query');
+    $securities = DB::table('securities')->where('name', 'like', $query.'%')->get();
+    return response()->json($securities);
+})->middleware('auth');
 //listagem de corretoras
 Route::get('/api/searchbrokers', function () {
     $query = Input::get('query');
     $brokers = DB::table('brokers')->where('name', 'like', $query.'%')->get();
     return response()->json($brokers);
 })->middleware('auth');
+//listagem de corretoras
+Route::get('/api/searchissuers', function () {
+    $query = Input::get('query');
+    $issuers = DB::table('issuers')->where('name', 'like', $query.'%')->get();
+    return response()->json($issuers);
+})->middleware('auth');
 Route::get('/api/brokers', function () {
     $brokers = DB::table('brokers')->get();
     return response()->json($brokers);
+})->middleware('auth');
+Route::get('/api/issuers', function () {
+    $issuers = DB::table('issuers')->get();
+    return response()->json($issuers);
 })->middleware('auth');
 Route::get('/api/columns/{table}', function ($table) { //pega a coluna de certa tabela do BD
     $schema = DB::getSchemaBuilder()->getColumnListing($table);
@@ -121,6 +155,10 @@ Route::get('/api/index/brokers', function () {
     $brokers = DB::table('brokers')->get();
     return $brokers;
 })->middleware('auth');
+Route::get('/api/index/issuers', function () {
+    $issuers = DB::table('issuers')->get();
+    return $issuers;
+})->middleware('auth');
 Route::get('/api/index/stocks', function () {
     $stocks = DB::table('stocks')->get();
     return response()->json($stocks);
@@ -128,6 +166,10 @@ Route::get('/api/index/stocks', function () {
 Route::get('/api/index/treasuries', function () {
     $treasuries = DB::table('treasuries')->get();
     return response()->json($treasuries);
+})->middleware('auth');
+Route::get('/api/index/securities', function () {
+    $securities = DB::table('securities')->get();
+    return response()->json($securities);
 })->middleware('auth');
 Route::get('/api/index/users', function () {
     $user = Auth::user();
@@ -142,16 +184,29 @@ Route::get('/api/index/users', function () {
 Route::get('/api/index/invests', function () {
     $user = Auth::user();
     if ($user->role_id === 1) {
-        $invests = Invest::with(['dailyQuote' => function ($query) {
+        $invests = Invest::with([
+        'dailyQuote' => function ($query) {
             $query->orderBy('timestamp', 'desc');
         },
+        'treasuryQuote' => function ($query) {
+            $query->where('type', '=', 'sell')->orderBy('timestamp', 'desc');
+        },
         'treasury',
-        'broker', 'user', 'stock'])->get();
+        'security',
+        'issuer',
+        'broker', 'user', 'stock'
+         ])->get();
     } else {
-        $invests = Invest::with(['dailyQuote' => function ($query) {
+        $invests = Invest::with([
+        'dailyQuote' => function ($query) {
             $query->orderBy('timestamp', 'desc');
         },
+        'treasuryQuote' => function ($query) {
+            $query->where('type', '=', 'sell')->orderBy('timestamp', 'desc');
+        },
         'treasury',
+        'security',
+        'issuer',
         'broker', 'stock'])->where('user_id', $user->id)->get();
     };
     foreach ($invests as $key => &$value) {
@@ -159,25 +214,47 @@ Route::get('/api/index/invests', function () {
         //tratamento para broker
         $value->broker_name = $value->broker->name;
         unset($value->broker);
-        unset($value->broker_id);
+        unset($value->broker_id);       
+
+        //tratamento para issuer
+        if (isset($value->issuer)){
+        $value->issuer_name = $value->issuer->name;
+        }
+        unset($value->issuer);
+        unset($value->issuer_id);
 
         if (isset($value->stock)){
         //tratamento para stocks
         //para passar o nome do broker
+          
+        $value->inv = $value->stock->symbol;
         $value->symbol = $value->stock->symbol;
+        $value->issuer_name = $value->stock->symbol;
         //retira o objeto do stock
         unset($value->stock);
         }
-      
+
         if (isset($value->treasury)){
         //tratamento para treasury
         //para passar o nome do broker
-        $value->symbol = $value->treasury->code;
+        $value->inv = $value->treasury->code;
+        $value->code = $value->treasury->code;
+        $value->issuer_name = "Tesouro Nacional";
         //$value->rate = $value->rate / 10;
         //retira o objeto do treasury
         unset($value->treasury);
+        }        
+      
+        if (isset($value->security)){
+        //tratamento para treasury
+        //para passar o nome do broker
+        $value->inv = $value->security->name . " - " . $value->rate . "%";
+        $value->name = $value->security->name;
+        //$value->rate = $value->rate / 10;
+        //retira o objeto do treasury
+        unset($value->security);
         }
-        
+
         //retira o objeto de dentro do objeto, para renderizar corretamente
         //se existir, insere o valor da cotacao dos ultimo mes, caso não, vai zerado
         if (isset($value->dailyQuote[0]->close)) {
@@ -187,6 +264,16 @@ Route::get('/api/index/invests', function () {
         };
         //retira o objeto de dentro do objeto, para renderizar corretamente
         unset($value->dailyQuote);
+              
+      if (isset($value->treasuryQuote[0]->facevalue)) {
+            $value->quote = $value->treasuryQuote[0]->facevalue;
+        } else {
+            $value->quote = 0;
+        };
+        //retira o objeto de dentro do objeto, para renderizar corretamente
+        unset($value->treasuryQuote);
+      
+        
         //retira informacoes que nao queremos renderizar
         unset($value->stock_id);
         if ($user->role_id !== 1) {
@@ -199,9 +286,14 @@ Route::get('/api/index/invests', function () {
 
         //tratamento para treasuries
         unset($value->treasury_id);
-        unset($value->treasury);
+        unset($value->treasury);        
+      
+        //tratamento para securities
+        unset($value->security_id);
+        unset($value->security);
 
         //tratamento para cores e %
+        if($value->quote !== 0) {
         $value->percentage = ($value->quote / $value->price - 1);
         if ($value->price >= $value->quote) {
             $field = array('percentage' => 'danger');
@@ -212,6 +304,11 @@ Route::get('/api/index/invests', function () {
         } else {
             $field = array('percentage' => 'success');
             $value->_cellVariants = (object) array_merge((array)$value->_cellVariants, (array)$field);
+        }
+       } else {
+          $value->percentage = 0;
+          $field = array('percentage' => 'info');
+          $value->_cellVariants = (object) array_merge((array)$value->_cellVariants, (array)$field);
         }
     }
     return response()->json($invests);

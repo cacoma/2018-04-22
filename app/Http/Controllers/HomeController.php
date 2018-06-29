@@ -179,9 +179,19 @@ class HomeController extends Controller
         // $pie = array_combine($tempStockName, $tempTotal);
         //$portPerfP = array_combine($tempStockName, $tempPercentage);
 
-        $today = Carbon::today()->subDays(3);
+        $today = Carbon::today();
+        $pizzas = NULL;
+        do {
+            if (!empty($pizzas)) {
+               break;
+            } else {
+              $today = Carbon::today()->subDay(1);
+            }
+          $pizzas = DB::select("SELECT * FROM `pizza` WHERE user_id = :user_id AND atual = :today", ['user_id' => $user->id, 'today' => $today->toDateString()]);
+        } while (0);
+      
         
-      $pizzas = DB::select("SELECT * FROM `pizza` WHERE user_id = :user_id AND atual = :today", ['user_id' => $user->id, 'today' => $today->toDateString()]);
+      //$pizzas = DB::select("SELECT * FROM `pizza` WHERE user_id = :user_id AND atual = :today", ['user_id' => $user->id, 'today' => $today->toDateString()]);
       
       //$pizzas = DB::select("SELECT * FROM `pizza` WHERE user_id = ? AND atual = '?'", [$user->id, $today->toDateString()]);
         
@@ -192,24 +202,18 @@ class HomeController extends Controller
         
       
       //se a view do machado nao trouxer nada de hoje, buscar no dia anterior
-        if(empty($pizzas))
-        {
-          $yesterday = Carbon::yesterday()->subDays(5);
+        //if(empty($pizzas))
+       // {
+        //  $yesterday = Carbon::yesterday()->subDays(5);
           //$pizzas = DB::table('pizza')->where('user_id', $user->id)->whereDate('atual', '2018-06-24')->get();
 //           $sql = "SELECT * FROM `pizza` WHERE user_id = " . $user->id . " AND atual = '" . $yesterday->toDateString() . "'";
 //           var_dump($sql);
 //           $pizzas = DB::select($sql);
           //$pizzas = DB::select("SELECT * FROM `pizza` WHERE user_id = ? AND atual = '?'", [$user->id, $yesterday->toDateString()]);
          
-         $pizzas = DB::select("SELECT * FROM `pizza` WHERE user_id = :user_id AND atual = :yesterday", ['user_id' => $user->id, 'yesterday' => $yesterday->toDateString()]);
-        }
-      
-        //houve algum problema e não retornou nada
-        if(empty($pizzas))
-        {
-          //retornar algum erro?
-        }
-      
+        // $pizzas = DB::select("SELECT * FROM `pizza` WHERE user_id = :user_id AND atual = :yesterday", ['user_id' => $user->id, 'yesterday' => $yesterday->toDateString()]);
+       // }
+
         $pie = array();
         $portPerfP = array();
         $portPerfPTotalInvest = array();

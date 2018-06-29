@@ -53,6 +53,9 @@ window.createTypeStocks = (item) => {
 window.createTypeTreasuries = (item) => {
     window.events.$emit('createTypeTreasuries',item);
 };
+window.createTypeSecurities = (item) => {
+    window.events.$emit('createTypeSecurities',item);
+};
 window.deleteconfirmation = (item) => {
     window.events.$emit('deleteconfirmation',item);
 };
@@ -75,6 +78,7 @@ Vue.component('consolidatedinvests', require('./components/invests/consolidatedI
 Vue.component('createinvests', require('./components/invests/createInvests.vue'));
 Vue.component('createinveststypestocks', require('./components/invests/createTypeStocks.vue'));
 Vue.component('createinveststypetreasuries', require('./components/invests/createTypeTreasuries.vue'));
+Vue.component('createinveststypesecurities', require('./components/invests/createTypeSecurities.vue'));
 //Vue.component('createstock', require('./components/stocks/createStock.vue'));
 Vue.component('create', require('./components/create.vue'));
 Vue.component('createquotes', require('./components/quotes/createquotes.vue'));

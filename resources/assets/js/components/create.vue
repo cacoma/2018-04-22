@@ -32,6 +32,18 @@
               <b-form-input v-if="key == 'name'" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="key" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira esta informação.')"
                 required :dusk="key">
               </b-form-input>
+              <!--           index -->
+              <b-form-input v-if="key == 'index'" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="key" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira esta informação.')"
+                required :dusk="key">
+              </b-form-input>
+              <!--           liquidity -->
+              <b-form-input v-if="key == 'liquidity'" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="key" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira esta informação.')"
+                required :dusk="key">
+              </b-form-input>
+              <!--           ir -->
+              <b-form-input v-if="key == 'ir'" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="key" v-bind:ir="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira esta informação.')"
+                required :dusk="key">
+              </b-form-input>
               <!--           cnpj -->
               <b-form-input v-if="key == 'cnpj'" v-mask="['###.###.###-##', '##.###.###/####-##']" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="key" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')"
                 oninvalid="this.setCustomValidity('Insira esta informação.')" required :dusk="key">
@@ -51,6 +63,12 @@
               </b-form-input>
               <!-- coupon semestral -->
               <b-form-select v-if="key == 'coupon'" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="key" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" class="mb-3" :dusk="key">
+                <option value="" disabled>Por favor, escolha um.</option>
+                <option value="0">Não</option>
+                <option value="1">Sim</option>
+              </b-form-select>
+              <!-- FGC -->
+              <b-form-select v-if="key == 'fgc'" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="key" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" class="mb-3" :dusk="key">
                 <option value="" disabled>Por favor, escolha um.</option>
                 <option value="0">Não</option>
                 <option value="1">Sim</option>

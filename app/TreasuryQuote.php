@@ -3,11 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Invests;
 
 class TreasuryQuote extends Model
 {
     //
-  protected $table = 'daily_quotes';
+  protected $table = 'treasury_quotes';
   protected $dates = ['timestamp','created_at','updated_at'];
   
   public function treasury()
