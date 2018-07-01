@@ -210,7 +210,9 @@ Route::get('/api/index/invests', function () {
         'broker', 'stock'])->where('user_id', $user->id)->get();
     };
     foreach ($invests as $key => &$value) {
-
+  
+         $value->quote = 0;          
+    
         //tratamento para broker
         $value->broker_name = $value->broker->name;
         unset($value->broker);
@@ -248,7 +250,7 @@ Route::get('/api/index/invests', function () {
         if (isset($value->security)){
         //tratamento para treasury
         //para passar o nome do broker
-        $value->inv = $value->security->name . " - " . $value->rate . "%";
+        $value->inv = $value->security->name . " + " . $value->rate . "%";
         $value->name = $value->security->name;
         //$value->rate = $value->rate / 10;
         //retira o objeto do treasury
@@ -257,18 +259,18 @@ Route::get('/api/index/invests', function () {
 
         //retira o objeto de dentro do objeto, para renderizar corretamente
         //se existir, insere o valor da cotacao dos ultimo mes, caso não, vai zerado
-        if (isset($value->dailyQuote[0]->close)) {
+        if (isset($value->dailyQuote[0]->close) && $value->type === 'stock') {
             $value->quote = $value->dailyQuote[0]->close;
-        } else {
-            $value->quote = 0;
+//         } else {
+//             $value->quote = 0;
         };
         //retira o objeto de dentro do objeto, para renderizar corretamente
         unset($value->dailyQuote);
               
-      if (isset($value->treasuryQuote[0]->facevalue)) {
+      if (isset($value->treasuryQuote[0]->facevalue) && $value->type === 'treasury') {
             $value->quote = $value->treasuryQuote[0]->facevalue;
-        } else {
-            $value->quote = 0;
+//         } else {
+//             $value->quote = 0;
         };
         //retira o objeto de dentro do objeto, para renderizar corretamente
         unset($value->treasuryQuote);
@@ -280,7 +282,7 @@ Route::get('/api/index/invests', function () {
             unset($value->user_id);
             unset($value->id);
         } else {
-            $value->username = $user->name;
+            $value->username = $value->user->name;
             unset($value->user);
         }
 

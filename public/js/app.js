@@ -101491,9 +101491,9 @@ var tabs = [{
     template: '<div><moldura><createinveststypetreasuries dusk="createinveststypetreasuries"></createinveststypetreasuries> </moldura></div>'
   }
 }, {
-  name: 'CDBs ',
+  name: 'Renda Fixa ',
   component: {
-    template: '<div>CDBs</div>'
+    template: '<div><moldura><createinveststypesecurities dusk="createinveststypesecurities"></createinveststypesecurities> </moldura></div>'
   }
 }];
 
@@ -104027,11 +104027,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       results: [],
       resultbrokers: [],
+      resultissuers: [],
       show: false,
       disabledDates: racaz.dateInvestLimit.disabledDates,
       tipBroker: 'Procurar corretora',
-      tipname: 'Procurar título',
-      tipissuer: 'Procurar emissor',
+      tipName: 'Procurar título',
+      tipIssuer: 'Procurar emissor',
       optionsSignal: [{
         text: 'Compra',
         value: 'buy'
@@ -104086,8 +104087,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.form.post('/securities/investstore').then(function (data) {
           console.log('promise success ' + data);
           _this2.tipBroker = 'Procurar corretora';
-          _this2.tipname = 'Procurar título';
-          _this2.tipissuer = 'Procurar emissor';
+          _this2.tipName = 'Procurar título';
+          _this2.tipIssuer = 'Procurar emissor';
           if (_this2.Slug2 !== 'create') {
 
             _this2.show = false;
@@ -104116,8 +104117,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.formReset();
         this.form.signal = 'buy';
         this.tipBroker = 'Procurar corretora';
-        this.tipname = 'Procurar título';
-        this.tipissuer = 'Procurar emissor';
+        this.tipName = 'Procurar título';
+        this.tipIssuer = 'Procurar emissor';
         /* Reset our form values */
         /* Trick to reset/clear native browser form validation state */
         // this.show = false;
@@ -104146,8 +104147,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.form.reset();
         this.form.signal = 'buy';
         this.tipBroker = 'Procurar corretora';
-        this.tipname = 'Procurar título';
-        this.tipissuer = 'Procurar emissor';
+        this.tipName = 'Procurar título';
+        this.tipIssuer = 'Procurar emissor';
         this.editMode = false;
         this.show = true;
       }
@@ -104181,7 +104182,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     autoComplete: function autoComplete() {
       var _this5 = this;
 
-      this.tipname = 'Procurando...';
+      this.tipName = 'Procurando...';
       axios.get('/api/searchsecurities', {
         params: {
           query: this.form.name
@@ -104189,7 +104190,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }).then(function (response) {
         _this5.$nextTick(function () {
           this.results = response.data;
-          this.tipname = 'Ok';
+          this.tipName = 'Ok';
           console.log("buscou" + response.data);
         });
       }).catch(function (error) {
@@ -104362,16 +104363,16 @@ var render = function() {
                                 {
                                   name: "show",
                                   rawName: "v-show",
-                                  value: _vm.tipname,
-                                  expression: "tipname"
+                                  value: _vm.tipName,
+                                  expression: "tipName"
                                 }
                               ],
-                              ref: "tooltipname",
+                              ref: "tooltipName",
                               attrs: { target: "name", placement: "topright" }
                             },
                             [
                               _c("strong", {
-                                domProps: { textContent: _vm._s(_vm.tipname) }
+                                domProps: { textContent: _vm._s(_vm.tipName) }
                               })
                             ]
                           ),
@@ -104629,11 +104630,11 @@ var render = function() {
                                 {
                                   name: "show",
                                   rawName: "v-show",
-                                  value: _vm.tipissuer,
-                                  expression: "tipissuer"
+                                  value: _vm.tipIssuer,
+                                  expression: "tipIssuer"
                                 }
                               ],
-                              ref: "tooltipBroker",
+                              ref: "tooltipIssuer",
                               attrs: {
                                 target: "issuer_name",
                                 placement: "topright"
@@ -104641,7 +104642,7 @@ var render = function() {
                             },
                             [
                               _c("strong", {
-                                domProps: { textContent: _vm._s(_vm.tipBroker) }
+                                domProps: { textContent: _vm._s(_vm.tipIssuer) }
                               })
                             ]
                           ),
@@ -104663,7 +104664,7 @@ var render = function() {
                             attrs: {
                               type: "text",
                               list: "listissuers",
-                              placeholder: "Corretora",
+                              placeholder: "Emissor",
                               autocomplete: "off",
                               name: "issuer_name",
                               id: "issuer_name",

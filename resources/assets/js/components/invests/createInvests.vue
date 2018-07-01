@@ -37,9 +37,9 @@
     }
   },
   {
-    name: 'CDBs ',
+    name: 'Renda Fixa ',
     component: {
-      template: '<div>CDBs</div>',
+      template: '<div><moldura><createinveststypesecurities dusk="createinveststypesecurities"></createinveststypesecurities> </moldura></div>',
     }
   }
 ]

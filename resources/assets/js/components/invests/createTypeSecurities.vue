@@ -18,8 +18,8 @@
     <b-form-row>
       <b-col>
         <b-form-group id="namelabel" label="Código do titulo:" label-for="name">
-          <b-tooltip ref="tooltipname" v-show="tipname" target="name" placement="topright">
-            <strong v-text="tipname"></strong>
+          <b-tooltip ref="tooltipName" v-show="tipName" target="name" placement="topright">
+            <strong v-text="tipName"></strong>
           </b-tooltip>
           <input type="text" list="listsecurity" placeholder="Código da título" v-model="form.name" autocomplete="off" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('name') }" name="name" id="name" ref="name" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira o security')"
             required>
@@ -57,10 +57,10 @@
       </b-col>      
     <b-col>
         <b-form-group id="issuerlabel" label="Emissor:" label-for="issuer_name">
-          <b-tooltip ref="tooltipBroker" target="issuer_name" v-show="tipissuer" placement="topright">
-            <strong v-text="tipBroker"></strong>
+          <b-tooltip ref="tooltipIssuer" target="issuer_name" v-show="tipIssuer" placement="topright">
+            <strong v-text="tipIssuer"></strong>
           </b-tooltip>
-          <input type="text" list="listissuers" placeholder="Corretora" v-model="form.issuer_name" autocomplete="off" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('issuer_name') }" name="issuer_name" id="issuer_name" ref="issuer_name" oninput="setCustomValidity('')"
+          <input type="text" list="listissuers" placeholder="Emissor" v-model="form.issuer_name" autocomplete="off" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('issuer_name') }" name="issuer_name" id="issuer_name" ref="issuer_name" oninput="setCustomValidity('')"
             oninvalid="this.setCustomValidity('Insira o emissor.')" required>
           <datalist id="listissuers">
                    <option v-for="resultissuer in resultissuers" v-bind:value="resultissuer.name" class="text-light bg-dark">{{resultissuer.name}}</option>
@@ -174,11 +174,12 @@ export default {
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       results: [],
       resultbrokers: [],
+      resultissuers: [],
       show: false,
       disabledDates: racaz.dateInvestLimit.disabledDates,
       tipBroker: 'Procurar corretora',
-      tipname: 'Procurar título',
-      tipissuer: 'Procurar emissor',
+      tipName: 'Procurar título',
+      tipIssuer: 'Procurar emissor',
       optionsSignal: [{
           text: 'Compra',
           value: 'buy'
@@ -228,8 +229,8 @@ export default {
           .then(data => {
             console.log('promise success ' + data);
             this.tipBroker = 'Procurar corretora';
-            this.tipname = 'Procurar título';
-            this.tipissuer = 'Procurar emissor';
+            this.tipName = 'Procurar título';
+            this.tipIssuer = 'Procurar emissor';
               if(this.Slug2 !== 'create'){
                 
                 this.show = false;
@@ -261,8 +262,8 @@ export default {
         this.formReset();
         this.form.signal = 'buy';
         this.tipBroker = 'Procurar corretora';
-        this.tipname = 'Procurar título';
-        this.tipissuer = 'Procurar emissor';
+        this.tipName = 'Procurar título';
+        this.tipIssuer = 'Procurar emissor';
         /* Reset our form values */
         /* Trick to reset/clear native browser form validation state */
         // this.show = false;
@@ -290,8 +291,8 @@ export default {
         this.form.reset();
         this.form.signal = 'buy';
         this.tipBroker = 'Procurar corretora';
-        this.tipname = 'Procurar título';
-        this.tipissuer = 'Procurar emissor';
+        this.tipName = 'Procurar título';
+        this.tipIssuer = 'Procurar emissor';
         this.editMode = false;
         this.show = true;
       }
@@ -320,7 +321,7 @@ export default {
     },
     //busca os titulos
     autoComplete() {
-      this.tipname = 'Procurando...';
+      this.tipName = 'Procurando...';
       axios.get('/api/searchsecurities', {
           params: {
             query: this.form.name
@@ -328,7 +329,7 @@ export default {
         }).then(response => {
           this.$nextTick(function() {
             this.results = response.data;
-            this.tipname = 'Ok';
+            this.tipName = 'Ok';
             console.log("buscou" + response.data);
           });
         })
