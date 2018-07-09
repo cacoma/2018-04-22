@@ -43,6 +43,11 @@ Route::patch('/issuers/{id}', 'IssuerController@update');
 Route::delete('/issuers/{id}/destroy', 'IssuerController@destroy');
 Route::resource('issuers', 'IssuerController');
 
+Route::post('/indices/store', 'IndexController@store');
+Route::patch('/indices/{id}', 'IndexController@update');
+Route::delete('/indices/{id}/destroy', 'IndexController@destroy');
+Route::resource('indices', 'IndexController');
+
 //investimentos em acoes
 Route::post('/stocks/investstore', 'StockController@investstore'); //investimentos de acoes
 Route::get('/stocks/invests/{id}/edit', 'StockController@investedit'); //editar investimento tipo stock
@@ -131,6 +136,12 @@ Route::get('/api/searchissuers', function () {
     $issuers = DB::table('issuers')->where('name', 'like', $query.'%')->get();
     return response()->json($issuers);
 })->middleware('auth');
+//listagem de indices
+Route::get('/api/searchindices', function () {
+    $query = Input::get('query');
+    $indices = DB::table('indices')->where('name', 'like', $query.'%')->get();
+    return response()->json($indices);
+})->middleware('auth');
 Route::get('/api/brokers', function () {
     $brokers = DB::table('brokers')->get();
     return response()->json($brokers);
@@ -158,6 +169,10 @@ Route::get('/api/index/brokers', function () {
 Route::get('/api/index/issuers', function () {
     $issuers = DB::table('issuers')->get();
     return $issuers;
+})->middleware('auth');
+Route::get('/api/index/indices', function () {
+    $indices = DB::table('indices')->get();
+    return $indices;
 })->middleware('auth');
 Route::get('/api/index/stocks', function () {
     $stocks = DB::table('stocks')->get();

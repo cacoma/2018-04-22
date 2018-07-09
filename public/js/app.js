@@ -37967,7 +37967,7 @@ racaz = function () {
 
   var percFormatter = new Intl.NumberFormat(locale, percentageOptions);
 
-  var columnDesc = [["id", 'ID'], ["name", 'Nome'], ["email", 'E-mail'], ["role_id", 'Permissão'], ["created_at", "Criado em"], ["updated_at", "Atual. em"], ["timestamp", "Data do reg."], ["symbol", "Ticket"], ["stock_id", "Ticket"], ["type", "Tipo"], ["cnpj", "CNPJ"], ["open", "Abertura"], ["volume", "Volume"], ["price", "Preço"], ["low", "Baixa"], ["high", "Alta"], ["close", "Fecham"], ["date_invest", "Data inv."], ["broker_fee", "Corretagem"], ["broker_id", "Corretora"], ["broker", "Corretora"], ["quote", "Cotação"], ["quant", "Quant."], ["user_id", "Usuario"], ["total", "Total"], ["percentage", "%"], ["invests", "Investimentos"], ["stocks", "Ações"], ["stock", "Ação"], ["brokers", "Corretoras"], ["broker_name", "Corretora"], ["users", "Usuário"], ["monthlyquotes", "Cotações mensais"], ["dailyquotes", "Cotações diarias"], ["fail", "Falha"], ["success", "Sucesso"], ["upToDate", "Atualiz. anteriormente"], ["stock_name", "Ação"], ["profile", "Perfil"], ["treasuries", "Titulos"], ["treasury", "Titulo"], ["due_date", "Vencimento"], ["coupon", "Juros semestrais"], ["coupon_date", "Prim. pag. de juros"], ["coupon_date2", "Seg. pag. de juros"], ["code", "Código"], ["0", "Não"], ["1", "Sim"], ["rate", "Taxa"], ["avgprice", "Preço médio"], ["sumquant", "Quantidade"], ["index", "Índice"], ["ir", "IR"], ["name", "Nome"], ["securities", "Renda fixa"], ["security", "Renda fixa"], ["liquidity", "Liquidez"], ["fgc", "FGC"], ["issuer_name", "Emissor"], ["issuer", "Emissor"], ["issuers", "Emissores"], ["inv", "Invest."]];
+  var columnDesc = [["id", 'ID'], ["name", 'Nome'], ["email", 'E-mail'], ["role_id", 'Permissão'], ["created_at", "Criado em"], ["updated_at", "Atual. em"], ["timestamp", "Data do reg."], ["symbol", "Ticket"], ["stock_id", "Ticket"], ["type", "Tipo"], ["cnpj", "CNPJ"], ["open", "Abertura"], ["volume", "Volume"], ["price", "Preço"], ["low", "Baixa"], ["high", "Alta"], ["close", "Fecham"], ["date_invest", "Data inv."], ["broker_fee", "Corretagem"], ["broker_id", "Corretora"], ["broker", "Corretora"], ["quote", "Cotação"], ["quant", "Quant."], ["user_id", "Usuario"], ["total", "Total"], ["percentage", "%"], ["invests", "Investimentos"], ["stocks", "Ações"], ["stock", "Ação"], ["brokers", "Corretoras"], ["broker_name", "Corretora"], ["users", "Usuário"], ["monthlyquotes", "Cotações mensais"], ["dailyquotes", "Cotações diarias"], ["fail", "Falha"], ["success", "Sucesso"], ["upToDate", "Atualiz. anteriormente"], ["stock_name", "Ação"], ["profile", "Perfil"], ["treasuries", "Titulos"], ["treasury", "Titulo"], ["due_date", "Vencimento"], ["coupon", "Juros semestrais"], ["coupon_date", "Prim. pag. de juros"], ["coupon_date2", "Seg. pag. de juros"], ["code", "Código"], ["0", "Não"], ["1", "Sim"], ["rate", "Taxa"], ["avgprice", "Preço médio"], ["sumquant", "Quantidade"], ["index", "Índice"], ["ir", "IR"], ["name", "Nome"], ["securities", "Renda fixa"], ["security", "Renda fixa"], ["liquidity", "Liquidez"], ["fgc", "FGC"], ["issuer_name", "Emissor"], ["issuer", "Emissor"], ["issuers", "Emissores"], ["inv", "Invest."], ["bc_code", "Codigo BC"], ["unit", "Unidade"]];
 
   //variaveis para utilizar no vue datepicker, com a finalidade de limitar a quantidade de datas que podem ser utilizadas
 
@@ -38132,9 +38132,11 @@ racaz = function () {
               }
             });
             //o item _cellVariants nao é renderizado
-          } else if (value === "_cellVariants" || value === "created_at" || value === "updated_at" || value === "redirect" || value === "user_id" || value === "issuer_id" || value === "security_id" || value === "name" || value === "code" || value === "symbol") {
-            // faz nada
-          } else {
+          } else if (value === "_cellVariants" || value === "created_at" || value === "updated_at" || value === "redirect" || value === "user_id" || value === "issuer_id" || value === "security_id"
+          //|| value === "name" || value === "code" || value === "symbol") {
+          ) {
+              // faz nada
+            } else {
             fields.push({
               key: value,
               label: racaz.columnName(value),
@@ -100001,6 +100003,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['auth'],
@@ -100090,6 +100093,10 @@ var render = function() {
                   _vm._v(" "),
                   _c("b-dropdown-item", { attrs: { href: "/issuers" } }, [
                     _vm._v("Emissores")
+                  ]),
+                  _vm._v(" "),
+                  _c("b-dropdown-item", { attrs: { href: "/indices" } }, [
+                    _vm._v("Indices")
                   ]),
                   _vm._v(" "),
                   _c("b-dropdown-item", { attrs: { href: "/users" } }, [
@@ -105276,6 +105283,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -105542,7 +105557,59 @@ var render = function() {
                                       })
                                     : _vm._e(),
                                   _vm._v(" "),
+                                  key == "bc_code"
+                                    ? _c("b-form-input", {
+                                        key: key,
+                                        ref: key,
+                                        refInFor: true,
+                                        class: {
+                                          "is-invalid": _vm.form.errors.has(key)
+                                        },
+                                        attrs: {
+                                          value: value,
+                                          id: value,
+                                          name: key,
+                                          oninput: "setCustomValidity('')",
+                                          oninvalid:
+                                            "this.setCustomValidity('Insira esta informação.')",
+                                          required: "",
+                                          dusk: key
+                                        },
+                                        on: {
+                                          input: function($event) {
+                                            _vm.updateData(key)
+                                          }
+                                        }
+                                      })
+                                    : _vm._e(),
+                                  _vm._v(" "),
                                   key == "type"
+                                    ? _c("b-form-input", {
+                                        key: key,
+                                        ref: key,
+                                        refInFor: true,
+                                        class: {
+                                          "is-invalid": _vm.form.errors.has(key)
+                                        },
+                                        attrs: {
+                                          value: value,
+                                          id: key,
+                                          name: key,
+                                          oninput: "setCustomValidity('')",
+                                          oninvalid:
+                                            "this.setCustomValidity('Insira esta informação.')",
+                                          required: "",
+                                          dusk: key
+                                        },
+                                        on: {
+                                          input: function($event) {
+                                            _vm.updateData(key)
+                                          }
+                                        }
+                                      })
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  key == "unit"
                                     ? _c("b-form-input", {
                                         key: key,
                                         ref: key,

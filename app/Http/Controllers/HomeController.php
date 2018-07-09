@@ -32,7 +32,7 @@ class HomeController extends Controller
         $pie = new \stdClass;
         $portPerfP = new \stdClass;
 
-        $invests = Invest::with('stock')->where('user_id', $user->id)->get();
+        $invests = Invest::with('stock')->where('user_id', $user->id)->where('stock_id', '<>', 'NULL')->get();
 
 
         //pega todos os investimentos AGRUPADOS do usuario para chart de pie (pizza)
@@ -48,9 +48,7 @@ class HomeController extends Controller
 
 
         //variavel que busca os dados de todas as acoes que o usuario tem, para chart
-        $portPerf = Invest::groupBy('stock_id')->with('stock')
-          ->selectRaw('stock_id')
-          ->where('user_id', $user->id)->get();
+        $portPerf = Invest::groupBy('stock_id')->with('stock')->selectRaw('stock_id')->where('user_id', $user->id)->where('stock_id', '<>', 'NULL')->get();
 
 
 
@@ -179,16 +177,30 @@ class HomeController extends Controller
         // $pie = array_combine($tempStockName, $tempTotal);
         //$portPerfP = array_combine($tempStockName, $tempPercentage);
 
-        $today = Carbon::today();
         $pizzas = NULL;
+        $day = Carbon::today();
         do {
-            if (!empty($pizzas)) {
-               break;
-            } else {
-              $today = Carbon::today()->subDay(1);
-            }
-          $pizzas = DB::select("SELECT * FROM `pizza` WHERE user_id = :user_id AND atual = :today", ['user_id' => $user->id, 'today' => $today->toDateString()]);
-        } while (0);
+             //if (!empty($pizzas)) {
+             //    break;
+             // } else {
+              $pizzas = DB::select("SELECT * FROM `pizza` WHERE user_id = :user_id AND atual = :day", ['user_id' => $user->id, 'day' => $day->format('Y-m-d')]);
+              $day = $day->subDay();
+              //$pizzas = DB::select("SELECT * FROM `pizza` WHERE user_id = :user_id AND atual = :day", ['user_id' => $user->id, 'day' => $day->format('Y-m-d')]);
+            //  }
+          // $pizzas = DB::select("SELECT * FROM `pizza` WHERE user_id = :user_id AND atual = :today", ['user_id' => $user->id, 'today' => $today->toDateString()]);
+        } while (empty($pizzas));        
+      
+//       while (DB::table('pizza')->where('user_id', $user)->where('atual', $today)->doesntExist()) {
+//              //if (!empty($pizzas)) {
+//              //    break;
+//              // } else {
+//               // $pizzas = DB::select("SELECT * FROM `pizza` WHERE user_id = :user_id AND atual = :today", ['user_id' => $user->id, 'today' => $today->format('Y-m-d')]);
+//               $pizzas = DB::table('pizza')->where('user_id', $user)->where('atual', $today)->get();
+//               $today = $today->subDay();
+//               //}
+//           // $pizzas = DB::select("SELECT * FROM `pizza` WHERE user_id = :user_id AND atual = :today", ['user_id' => $user->id, 'today' => $today->toDateString()]);
+//         } 
+         // $pizzas = DB::select("SELECT * FROM `pizza` WHERE user_id = :user_id AND atual = :today", ['user_id' => $user->id, 'today' => '2018-07-08']);
       
         
       //$pizzas = DB::select("SELECT * FROM `pizza` WHERE user_id = :user_id AND atual = :today", ['user_id' => $user->id, 'today' => $today->toDateString()]);
@@ -218,6 +230,7 @@ class HomeController extends Controller
         $portPerfP = array();
         $portPerfPTotalInvest = array();
         //$portPerfPPrice = array();
+      
 
         foreach ($pizzas as &$pizza) {
             if (isset($pie[$pizza->symbol])) {
@@ -230,13 +243,14 @@ class HomeController extends Controller
         }
 
         foreach ($pie as $key => $value) {
-          $portPerfP[$key] = ($pie[$key] / $portPerfPTotalInvest[$key] - 1) * 100;
+          $portPerfP[$key] = round(($pie[$key] / $portPerfPTotalInvest[$key] - 1) * 100, 2);
         }
 
 
         return view('home')  ->with('invests', $invests)
                               ->with('portPerf', $portPerf)
                                 ->with('portPerfP', $portPerfP)
-                                  ->with('pie', $pie);
+                                  ->with('pie', $pie)
+                                  ->with('day', $day);
     }
 }

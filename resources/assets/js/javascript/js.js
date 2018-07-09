@@ -101,6 +101,8 @@ racaz = function() {
     ["issuer", "Emissor"],
     ["issuers", "Emissores"],
     ["inv", "Invest."],
+    ["bc_code", "Codigo BC"],
+    ["unit", "Unidade"],
   ];
 
   //variaveis para utilizar no vue datepicker, com a finalidade de limitar a quantidade de datas que podem ser utilizadas
@@ -237,7 +239,9 @@ racaz = function() {
             }
           });
           //o item _cellVariants nao é renderizado
-        } else if (value === "_cellVariants" || value === "created_at" || value === "updated_at" || value === "redirect" || value === "user_id" || value === "issuer_id" || value === "security_id" || value === "name" || value === "code" || value === "symbol") {
+        } else if (value === "_cellVariants" || value === "created_at" || value === "updated_at" || value === "redirect" || value === "user_id" || value === "issuer_id" || value === "security_id" 
+                   //|| value === "name" || value === "code" || value === "symbol") {
+                   ){
           // faz nada
         } else {
           fields.push({

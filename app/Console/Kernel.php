@@ -38,10 +38,15 @@ class Kernel extends ConsoleKernel
           ->after(function () {
              Log::info("Execução da importação em massa programada");
          });
-         $schedule->exec('node /home/ubuntu/scraping/treasury.js')
+         $schedule->exec('node /home/ubuntu/scraping/getTreasuries.js')
            ->hourlyAt(18)
            ->between('8:00', '18:00')
            ->sendOutputTo('/var/www/html/storage/logs/treasuryScrape2.log')
+           ->emailOutputTo('rcaziraghi@gmail.com')
+           ->withoutOverlapping();         
+      $schedule->exec('node /home/ubuntu/scraping/getIndices.js')
+          ->dailyAt('18:15')
+           ->sendOutputTo('/var/www/html/storage/logs/IndicesScrape.log')
            ->emailOutputTo('rcaziraghi@gmail.com')
            ->withoutOverlapping();
 //            ->after(function () {

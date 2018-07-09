@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateIndicesTable extends Migration
+class CreateIndexQuotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateIndicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('indices', function (Blueprint $table) {
+        Schema::create('index_quotes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('type');
+            $table->integer('index_id')->unsigned();
+            $table->decimal('quote',18,4);
             $table->string('unit');
-            $table->string('bc_code');
-            // $table->dateTime('timestamp');
+            $table->string('type');
+            $table->dateTime('timestamp');
+            $table->foreign('index_id')->references('id')->on('indices');
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ class CreateIndicesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('indices');
+        Schema::dropIfExists('index_quotes');
     }
 }

@@ -21,8 +21,16 @@
               <b-form-input v-if="key == 'code'" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="value" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')"
                 oninvalid="this.setCustomValidity('Insira esta informação.')" required :dusk="key">
               </b-form-input>
+              <!--              bc_code -->
+              <b-form-input v-if="key == 'bc_code'" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="value" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')"
+                oninvalid="this.setCustomValidity('Insira esta informação.')" required :dusk="key">
+              </b-form-input>
               <!--           type -->
               <b-form-input v-if="key == 'type'" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="key" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira esta informação.')"
+                required :dusk="key">
+              </b-form-input>              
+              <!--           unit -->
+              <b-form-input v-if="key == 'unit'" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="key" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira esta informação.')"
                 required :dusk="key">
               </b-form-input>
               <!--           id -->
