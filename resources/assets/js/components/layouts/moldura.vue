@@ -22,15 +22,14 @@ export default {
       createTypeStocks();
       createTypeTreasuries();
       createTypeSecurities();
-    } else {
+    } else if (this.slug !== 'invests' && this.slug !== 'funds' && this.Slug2 === 'create') {
+    //caso seja usado para criar algum elemento sem modal, no caminho de http
+      create();
       console.log('not invests');
       //create();
-    };
-    //caso seja usado para criar algum elemento sem modal, no caminho de http
-    if (this.slug !== 'invests' && this.Slug2 === 'create') {
-      console.log('invests');
-      create();
-    }
+    } else if (this.slug === 'funds' && this.Slug2 === 'create') {
+      createFund();     
     }
   }
+}
 </script>

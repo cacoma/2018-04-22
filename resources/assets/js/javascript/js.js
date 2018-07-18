@@ -103,6 +103,29 @@ racaz = function() {
     ["inv", "Invest."],
     ["bc_code", "Codigo BC"],
     ["unit", "Unidade"],
+    ["type_invest", "Tipo"],
+    ["designation", "Investimento"],
+    ["total_invested", "Tot. inv."],
+    ["total_updated", "Tot. atual."],
+    ["dif_percentage", "%"],
+    ["dif_reais", "Dif. (R$)"],
+    ["date_updated", "Data at."],
+    ["funds", "Fundos"],
+    ["fund", "Fundo"],
+    ["reg_date", "Data de registro"],
+    ["const_date", "Data de constituição"],
+    ["canc_date", "Data de cancelamento"],
+    ["sit", "Situação"],
+    ["classe", "Classe"],
+    ["rentabilidade", "Rentabilidade"],
+    ["inv_qual", "Investidor qualificado"],
+    ["fundo_exc", "Fundo exclusivo"],
+    ["fundo_cotas", "Fundo de cotas"],
+    ["taxa_perf", "Taxa de performance"],
+    ["diretor", "Diretor"],
+    ["admin", "Administrador"],
+    ["gestor", "Gestor"],
+    ["auditor", "Auditor"],
   ];
 
   //variaveis para utilizar no vue datepicker, com a finalidade de limitar a quantidade de datas que podem ser utilizadas
@@ -160,20 +183,24 @@ racaz = function() {
       for (let value of data) {
         //value = value.replace(/[.\W\d]/g,'');
         //aqui ele formata as datas
-        if (value === "timestamp" || value === "date_invest" || value === "data" || value === "due_date") {
+        if (value === "timestamp" || value === "date_invest" || value === "data" || value === "due_date" || value === "date_updated") {
           fields.push({
             key: value,
             label: racaz.columnName(value),
             sortable: true,
             formatter: (value) => {
-              return moment(String(value)).format('DD/MM/YYYY hh:mm');
+              // return moment(String(value)).format('DD/MM/YYYY hh:mm');
+              return moment(String(value)).format('DD/MM/YYYY');
             }
           });
           //aqui formata os precos
         } else if (value === "open" || value === "high" || value === "low" ||
           value === "close" || value === "price" || value === "quote" ||
           value === "broker_fee" || value === "total" ||
-          value === "1. open" || value === "2. high" || value === "3. low" || value === "4. close" || value === "avgprice"
+          value === "1. open" || value === "2. high" || value === "3. low" ||
+          value === "4. close" || value === "avgprice" ||
+          value === "total_invested" || value === "total_updated" ||
+          value === "dif_reais"
         ) {
           fields.push({
             key: value,
@@ -224,7 +251,7 @@ racaz = function() {
               return racaz.columnName(value);
             }
           });
-        } else if (value === "coupon" || value === "fgc") {
+        } else if (value === "coupon" || value === "fgc" || value === "fundo_cotas") {
           fields.push({
             key: value,
             label: racaz.columnName(value),
@@ -239,7 +266,10 @@ racaz = function() {
             }
           });
           //o item _cellVariants nao é renderizado
-        } else if (value === "_cellVariants" || value === "created_at" || value === "updated_at" || value === "redirect" || value === "user_id" || value === "issuer_id" || value === "security_id" 
+        } else if (value === "_cellVariants" || value === "created_at" || value === "updated_at" || value === "redirect" || 
+                   value === "user_id" || value === "issuer_id" || value === "security_id" || value === "canc_date" ||
+                   value === "const_date" || value === "reg_date" || value === "fundos_cotas" || value === "fundo_exc" ||
+                   value === "inv_qual" || value === "ir" || value === "taxa_perf" || value === "auditor" || value === "diretor"
                    //|| value === "name" || value === "code" || value === "symbol") {
                    ){
           // faz nada
@@ -260,11 +290,13 @@ racaz = function() {
     //depois ele vai fazer o tratamento dos dados apresentados, trazendo para formatos de apresentacao
     if (Array.isArray(data)) {
       //aqui ele formata as datas
-      if (data[0] === "timestamp" || data[0] === "date_invest") {
+      if (data[0] === "timestamp" || data[0] === "date_invest" || data[0] === "date_updated") {
         data[1] = moment(String(data[1])).format('DD/MM/YYYY hh:mm');
         //data[1] = moment(data[1]).format('DD/MM/YYYY');
         //aqui formata os precos
-      } else if (data[0] === "open" || data[0] === "high" || data[0] === "low" || data[0] === "close" || data[0] === "price" || data[0] === "quote" || data[0] === "broker_fee" || data[0] === "total") {
+      } else if (data[0] === "open" || data[0] === "high" || data[0] === "low" || data[0] === "close"
+      || data[0] === "price" || data[0] === "quote" || data[0] === "broker_fee" || data[0] === "dif_reais"
+      || data[0] === "total" || data[0] === "total_invested" || data[0] === "total_updated") {
         data[1] = currFormatter.format(data[1]);
         //aqui traz volume para valor inteiro, sem fracao
       } else if (data[0] === "volume" || data[0] === "quant") {
@@ -275,6 +307,10 @@ racaz = function() {
         //o item _cellVariants nao é renderizado
       } else if (data[0] === "created_at" || data[0] === "updated_at") {
         data[1] = moment(data[1]).format('DD/MM/YYYY HH:mm:ss');
+      } else if (data[0] === "dif_percentage") {
+        data[1] = data[1] + "%";      
+      } else if (data[0] === "fundo_cotas") {
+        data[1] = data[1] === 1 ? "Sim" : "Não";
       } else {
         console.log('Nao formatado pelo formtt, mas sucesso' + data);
       }
@@ -329,7 +365,48 @@ racaz = function() {
     // Shift back
     value = value.toString().split('e');
     return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
-  }
+  };
+  
+//   function removeAcento (text)
+// {       
+//     // text = text.toLowerCase();                                                         
+//     text = text.replace(new RegExp('[ÁÀÂÃ]','gi'), 'a');
+//     text = text.replace(new RegExp('[ÉÈÊ]','gi'), 'e');
+//     text = text.replace(new RegExp('[ÍÌÎ]','gi'), 'i');
+//     text = text.replace(new RegExp('[ÓÒÔÕ]','gi'), 'o');
+//     text = text.replace(new RegExp('[ÚÙÛ]','gi'), 'u');
+//     text = text.replace(new RegExp('[Ç]','gi'), 'c');
+//     return text;                 
+// }
+  
+//   function removeAcento( newStringComAcento ) {
+//   var string = newStringComAcento;
+// 	var mapaAcentosHex 	= {
+// 		a : /[\xE0-\xE6]/g,
+// 		e : /[\xE8-\xEB]/g,
+// 		i : /[\xEC-\xEF]/g,
+// 		o : /[\xF2-\xF6]/g,
+// 		u : /[\xF9-\xFC]/g,
+// 		c : /\xE7/g,
+// 		n : /\xF1/g
+// 	};
+
+// 	for ( var letra in mapaAcentosHex ) {
+// 		var expressaoRegular = mapaAcentosHex[letra];
+// 		string = string.replace( expressaoRegular, letra );
+// 	}
+
+// 	return string;
+// }
+  function removeAcento(s) 
+{
+    var i = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖŐòóôõöőÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜŰùúûüűÑñŠšŸÿýŽž'.split('');
+    var o = 'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUUuuuuuNnSsYyyZz'.split('');
+    var map = {};
+    i.forEach(function(el, idx) {map[el] = o[idx]});
+    return s.replace(/[^A-Za-z0-9]/g, function(ch) { return map[ch] || ch; })
+}
+
 
   //traz para
   //   currFormatterNeu = function (n, currency) {
@@ -350,6 +427,7 @@ racaz = function() {
     "currFormatter": currFormatter,
     "numberForm": numberForm,
     "round": round,
+    "removeAcento" : removeAcento
   };
 
 }();

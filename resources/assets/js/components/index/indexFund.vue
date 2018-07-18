@@ -1,0 +1,175 @@
+<template>
+<div class="container-fluid justify-content-center" v-if="loaded === true">
+  <b-card :header="this.Slug" header-tag="header" title="">
+    <p class="card-text">
+      <b-row>
+        <b-col md="6" class="my-1">
+          <b-button size="sm" @click.stop="allDetails()">
+            {{ this.showAll ? 'Fechar' : 'Abrir' }} todos detalhes
+          </b-button>
+          <b-button size="sm" @click.stop="this.enlarge('createFund')">
+            Criar fundos
+          </b-button>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col md="6" class="my-1">
+          <b-form-group horizontal label="Filtro" class="mb-0">
+            <b-input-group>
+              <b-form-input v-model="filter" placeholder="Pesquisar" />
+              <b-input-group-append>
+                <b-btn :disabled="!filter" @click="filter = ''">Limpar</b-btn>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+        </b-col>
+        <b-col md="6" class="my-1">
+          <b-form-group horizontal label="Itens por pagina" class="mb-0">
+            <b-form-select :options="pageOptions" v-model="perPage" />
+          </b-form-group>
+        </b-col>
+      </b-row>
+
+      <!-- Main table element -->
+      <b-table ref="table" id="table" show-empty responsive stacked="lg" :busy.sync="isBusy" :items="items" :fields="fields" :current-page="currentPage" :per-page="perPage" :filter="filter" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" @filtered="onFiltered">
+        <template slot="actions" slot-scope="row">
+        <!-- We use @click.stop here to prevent a 'row-clicked' event from also happening -->
+        <b-button size="sm" @click.stop="toggleInfo(row.item, row.index)">
+          {{ row.detailsShowing ? 'Fechar' : 'Abrir' }} detalhes
+        </b-button>
+        <b-button size="sm" @click.stop="this.enlarge('createFund',row.item)">
+          Editar
+        </b-button>
+        <b-button size="sm" @click.stop="this.deleteconfirmation(row.item)">
+          Excluir
+        </b-button>
+      </template>
+        <template slot="row-details" slot-scope="row">
+        <b-card>
+<!--  funcao para nao mostrar o que sao variaveis          -->
+          <ul v-for="(value, key) in row.item">
+            <li v-if="key !== '_cellVariants' && key !== '_showDetails' && key !== 'index'" :key="key">{{ this.racaz.columnName(key) }}: {{ this.racaz.formtt([key,value]) }}</li>
+          </ul>
+        </b-card>
+      </template>
+      </b-table>
+      <b-row>
+        <b-col md="12" class="my-1 mx-auto">
+          <b-pagination :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0" />
+        </b-col>
+      </b-row>
+      <enlarge>
+        <createfund></createfund>
+      </enlarge>
+      <!-- <enlarge> -->
+      <!-- <createinvests></createinvests> -->
+      <!-- </enlarge> -->
+      <!--     </div> -->
+    </p>
+  </b-card>
+  <!--   </div> -->
+</div>
+</template>
+
+<script>
+ 
+let items = {};
+export default {
+  data() {
+    return {
+      keys: [],
+      fields: [],
+      currentPage: 1,
+      perPage: 5,
+      totalRows: 0,
+      pageOptions: [5, 10, 15],
+      sortBy: null,
+      sortDesc: false,
+      filter: null,
+      modalInfo: {
+        title: '',
+        content: ''
+      },
+      loaded: false,
+      slug: racaz.slug,
+      Slug: racaz.columnName(racaz.slug),
+      showAll: false,
+      editRow: '',
+      delRow: '',
+      delRowMessage: '',
+      delUrl: '',
+      isBusy: false,
+      items: [],
+    }
+  },
+  created: function() {
+    this.provideData();
+    this.loaded = true;
+  },
+  mounted: function() {
+    this.$bus.$on('updateindexedit', () => this.provideData());
+  },
+  methods: {
+    provideData() {
+      this.isBusy = true;
+      // Here we don't set isBusy prop, so busy state will be handled by table itself
+      let promise = axios.get('/api/index/' + racaz.slug)
+
+      return promise.then((response) => {
+          this.fields = racaz.fieldsFiller(Object.keys(response.data[0]));
+          this.fields.push({
+            key: 'actions',
+            label: 'Opções',
+            formatter: (value, key, item) => {30
+              return `/${racaz.slug}/${response.data.id}`;
+            }
+          });
+          this.items = response.data;
+          this.totalRows = this.items.length;
+          // Here we could override the busy state, setting isBusy to false
+          this.isBusy = false;
+          return (this.items);
+        })
+        .catch(error => {
+          // Here we could override the busy state, setting isBusy to false
+          // this.isBusy = false
+          // Returning an empty array, allows table to correctly handle busy state in case of error
+          return []
+        })
+    },
+    toggleInfo(item, index, button) {
+      if (!item._showDetails) {
+        Vue.set(item, '_showDetails', true)
+        this.showAll = true
+      } else if (item._showDetails == false) {
+        Vue.set(item, '_showDetails', true)
+        this.showAll = true
+      } else {
+        Vue.set(item, '_showDetails', false)
+        this.showAll = false
+      }
+      this.$forceUpdate()
+    },
+    onFiltered(filteredItems) {
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.totalRows = filteredItems.length
+      this.currentPage = 1
+    },
+    allDetails() {
+      //funcao para mostrar ou fechar todos os detalhes
+      if (this.showAll == false) {
+        for (const value of this.items) {
+          value._showDetails = true
+        }
+        this.showAll = true
+      } else {
+        for (const value of this.items) {
+          value._showDetails = false
+        }
+        this.showAll = false
+      }
+      this.$forceUpdate();
+    },
+  }
+}
+</script>

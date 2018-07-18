@@ -19,6 +19,7 @@ export class Errors {
   }
   //faz update dos erros que chegam do servidor
   record(errors) {
+    console.log(errors)
     this.errors = errors;
   }
 

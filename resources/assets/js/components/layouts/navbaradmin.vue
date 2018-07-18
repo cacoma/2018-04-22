@@ -10,11 +10,12 @@
     <b-nav-item-dropdown text="Cadastros" right v-if="this.auth.role_id === 1">
       <b-dropdown-item href="/stocks">Ações</b-dropdown-item>
       <b-dropdown-item href="/brokers">Corretoras</b-dropdown-item>
+      <b-dropdown-item href="/treasuries">Títulos do tesouro</b-dropdown-item>
+      <b-dropdown-item href="/securities">Renda fixa</b-dropdown-item>
+      <b-dropdown-item href="/funds">Fundos de investimento</b-dropdown-item>
       <b-dropdown-item href="/issuers">Emissores</b-dropdown-item>
       <b-dropdown-item href="/indices">Indices</b-dropdown-item>
       <b-dropdown-item href="/users">Usuários</b-dropdown-item>
-      <b-dropdown-item href="/treasuries">Títulos do tesouro</b-dropdown-item>
-      <b-dropdown-item href="/securities">Renda fixa</b-dropdown-item>
     </b-nav-item-dropdown>
     <!-- <b-nav-item-dropdown text="Cotações" right v-if="this.auth.role_id === 1">
       <b-dropdown-item href="/dailyquotes">Diárias</b-dropdown-item>

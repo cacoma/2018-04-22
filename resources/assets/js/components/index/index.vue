@@ -10,7 +10,10 @@
           <b-button size="sm" @click.stop="allDetails()">
             {{ this.showAll ? 'Fechar' : 'Abrir' }} todos detalhes
           </b-button>
-          <b-button v-if="slug != 'invests'" size="sm" @click.stop="this.enlarge('create')">
+          <b-button v-if="slug !== 'invests' && slug !== 'funds'" size="sm" @click.stop="this.enlarge('create')">
+            Criar {{Slug}}
+          </b-button>
+          <b-button v-if="slug === 'funds'" size="sm" @click.stop="this.enlarge('createFunds')">
             Criar {{Slug}}
           </b-button>
           <!--           <b-button v-if="slug == 'invests'" size="sm" @click.stop="this.enlarge('createTypeStocks')">
@@ -20,6 +23,7 @@
             <b-dropdown-item @click.stop="this.enlarge('createTypeStocks')">Ações</b-dropdown-item>
             <b-dropdown-item @click.stop="this.enlarge('createTypeTreasuries')">Titulos do tesouro</b-dropdown-item>
             <b-dropdown-item @click.stop="this.enlarge('createTypeSecurities')">Renda fixa</b-dropdown-item>
+            <b-dropdown-item @click.stop="this.enlarge('createTypeFunds')">Fundos</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
             <b-dropdown-item disabled>CDB</b-dropdown-item>
           </b-dropdown>
@@ -56,10 +60,10 @@
          <div v-if="slug == 'invests'">
         <b-button v-if="row.item.type === 'stock'" size="sm" @click.stop="this.enlarge('createTypeStocks',row.item)">
           Editar ação
-        </b-button>        
+        </b-button>
         <b-button v-if="row.item.type === 'treasury'" size="sm" @click.stop="this.enlarge('createTypeTreasuries',row.item)">
           Editar título
-        </b-button>        
+        </b-button>
         <b-button v-if="row.item.type === 'security'" size="sm" @click.stop="this.enlarge('createTypeSecurities',row.item)">
           Editar renda fixa
         </b-button>

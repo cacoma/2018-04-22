@@ -38,6 +38,7 @@
         <div class="sk-cube sk-cube9"></div>
       </div>
       <loading dusk="loading" id="loading"></loading>
+      <progressbar dusk="progressbar" id="progressbar"></progressbar>
       <deleteconfirmation dusk="deleteconfirmation" id="deleteconfirmation"></deleteconfirmation>
       <div id="blur" dusk="blur" class="blur">
 <!--   componente que mostra mensagens de erro     -->

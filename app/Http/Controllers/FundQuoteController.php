@@ -2,18 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\WorkingDay;
+use App\FundQuote;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 
-class WorkingDayController extends Controller
+class FundQuoteController extends Controller
 {
-      public function __construct()
-    {
-        $this->middleware('auth');
-    }
     /**
      * Display a listing of the resource.
      *
@@ -48,10 +41,10 @@ class WorkingDayController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\WorkingDay  $workingDay
+     * @param  \App\FundQuote  $fundQuote
      * @return \Illuminate\Http\Response
      */
-    public function show(WorkingDay $workingDay)
+    public function show(FundQuote $fundQuote)
     {
         //
     }
@@ -59,10 +52,10 @@ class WorkingDayController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\WorkingDay  $workingDay
+     * @param  \App\FundQuote  $fundQuote
      * @return \Illuminate\Http\Response
      */
-    public function edit(WorkingDay $workingDay)
+    public function edit(FundQuote $fundQuote)
     {
         //
     }
@@ -71,10 +64,10 @@ class WorkingDayController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\WorkingDay  $workingDay
+     * @param  \App\FundQuote  $fundQuote
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, WorkingDay $workingDay)
+    public function update(Request $request, FundQuote $fundQuote)
     {
         //
     }
@@ -82,17 +75,11 @@ class WorkingDayController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\WorkingDay  $workingDay
+     * @param  \App\FundQuote  $fundQuote
      * @return \Illuminate\Http\Response
      */
-    public function destroy(WorkingDay $workingDay)
+    public function destroy(FundQuote $fundQuote)
     {
         //
-    }    
-  
-    public function lastWorkingDay(date)
-    {
-        //
-      
     }
 }

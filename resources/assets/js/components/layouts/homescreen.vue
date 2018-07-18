@@ -25,7 +25,7 @@
       <b-input-group>
         <b-form-select v-model="selected">
           <option slot="first" v-bind:value="null">-- none --</option>
-          <option v-for="stock in stocks" v-bind:value="stock.value">{{ stock.text }}</option>
+          <option v-for="invest in investList" v-bind:value="{ id: invest.value, table: invest.type}">{{ invest.text }}</option>
         </b-form-select>
         <!-- <b-button size="md" variant="primary" @click="goChart">
           Buscar
@@ -40,7 +40,7 @@
         <b-input-group>
           <b-form-select v-model="selected" @input="goChart">
             <option slot="first" v-bind:value="null">-- none --</option>
-            <option v-for="stock in stocks" v-bind:value="stock.value">{{ stock.text }}</option>
+           <option v-for="invest in investList" v-bind:value="{ id: invest.value, table: invest.type}">{{ invest.text }}</option>
           </b-form-select>
           <!-- <b-button size="md" variant="primary" @click="goChart"> -->
             <!-- Buscar
@@ -82,15 +82,16 @@
     </b-card>
     <!-- quarto  card -->
     <b-card header="Resultado por tipo de investimento" header-tag="header">
-
-      <line-chart :download="true" legend="bottom" :messages="{empty: 'Sem dados'}" prefix="R$ " decimal="," :curve="false" xtitle="Tempo" ytitle="Reais" :data="this.portperf"></line-chart>
-      <enlarge ref="linechart">
-        <line-chart :download="true" legend="bottom" :messages="{empty: 'Sem dados'}" prefix="R$ " decimal="," :curve="false" xtitle="Tempo" ytitle="Reais" :data="this.portperf"></line-chart>
+      <pie-chart :donut="false" prefix="R$" thousands="." decimal="," :data="this.pietype" :messages="{empty: 'Sem dados'}"></pie-chart>
+<!--       <line-chart :download="true" legend="bottom" :messages="{empty: 'Sem dados'}" prefix="R$ " decimal="," :curve="false" xtitle="Tempo" ytitle="Reais" :data="this.portperf"></line-chart> -->
+      <enlarge ref="pieType">
+              <pie-chart :donut="false" prefix="R$" thousands="." decimal="," :data="this.pietype" :messages="{empty: 'Sem dados'}"></pie-chart>
+<!--         <line-chart :download="true" legend="bottom" :messages="{empty: 'Sem dados'}" prefix="R$ " decimal="," :curve="false" xtitle="Tempo" ytitle="Reais" :data="this.portperf"></line-chart> -->
       </enlarge>
       <div slot="footer">
         <b-row align-h="end">
           <b-col cols="3">
-            <b-button align-self="end" @click="showModal('linechart')" variant="primary">Ampliar</b-button>
+            <b-button align-self="end" @click="showModal('pieType')" variant="primary">Ampliar</b-button>
           </b-col>
         </b-row>
       </div>
@@ -101,10 +102,10 @@
 <script>
 /*jshint esversion: 6 */
 export default {
-  props: ['portperf', 'portperfp', 'pie', 'invests'],
+  props: ['pietype', 'portperfp', 'pie', 'invests'],
   data() {
     return {
-      stocks: [],
+      investList: [],
       selected: null,
       chartData: [],
       datacollection: [],
@@ -121,16 +122,34 @@ export default {
   created: function() {
     //cria lista de stocks com seus ids para passar para chart interativo
     //simbolos (tickets) unicos
-    const uniqueSymbol = [...new Set(this.invests.map(item => item.stockName))];
+    // const uniqueDesignation = [...new Set(this.invests.map(item => item.designation))];
+    const uniqueDesignation = this.invests.map(item => item.designation);
     //ids dos simbolos (tickets) unicos
-    const uniqueStock_id = [...new Set(this.invests.map(item => item.stock_id))];
+    // const uniqueID = [...new Set(this.invests.map(item => item.typeId))];    
+    const uniqueID = this.invests.map(item => item.typeId);    
+    //tipo de investimento
+    // const uniqueType = [...new Set(this.invests.map(item => item.type))];
+    const uniqueType = this.invests.map(item => item.type);
     //monta objeto com os dados acima
-    for (let i = 0; i < uniqueSymbol.length; i++) {
-      this.stocks.push({
-        text: uniqueSymbol[i],
-        value: uniqueStock_id[i]
+    for (let i = 0; i < uniqueDesignation.length; i++) {
+      if (uniqueType[i] === 'stock' || uniqueType[i] === 'treasury') {
+      this.investList.push({
+        text: uniqueDesignation[i],
+        value: uniqueID[i],
+        type: uniqueType[i]
       });
-    }
+      }
+    };
+
+//     const investList = [...new Set(this.invests.map((item) => {
+//       let data = {
+//         text: item.designation,
+//         value: item.typeId,
+//         type: item.type
+//         };
+//       return data;
+//     })
+//                               )];
     //pega os meses para o grafico interativo
     //this.Months = [...new Set(this.monthlyquotes.map(element => moment(String(element.timestamp)).format('YYYY-MM')))];
 
@@ -152,18 +171,22 @@ export default {
     showModal(name) {
       this.$refs[name].enlarge();
     },
-    goChart() {
-      console.log(this.selected);
+  goChart() {
+      console.log(this.selected.id);
+      console.log(this.selected.table);
       this.Days = [];
       this.Labels = [];
       this.Prices = [];
       //this.chartData = [];
       //this.datacollection = [];
-      axios.get('/api/daily/getintchart', {
-          params: {
-            query: this.selected
-          }
-        })
+      axios.get('/api/daily/getintchart/' + this.selected.table + '/' + this.selected.id, 
+//                 {
+//           params: {
+//             id: ID,
+//             table: table
+//           }
+//         }
+               )
         // .then(response => response.data)
         .then(response => {
           //Vue.set(this, chartData, response.data);
@@ -173,16 +196,26 @@ export default {
           if (this.chartData) {
             this.chartData.forEach(element => {
               this.Days.push(moment(String(element.timestamp)).format('MM-DD'));
-              this.Prices.push(element.close);
+              this.Prices.push(element.price);
             });
-            this.Labels = [...new Set(this.chartData.map(item => item.stock_id))];
+            this.Labels = [...new Set(this.chartData.map(item => item.designation))];
+//             let datasets = {}
+//             this.Labels.forEach((Label) => {
+//               this.datasets = {
+//                 label: this.Label,
+//                 backgroundColor: "#"+((1<<24)*Math.random()|0).toString(16),
+//                 data: this.Prices
+//               }
+//             })
             this.datacollection = {
               labels: this.Days,
-              datasets: [{
+              datasets: [
+                 {
                 label: this.Labels,
-                backgroundColor: '#FC2525',
+                backgroundColor: this.getRandomColor(),
                 data: this.Prices
-              }]
+                 }
+              ]
             };
             //set(this , 'datacollection', temp )
           } else {
@@ -195,6 +228,14 @@ export default {
       //.then(response => {
       //this.chartData = response.data;
     },
+  getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
   }
 };
 </script>

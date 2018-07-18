@@ -64,10 +64,9 @@ export default {
     },
     totalizator() {
           this.total = racaz.currFormatter.format(Object.keys(this.items).reduce((sum, key)  => {
-                  return sum + parseFloat(this.items[key].total);
+                  return sum + parseFloat(this.items[key].total_updated);
                   }, 0));
     }
       }
     }
 </script>
-

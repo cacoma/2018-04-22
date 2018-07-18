@@ -59,10 +59,14 @@ export default {
       } else if (type == 'createTypeTreasuries'){
         console.log(info);
         createTypeTreasuries(info);
-        this.show = true;      
+        this.show = true;
       } else if (type == 'createTypeSecurities'){
         console.log(info);
         createTypeSecurities(info);
+        this.show = true;
+      } else if (type == 'createFund'){
+        console.log(info);
+        createFund(info);
         this.show = true;
       } else {
       console.log('acessou enlarge, sem dados');

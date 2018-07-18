@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Invests;
+use App\Treasury;
 
 class TreasuryQuote extends Model
 {
@@ -13,7 +14,7 @@ class TreasuryQuote extends Model
   
   public function treasury()
     {
-        return $this->belongsTo(stock::Class,'treasury_id','id');
+        return $this->belongsTo(treasury::Class,'treasury_id','id');
     }
     
     public function invest()

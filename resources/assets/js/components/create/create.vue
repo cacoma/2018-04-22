@@ -28,7 +28,7 @@
               <!--           type -->
               <b-form-input v-if="key == 'type'" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="key" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira esta informação.')"
                 required :dusk="key">
-              </b-form-input>              
+              </b-form-input>
               <!--           unit -->
               <b-form-input v-if="key == 'unit'" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="key" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira esta informação.')"
                 required :dusk="key">
@@ -120,7 +120,7 @@ import {
   Errors,
   Form,
   Modal
-} from './../javascript/classes.js';
+} from './../../javascript/classes.js';
 
 export default {
   props: ['data'],

@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-          <homescreen :invests="{{$invests}}" :portperf="{{$portPerf}}" :portperfp="{{json_encode($portPerfP)}}" :pie="{{json_encode($pie)}}"></homescreen>
+          <homescreen :invests="{{$invests}}" :pietype="{{json_encode($pieType)}}" :portperfp="{{json_encode($portPerfP)}}" :pie="{{json_encode($pie)}}"></homescreen>
 
 <!--             <div class="card">
                 <div class="card-header">Dashboard</div>

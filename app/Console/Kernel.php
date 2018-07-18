@@ -44,9 +44,14 @@ class Kernel extends ConsoleKernel
            ->sendOutputTo('/var/www/html/storage/logs/treasuryScrape2.log')
            ->emailOutputTo('rcaziraghi@gmail.com')
            ->withoutOverlapping();         
-      $schedule->exec('node /home/ubuntu/scraping/getIndices.js')
+      $schedule->exec('node /home/ubuntu/scraping/getIndicesValues.js')
           ->dailyAt('18:15')
            ->sendOutputTo('/var/www/html/storage/logs/IndicesScrape.log')
+           ->emailOutputTo('rcaziraghi@gmail.com')
+           ->withoutOverlapping();      
+      $schedule->exec('node /home/ubuntu/scraping/getStocksIntradayYF.js')
+          ->dailyAt('19:15')
+           ->sendOutputTo('/var/www/html/storage/logs/StocksIntradayYF.log')
            ->emailOutputTo('rcaziraghi@gmail.com')
            ->withoutOverlapping();
 //            ->after(function () {

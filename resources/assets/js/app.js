@@ -31,6 +31,8 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 window.moment = require('moment');
+window.Papa = require('papaparse');
+window.fundsInfo = require('./javascript/getFundsInfo.js');
 
 //para o componente proprio para lidar com mensagens, desta forma ativa no javascript
 window.events = new Vue();
@@ -47,6 +49,9 @@ window.loadingoff = () => {
 window.create = (item) => {
     window.events.$emit('create',item);
 };
+window.createFund = (item) => {
+    window.events.$emit('createFund',item);
+};
 window.createTypeStocks = (item) => {
     window.events.$emit('createTypeStocks',item);
 };
@@ -62,6 +67,12 @@ window.deleteconfirmation = (item) => {
 window.enlarge = (type, incoming) => {
     window.events.$emit('enlarge', type, incoming);
 };
+window.progressBarValue = (value) => {
+    window.events.$emit('progressBarValue', value);
+};
+window.progressBar = (value) => {
+    window.events.$emit('progressBar', value);
+};
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -73,14 +84,16 @@ window.enlarge = (type, incoming) => {
 Vue.component('navbaradmin', require('./components/layouts/navbaradmin.vue'));
 Vue.component('homecarousel', require('./components/layouts/homecarousel.vue'));
 //Vue.component('homechart', require('./components/layouts/homechart.vue'));
-Vue.component('index', require('./components/index.vue'));
+Vue.component('index', require('./components/index/index.vue'));
+Vue.component('indexfund', require('./components/index/indexFund.vue'));
 Vue.component('consolidatedinvests', require('./components/invests/consolidatedInvests.vue'));
 Vue.component('createinvests', require('./components/invests/createInvests.vue'));
 Vue.component('createinveststypestocks', require('./components/invests/createTypeStocks.vue'));
 Vue.component('createinveststypetreasuries', require('./components/invests/createTypeTreasuries.vue'));
 Vue.component('createinveststypesecurities', require('./components/invests/createTypeSecurities.vue'));
 //Vue.component('createstock', require('./components/stocks/createStock.vue'));
-Vue.component('create', require('./components/create.vue'));
+Vue.component('create', require('./components/create/create.vue'));
+Vue.component('createfund', require('./components/create/createFund.vue')); //vue especifico para cadastro(criacao) de fundos de investimento
 Vue.component('createquotes', require('./components/quotes/createquotes.vue'));
 Vue.component('massinsert', require('./components/quotes/massInsert.vue'));
 Vue.component('flash', require('./components/layouts/flash.vue')); //componente proprio para lidar com mensagens
@@ -91,6 +104,7 @@ Vue.component('homechartint', require('./components/layouts/homechartint.vue'));
 Vue.component('homechart', require('./components/layouts/homechart.vue')); //componente para tela home
 Vue.component('enlarge', require('./components/layouts/enlarge.vue')); //componente aumentar tamanho de itens selecionados
 Vue.component('moldura', require('./components/layouts/moldura.vue')); //componente aumentar tamanho de itens selecionados
+Vue.component('progressbar', require('./components/layouts/progressBar.vue')); //componente aumentar tamanho de itens selecionados
 
 
 //Vue.component('treasuryscrape', require('./components/scraping/treasuryscrape.vue')); //componente para fazer scrape dos valores do tesouro nacional
