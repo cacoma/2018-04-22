@@ -128,6 +128,94 @@ racaz = function() {
     ["auditor", "Auditor"],
   ];
 
+  const cvmWords = [
+    ["CRï¿½DITO", "CREDITO"],
+    ["Aï¿½ï¿½ES", "ACOES"],
+    ["ALOCAï¿½ï¿½O", "ALOCACAO"],
+    ["CONVERGï¿½NCIA", "CONVERGENCIA"],
+    ["EFIGï¿½NIA", "EFIGENIA"],
+    ["APLICAï¿½ï¿½O", "APLICACAO"],
+    ["Nï¿½VEL", "NIVEL"],
+    ["TRï¿½PICO", "TROPICO"],
+    ["PORTIFï¿½LIO", "PORTFOLIO"],
+    ["MULTIESTRATï¿½GIA", "MULTIESTRATEGIA"],
+    ["ALDEBARï¿½", "ALDEBARA"],
+    ["DEBï¿½NTURES", "DEBENTURES"],
+    ["Dï¿½VIDA", "DIVIDA"],
+    ["ï¿½RAMA", "ORAMA"],
+    ["GESTï¿½O", "GESTAO"],
+    ["ADMINISTRAï¿½ï¿½O", "ADMINISTRACAO"],
+    ["Tï¿½TULOS", "TITULOS"],
+    ["MOBILIï¿½RIOS", "MOBILIARIOS"],
+    ["ï¿½NDICE", "INDICE"],
+    ["ï¿½ndice", "Indice"],
+    ["PREVIDï¿½NCIA", "PREVIDENCIA"],
+    ["PREï¿½O", "PRECO"],
+    ["PREï¿½OS", "PRECOS"],
+    ["MULTI-ï¿½NDICES", "MULTI-INDICES"],
+    ["CAMBURIï¿½", "CAMBORIU"],
+    ["ITAï¿½", "ITAU"],
+    ["PERSONNALITï¿½", "PERSONALITE"],
+    ["ARMAZï¿½M", "ARMAZEM"],
+    ["ALIANï¿½A", "ALIANCA"],
+    ["Pï¿½BLICOS", "PUBLICOS"],
+    ["COMPENSAï¿½ï¿½ES", "COMPENSACOES"],
+    ["GOIï¿½S", "GOIAS"],
+    ["HIDROGRï¿½FICAS", "HIDROGRAFICAS"],
+    ["HIDROGRï¿½FICA", "HIDROGRAFICA"],
+    ["FAMï¿½LIA", "FAMILIA"],
+    ["PARAï¿½BA", "PARAIBA"],
+    ["CONSTRUï¿½ï¿½O", "CONSTRUCAO"],
+    ["CONSTRUï¿½ï¿½O", "CONSTRUCAO"],
+    ["CRï¿½D", "CRED."],
+    ["CONCESSï¿½ES", "CONCESSOES"],
+    ["BENEFï¿½CIO", "BENEICIO"],
+    ["ALOCAï¿½ï¿½O", "ALOCACAO"],
+    ["Aï¿½ï¿½es", "Acoes"],
+    ["CR�DITO", "CREDITO"],
+    ["A��ES", "ACOES"],
+    ["ALOCA��O", "ALOCACAO"],
+    ["CONVERG�NCIA", "CONVERGENCIA"],
+    ["EFIG�NIA", "EFIGENIA"],
+    ["APLICA��O", "APLICACAO"],
+    ["N�VEL", "NIVEL"],
+    ["TR�PICO", "TROPICO"],
+    ["PORTIF�LIO", "PORTFOLIO"],
+    ["MULTIESTRAT�GIA", "MULTIESTRATEGIA"],
+    ["ALDEBAR�", "ALDEBARA"],
+    ["DEB�NTURES", "DEBENTURES"],
+    ["D�VIDA", "DIVIDA"],
+    ["�RAMA", "ORAMA"],
+    ["GEST�O", "GESTAO"],
+    ["ADMINISTRA��O", "ADMINISTRACAO"],
+    ["T�TULOS", "TITULOS"],
+    ["MOBILI�RIOS", "MOBILIARIOS"],
+    ["�NDICE", "INDICE"],
+    ["�ndice", "Indice"],
+    ["PREVID�NCIA", "PREVIDENCIA"],
+    ["PRE�O", "PRECO"],
+    ["PRE�OS", "PRECOS"],
+    ["MULTI-�NDICES", "MULTI-INDICES"],
+    ["CAMBURI�", "CAMBORIU"],
+    ["ITA�", "ITAU"],
+    ["PERSONNALIT�", "PERSONALITE"],
+    ["ARMAZ�M", "ARMAZEM"],
+    ["ALIAN�A", "ALIANCA"],
+    ["P�BLICOS", "PUBLICOS"],
+    ["COMPENSA��ES", "COMPENSACOES"],
+    ["GOI�S", "GOIAS"],
+    ["HIDROGR�FICAS", "HIDROGRAFICAS"],
+    ["HIDROGR�FICA", "HIDROGRAFICA"],
+    ["FAM�LIA", "FAMILIA"],
+    ["PARA�BA", "PARAIBA"],
+    ["CONSTRU��O", "CONSTRUCAO"],
+    ["CONSTRU��O", "CONSTRUCAO"],
+    ["CR�D", "CRED."],
+    ["CONCESS�ES", "CONCESSOES"],
+    ["BENEF�CIO", "BENEICIO"],
+    ["ALOCA��O", "ALOCACAO"],
+    ["A��es", "Acoes"],
+  ];
   //variaveis para utilizar no vue datepicker, com a finalidade de limitar a quantidade de datas que podem ser utilizadas
 
   const dateInvestLimit = {
@@ -251,7 +339,7 @@ racaz = function() {
               return racaz.columnName(value);
             }
           });
-        } else if (value === "coupon" || value === "fgc" || value === "fundo_cotas") {
+        } else if (value === "coupon" || value === "fgc") {
           fields.push({
             key: value,
             label: racaz.columnName(value),
@@ -266,12 +354,13 @@ racaz = function() {
             }
           });
           //o item _cellVariants nao é renderizado
-        } else if (value === "_cellVariants" || value === "created_at" || value === "updated_at" || value === "redirect" || 
-                   value === "user_id" || value === "issuer_id" || value === "security_id" || value === "canc_date" ||
-                   value === "const_date" || value === "reg_date" || value === "fundos_cotas" || value === "fundo_exc" ||
-                   value === "inv_qual" || value === "ir" || value === "taxa_perf" || value === "auditor" || value === "diretor"
-                   //|| value === "name" || value === "code" || value === "symbol") {
-                   ){
+        } else if (value === "_cellVariants" || value === "created_at" || value === "updated_at" || value === "redirect" ||
+          value === "user_id" || value === "issuer_id" || value === "security_id" || value === "canc_date" ||
+          value === "const_date" || value === "reg_date" || value === "fundos_cotas" || value === "fundo_exc" ||
+          value === "inv_qual" || value === "ir" || value === "taxa_perf" || value === "auditor" || value === "diretor" ||
+          value === "fundo_cotas"
+          //|| value === "name" || value === "code" || value === "symbol") {
+        ) {
           // faz nada
         } else {
           fields.push({
@@ -294,9 +383,9 @@ racaz = function() {
         data[1] = moment(String(data[1])).format('DD/MM/YYYY hh:mm');
         //data[1] = moment(data[1]).format('DD/MM/YYYY');
         //aqui formata os precos
-      } else if (data[0] === "open" || data[0] === "high" || data[0] === "low" || data[0] === "close"
-      || data[0] === "price" || data[0] === "quote" || data[0] === "broker_fee" || data[0] === "dif_reais"
-      || data[0] === "total" || data[0] === "total_invested" || data[0] === "total_updated") {
+      } else if (data[0] === "open" || data[0] === "high" || data[0] === "low" || data[0] === "close" ||
+        data[0] === "price" || data[0] === "quote" || data[0] === "broker_fee" || data[0] === "dif_reais" ||
+        data[0] === "total" || data[0] === "total_invested" || data[0] === "total_updated") {
         data[1] = currFormatter.format(data[1]);
         //aqui traz volume para valor inteiro, sem fracao
       } else if (data[0] === "volume" || data[0] === "quant") {
@@ -308,9 +397,9 @@ racaz = function() {
       } else if (data[0] === "created_at" || data[0] === "updated_at") {
         data[1] = moment(data[1]).format('DD/MM/YYYY HH:mm:ss');
       } else if (data[0] === "dif_percentage") {
-        data[1] = data[1] + "%";      
-      } else if (data[0] === "fundo_cotas") {
-        data[1] = data[1] === 1 ? "Sim" : "Não";
+        data[1] = data[1] + "%";
+        //       } else if (data[0] === "fundo_cotas") {
+        //         data[1] = data[1] === 1 ? "Sim" : "Não";
       } else {
         console.log('Nao formatado pelo formtt, mas sucesso' + data);
       }
@@ -366,47 +455,34 @@ racaz = function() {
     value = value.toString().split('e');
     return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
   };
-  
-//   function removeAcento (text)
-// {       
-//     // text = text.toLowerCase();                                                         
-//     text = text.replace(new RegExp('[ÁÀÂÃ]','gi'), 'a');
-//     text = text.replace(new RegExp('[ÉÈÊ]','gi'), 'e');
-//     text = text.replace(new RegExp('[ÍÌÎ]','gi'), 'i');
-//     text = text.replace(new RegExp('[ÓÒÔÕ]','gi'), 'o');
-//     text = text.replace(new RegExp('[ÚÙÛ]','gi'), 'u');
-//     text = text.replace(new RegExp('[Ç]','gi'), 'c');
-//     return text;                 
-// }
-  
-//   function removeAcento( newStringComAcento ) {
-//   var string = newStringComAcento;
-// 	var mapaAcentosHex 	= {
-// 		a : /[\xE0-\xE6]/g,
-// 		e : /[\xE8-\xEB]/g,
-// 		i : /[\xEC-\xEF]/g,
-// 		o : /[\xF2-\xF6]/g,
-// 		u : /[\xF9-\xFC]/g,
-// 		c : /\xE7/g,
-// 		n : /\xF1/g
-// 	};
 
-// 	for ( var letra in mapaAcentosHex ) {
-// 		var expressaoRegular = mapaAcentosHex[letra];
-// 		string = string.replace( expressaoRegular, letra );
-// 	}
-
-// 	return string;
-// }
-  function removeAcento(s) 
-{
+  function removeAcento(s) {
     var i = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖŐòóôõöőÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜŰùúûüűÑñŠšŸÿýŽž'.split('');
     var o = 'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUUuuuuuNnSsYyyZz'.split('');
     var map = {};
-    i.forEach(function(el, idx) {map[el] = o[idx]});
-    return s.replace(/[^A-Za-z0-9]/g, function(ch) { return map[ch] || ch; })
-}
+    i.forEach(function(el, idx) {
+      map[el] = o[idx]
+    });
+    return s.replace(/[^A-Za-z0-9]/g, function(ch) {
+      return map[ch] || ch;
+    })
+  }
 
+
+  function cvmStringReplace(s) {
+    return s.
+    split(" ").
+    map(word => {
+      let iterable = new Map(cvmWords);
+      for (let [key, value] of iterable) {
+        if (key === word) {
+          return value;
+        }
+      }
+      return word;
+    }).
+    join(" ");
+  }
 
   //traz para
   //   currFormatterNeu = function (n, currency) {
@@ -427,7 +503,8 @@ racaz = function() {
     "currFormatter": currFormatter,
     "numberForm": numberForm,
     "round": round,
-    "removeAcento" : removeAcento
+    "removeAcento": removeAcento,
+    "cvmStringReplace": cvmStringReplace
   };
 
 }();

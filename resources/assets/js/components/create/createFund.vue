@@ -10,17 +10,10 @@
   <b-form @submit="onSubmit" @reset="onReset" @click="form.errors.clear($event.target.name)">
     <b-col>
       <b-form-group horizontal breakpoint="sm" label-cols="2" :label="this.Slug" label-size="lg" label-class="font-weight-bold pt-0" class="mb-0">
-        <!--           name  -->
-        <b-form-group id="namelabel" label="Nome" label-for="name">
-          <b-form-input v-model="form.name" ref="name" id="name" :class="{ 'is-invalid': form.errors.has('name') }" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira o nome.')" required dusk="name">
-          </b-form-input>
-          <p class="text-danger" v-if="form.errors.has('name')" v-text="form.errors.get('name')">
-          </p>
-        </b-form-group>
         <!--           cnpj -->
         <b-form-group id="cnpjlabel" label="CNPJ" label-for="cnpj">
 <!--           <b-form-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="form.cnpj" ref="cnpj" id="cnpj" :class=="{ 'is-invalid': form.errors.has(cnpj) }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira esta informação.')" required -->
-          <b-form-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="form.cnpj" ref="cnpj" id="cnpj" :class="{ 'is-invalid': form.errors.has('cnpj') }" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira o CNPJ.')" required
+          <b-form-input v-mask="'##.###.###/####-##'" v-model="form.cnpj" ref="cnpj" id="cnpj" :class="{ 'is-invalid': form.errors.has('cnpj') }" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira o CNPJ.')" required
             dusk="cnpj">
           </b-form-input>
           <p class="text-danger" v-if="form.errors.has('cnpj')" v-text="form.errors.get('cnpj')">
@@ -29,10 +22,17 @@
           <b-button variant="primary" @click="getFunds(form.cnpj)">{{ 'Buscar fundo' }}</b-button>
 
         </b-form-group>
+        <!--           name  -->
+        <b-form-group id="namelabel" label="Nome" label-for="name">
+          <b-form-input v-model="form.name" :disabled="form.name === '' && form.id === ''" ref="name" id="name" :class="{ 'is-invalid': form.errors.has('name') }" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira o nome.')" required dusk="name">
+          </b-form-input>
+          <p class="text-danger" v-if="form.errors.has('name')" v-text="form.errors.get('name')">
+          </p>
+        </b-form-group>
         <!--           data de registro -->
         <b-form-group id="reg_datelabel" label="Data de registro" label-for="reg_date">
              
-          <datepicker id="reg_date" name="reg_date" v-model="form.reg_date" autocomplete="off" input-class="form-control" :class="{ 'is-invalid': form.errors.has('reg_date') }" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira a data de registro.')"
+          <datepicker id="reg_date" name="reg_date" v-model="form.reg_date" :disabled="form.name === '' && form.id === ''" autocomplete="off" input-class="form-control" :class="{ 'is-invalid': form.errors.has('reg_date') }" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira a data de registro.')"
             placeholder="Clique aqui para inserir a data." format="dd/MM/yyyy" required dusk="datepicker">
           </datepicker>
         
@@ -47,7 +47,7 @@
         <!--           data de constituicao -->
         <b-form-group id="const_datelabel" label="Data de constituição" label-for="const_date">
           
-                    <datepicker id="const_date" name="const_date" v-model="form.const_date" autocomplete="off" input-class="form-control" :class="{ 'is-invalid': form.errors.has('const_date') }" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira a data de constituição.')"
+                    <datepicker id="const_date" name="const_date" v-model="form.const_date" :disabled="form.name === '' && form.id === ''" autocomplete="off" input-class="form-control" :class="{ 'is-invalid': form.errors.has('const_date') }" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira a data de constituição.')"
             placeholder="Clique aqui para inserir a data." format="dd/MM/yyyy" required dusk="datepicker">
           </datepicker>
           
@@ -61,7 +61,7 @@
         <!--           data de cancelamento -->
         <b-form-group id="canc_datelabel" label="Data de cancelamento" label-for="canc_date">
           
-                              <datepicker id="canc_date" name="canc_date" v-model="form.canc_date" autocomplete="off" input-class="form-control" :class="{ 'is-invalid': form.errors.has('canc_date') }" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira a data de cancelamento.')"
+                              <datepicker id="canc_date" name="canc_date" v-model="form.canc_date" :disabled="form.name === '' && form.id === ''" autocomplete="off" input-class="form-control" :class="{ 'is-invalid': form.errors.has('canc_date') }" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira a data de cancelamento.')"
             placeholder="Clique aqui para inserir a data." format="dd/MM/yyyy"  dusk="datepicker">
           </datepicker>
           
@@ -75,7 +75,7 @@
 
         <!--           situacao -->
         <b-form-group id="sitlabel" label="Situação" label-for="sit">
-          <b-form-input v-model="form.sit" ref="sit" id="sit" :class="{ 'is-invalid': form.errors.has('sit') }" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira esta informação.')" required dusk="sit">
+          <b-form-input v-model="form.sit" ref="sit" id="sit" :class="{ 'is-invalid': form.errors.has('sit') }" :disabled="form.name === '' && form.id === ''" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira esta informação.')" required dusk="sit">
           </b-form-input>
           <p class="text-danger" v-if="form.errors.has('sit')" v-text="form.errors.get('sit')">
           </p>
@@ -83,21 +83,21 @@
 
         <!--             classe -->
         <b-form-group id="classelabel" label="Classe" label-for="classe">
-          <b-form-input v-model="form.classe" ref="classe" id="classe" :class="{ 'is-invalid': form.errors.has('classe') }" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira esta informação.')" required dusk="classe">
+          <b-form-input v-model="form.classe" ref="classe" id="classe" :class="{ 'is-invalid': form.errors.has('classe') }" :disabled="form.name === '' && form.id === ''" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira esta informação.')" required dusk="classe">
           </b-form-input>
           <p class="text-danger" v-if="form.errors.has('classe')" v-text="form.errors.get('classe')">
           </p>
         </b-form-group>
         <!--           rentabilidade -->
         <b-form-group id="rentabilidadelabel" label="Rentabilidade" label-for="rentabilidade">
-          <b-form-input v-model="form.rentabilidade" ref="rentabilidade" id="rentabilidade" :class="{ 'is-invalid': form.errors.has('rentabilidade') }" dusk="rentabilidade">
+          <b-form-input v-model="form.rentabilidade" ref="rentabilidade" id="rentabilidade" :class="{ 'is-invalid': form.errors.has('rentabilidade') }" :disabled="form.name === '' && form.id === ''" dusk="rentabilidade">
           </b-form-input>
           <p class="text-danger" v-if="form.errors.has('rentabilidade')" v-text="form.errors.get('rentabilidade')">
           </p>
         </b-form-group>
         <!--           investidor qualificado -->
         <b-form-group id="inv_quallabel" label="Investidor qualificado" label-for="inv_qual">
-          <b-form-select v-model="form.inv_qual" ref="inv_qual" id="inv_qual" :class="{ 'is-invalid': form.errors.has('inv_qual') }" dusk="inv_qual">
+          <b-form-select v-model="form.inv_qual" ref="inv_qual" id="inv_qual" :class="{ 'is-invalid': form.errors.has('inv_qual') }" :disabled="form.name === '' && form.id === ''" dusk="inv_qual">
             <option value="" disabled>Por favor, escolha um.</option>
             <option value="0">Não</option>
             <option value="1">Sim</option>
@@ -107,7 +107,7 @@
         </b-form-group>
         <!--           fundo exclusivo -->
         <b-form-group id="fundo_exclabel" label="Fundo exclusivo" label-for="fundo_exc">
-          <b-form-select v-model="form.fundo_exc" ref="fundo_exc" id="fundo_exc" :class="{ 'is-invalid': form.errors.has('fundo_exc') }" dusk="fundo_exc">
+          <b-form-select v-model="form.fundo_exc" ref="fundo_exc" id="fundo_exc" :class="{ 'is-invalid': form.errors.has('fundo_exc') }" :disabled="form.name === '' && form.id === ''" dusk="fundo_exc">
             <option value="" disabled>Por favor, escolha um.</option>
             <option value="0">Não</option>
             <option value="1">Sim</option>
@@ -118,7 +118,7 @@
 
         <!--           fundo de cotas -->
         <b-form-group id="fundo_cotaslabel" label="Fundo de cotas" label-for="fundo_cotas">
-          <b-form-select v-model="form.fundo_cotas" ref="fundo_cotas" id="fundo_cotas" :class="{ 'is-invalid': form.errors.has('fundo_cotas') }" dusk="fundo_cotas">
+          <b-form-select v-model="form.fundo_cotas" ref="fundo_cotas" id="fundo_cotas" :class="{ 'is-invalid': form.errors.has('fundo_cotas') }" :disabled="form.name === '' && form.id === ''" dusk="fundo_cotas">
             <option value="" disabled>Por favor, escolha um.</option>
             <option value="0">Não</option>
             <option value="1">Sim</option>
@@ -128,7 +128,7 @@
         </b-form-group>
         <!--           ir -->
         <b-form-group id="irlabel" label="Incide IR" label-for="ir">
-          <b-form-select v-model="form.ir" ref="ir" id="ir" :class="{ 'is-invalid': form.errors.has('ir') }" dusk="ir">
+          <b-form-select v-model="form.ir" ref="ir" id="ir" :class="{ 'is-invalid': form.errors.has('ir') }" :disabled="form.name === '' && form.id === ''" dusk="ir">
             <option value="" disabled>Por favor, escolha um.</option>
             <option value="0">Não</option>
             <option value="1">Sim</option>
@@ -138,7 +138,7 @@
         </b-form-group>
         <!--           taxa de performance -->
         <b-form-group id="taxa_perflabel" label="Taxa de performance" label-for="taxa_perf">
-          <b-form-input v-model="form.taxa_perf" ref="taxa_perf" id="taxa_perf" :class="{ 'is-invalid': form.errors.has('taxa_perf') }" dusk="taxa_perf">
+          <b-form-input v-model="form.taxa_perf" ref="taxa_perf" id="taxa_perf" :class="{ 'is-invalid': form.errors.has('taxa_perf') }" :disabled="form.name === '' && form.id === ''" dusk="taxa_perf">
           </b-form-input>
           <p class="text-danger" v-if="form.errors.has('taxa_perf')" v-text="form.errors.get('taxa_perf')">
           </p>
@@ -146,7 +146,7 @@
 
         <!--           diretor -->
         <b-form-group id="diretorlabel" label="Diretor" label-for="diretor">
-          <b-form-input v-model="form.diretor" ref="diretor" id="diretor" :class="{ 'is-invalid': form.errors.has('diretor') }" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira o diretor.')" required dusk="diretor">
+          <b-form-input v-model="form.diretor" ref="diretor" id="diretor" :class="{ 'is-invalid': form.errors.has('diretor') }" :disabled="form.name === '' && form.id === ''" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira o diretor.')" required dusk="diretor">
           </b-form-input>
           <p class="text-danger" v-if="form.errors.has('diretor')" v-text="form.errors.get('diretor')">
           </p>
@@ -154,7 +154,7 @@
 
         <!--           administrador -->
         <b-form-group id="adminlabel" label="Administrador" label-for="admin">
-          <b-form-input v-model="form.admin" ref="admin" id="admin" :class="{ 'is-invalid': form.errors.has('admin') }" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira o administrador.')" required dusk="admin">
+          <b-form-input v-model="form.admin" ref="admin" id="admin" :class="{ 'is-invalid': form.errors.has('admin') }" :disabled="form.name === '' && form.id === ''" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira o administrador.')" required dusk="admin">
           </b-form-input>
           <p class="text-danger" v-if="form.errors.has('admin')" v-text="form.errors.get('admin')">
           </p>
@@ -162,7 +162,7 @@
 
         <!--           gestor -->
         <b-form-group id="gestorlabel" label="Gestor" label-for="gestor">
-          <b-form-input v-model="form.gestor" ref="gestor" id="gestor" :class="{ 'is-invalid': form.errors.has('gestor') }" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira o gestor.')" required dusk="gestor">
+          <b-form-input v-model="form.gestor" ref="gestor" id="gestor" :class="{ 'is-invalid': form.errors.has('gestor') }" :disabled="form.name === '' && form.id === ''" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira o gestor.')" required dusk="gestor">
           </b-form-input>
           <p class="text-danger" v-if="form.errors.has('gestor')" v-text="form.errors.get('gestor')">
           </p>
@@ -170,7 +170,7 @@
 
         <!--           auditor -->
         <b-form-group id="auditorlabel" label="Auditor" label-for="auditor">
-          <b-form-input v-model="form.auditor" ref="auditor" id="auditor" :class="{ 'is-invalid': form.errors.has('auditor') }" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira o auditor.')" required dusk="auditor">
+          <b-form-input v-model="form.auditor" ref="auditor" id="auditor" :class="{ 'is-invalid': form.errors.has('auditor') }" :disabled="form.name === '' && form.id === ''" oninput="setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira o auditor.')" required dusk="auditor">
           </b-form-input>
           <p class="text-danger" v-if="form.errors.has('auditor')" v-text="form.errors.get('auditor')">
           </p>
@@ -206,6 +206,7 @@ export default {
   data() {
     return {
       form: new Form({
+        id: '',
         name: '',
         cnpj: '',
         reg_date: '',
@@ -320,6 +321,7 @@ export default {
     },
     populateData(value) {
       if (value) {
+        this.fetched = true;
         if (!value.id) {
         this.editMode = false;
         for (let k in value) {
@@ -347,6 +349,7 @@ export default {
 //         }
 //         this.show = true;
       } else {
+        this.fetched = false;
         this.editMode = false;
         this.form.reset();
         //         axios.get('/api/columns/' + this.pathArray[1])
@@ -369,17 +372,21 @@ export default {
       } else {
       console.log(cnpj);
       let fund = await fundsInfo.get(cnpj)
+      .catch(error => {
+        flash('Não foi encontrado registro com este CNPJ ou não foi possível buscar os dados.|warning')
+        console.log(fund)
+      })
       console.log(fund)
-      if (this.containsObject('CNPJ_FUNDO', fund)) {
+      if (Array.isArray(fund)) {
         console.log('podemos popular')
-        this.newFund.name = racaz.removeAcento(fund[0].DENOM_SOCIAL);
+        this.newFund.name = racaz.removeAcento(racaz.cvmStringReplace(fund[0].DENOM_SOCIAL.toString()));
         this.newFund.cnpj = fund[0].CNPJ_FUNDO ;
         this.newFund.reg_date = fund[0].DT_REG ;
         this.newFund.const_date = fund[0].DT_CONST ;
         this.newFund.canc_date = fund[0].DT_CANCEL ;
-        this.newFund.sit = racaz.removeAcento(fund[0].SIT);
-        this.newFund.classe = racaz.removeAcento(fund[0].CLASSE);
-        this.newFund.rentabilidade = racaz.removeAcento(fund[0].RENTAB_FUNDO);
+        this.newFund.sit = racaz.removeAcento(racaz.cvmStringReplace(fund[0].SIT.toString()));
+        this.newFund.classe = racaz.removeAcento(racaz.cvmStringReplace(fund[0].CLASSE.toString()));
+        this.newFund.rentabilidade = racaz.removeAcento(racaz.cvmStringReplace(fund[0].RENTAB_FUNDO.toString()));
         
         this.newFund.fundo_cotas = fund[0].FUNDO_COTAS === 'S' ? 1 : 0;
         this.newFund.fundo_exc = fund[0].FUNDO_EXCLUSIVO === 'S' ? 1 : 0;
@@ -395,11 +402,11 @@ export default {
         // this.newFund.fundo_exc = fund[0].FUNDO_EXCLUSIVO ;
         // this.newFund.fundo_cotas = fund[0].FUNDO_COTAS ;
         //this.newFund.ir = fund[0].TRIB_LPRAZO ;
-        this.newFund.taxa_perf = fund[0].TAXA_PERFM.toString();
-        this.newFund.diretor = racaz.removeAcento(fund[0].DIRETOR);
-        this.newFund.admin = racaz.removeAcento(fund[0].ADMIN);
-        this.newFund.gestor = racaz.removeAcento(fund[0].GESTOR);
-        this.newFund.auditor = racaz.removeAcento(fund[0].AUDITOR);
+        this.newFund.taxa_perf = typeof variable !== 'undefined' ? racaz.removeAcento(racaz.cvmStringReplace(fund[0].TAXA_PERFM.toString())) : '';
+        this.newFund.diretor = racaz.removeAcento(racaz.cvmStringReplace(fund[0].DIRETOR.toString()));
+        this.newFund.admin = racaz.removeAcento(racaz.cvmStringReplace(fund[0].ADMIN.toString()));
+        this.newFund.gestor = racaz.removeAcento(racaz.cvmStringReplace(fund[0].GESTOR.toString()));
+        this.newFund.auditor = racaz.removeAcento(racaz.cvmStringReplace(fund[0].AUDITOR.toString()));
         this.fetched = true;
         enlarge('createFund',this.newFund);
       } else {
@@ -408,17 +415,6 @@ export default {
       }
     }
   },
-
-  containsObject(obj, list) {
-    var i;
-    for (i = 0; i < list.length; i++) {
-        if (list[i] === obj) {
-            return true;
-        }
-    }
-
-    return false;
-}
   }
 }
 </script>

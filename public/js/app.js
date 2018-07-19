@@ -39455,6 +39455,7 @@ racaz = function () {
 
   var columnDesc = [["id", 'ID'], ["name", 'Nome'], ["email", 'E-mail'], ["role_id", 'Permissão'], ["created_at", "Criado em"], ["updated_at", "Atual. em"], ["timestamp", "Data do reg."], ["symbol", "Ticket"], ["stock_id", "Ticket"], ["type", "Tipo"], ["cnpj", "CNPJ"], ["open", "Abertura"], ["volume", "Volume"], ["price", "Preço"], ["low", "Baixa"], ["high", "Alta"], ["close", "Fecham"], ["date_invest", "Data inv."], ["broker_fee", "Corretagem"], ["broker_id", "Corretora"], ["broker", "Corretora"], ["quote", "Cotação"], ["quant", "Quant."], ["user_id", "Usuario"], ["total", "Total"], ["percentage", "%"], ["invests", "Investimentos"], ["stocks", "Ações"], ["stock", "Ação"], ["brokers", "Corretoras"], ["broker_name", "Corretora"], ["users", "Usuário"], ["monthlyquotes", "Cotações mensais"], ["dailyquotes", "Cotações diarias"], ["fail", "Falha"], ["success", "Sucesso"], ["upToDate", "Atualiz. anteriormente"], ["stock_name", "Ação"], ["profile", "Perfil"], ["treasuries", "Titulos"], ["treasury", "Titulo"], ["due_date", "Vencimento"], ["coupon", "Juros semestrais"], ["coupon_date", "Prim. pag. de juros"], ["coupon_date2", "Seg. pag. de juros"], ["code", "Código"], ["0", "Não"], ["1", "Sim"], ["rate", "Taxa"], ["avgprice", "Preço médio"], ["sumquant", "Quantidade"], ["index", "Índice"], ["ir", "IR"], ["name", "Nome"], ["securities", "Renda fixa"], ["security", "Renda fixa"], ["liquidity", "Liquidez"], ["fgc", "FGC"], ["issuer_name", "Emissor"], ["issuer", "Emissor"], ["issuers", "Emissores"], ["inv", "Invest."], ["bc_code", "Codigo BC"], ["unit", "Unidade"], ["type_invest", "Tipo"], ["designation", "Investimento"], ["total_invested", "Tot. inv."], ["total_updated", "Tot. atual."], ["dif_percentage", "%"], ["dif_reais", "Dif. (R$)"], ["date_updated", "Data at."], ["funds", "Fundos"], ["fund", "Fundo"], ["reg_date", "Data de registro"], ["const_date", "Data de constituição"], ["canc_date", "Data de cancelamento"], ["sit", "Situação"], ["classe", "Classe"], ["rentabilidade", "Rentabilidade"], ["inv_qual", "Investidor qualificado"], ["fundo_exc", "Fundo exclusivo"], ["fundo_cotas", "Fundo de cotas"], ["taxa_perf", "Taxa de performance"], ["diretor", "Diretor"], ["admin", "Administrador"], ["gestor", "Gestor"], ["auditor", "Auditor"]];
 
+  var cvmWords = [["CRï¿½DITO", "CREDITO"], ["Aï¿½ï¿½ES", "ACOES"], ["ALOCAï¿½ï¿½O", "ALOCACAO"], ["CONVERGï¿½NCIA", "CONVERGENCIA"], ["EFIGï¿½NIA", "EFIGENIA"], ["APLICAï¿½ï¿½O", "APLICACAO"], ["Nï¿½VEL", "NIVEL"], ["TRï¿½PICO", "TROPICO"], ["PORTIFï¿½LIO", "PORTFOLIO"], ["MULTIESTRATï¿½GIA", "MULTIESTRATEGIA"], ["ALDEBARï¿½", "ALDEBARA"], ["DEBï¿½NTURES", "DEBENTURES"], ["Dï¿½VIDA", "DIVIDA"], ["ï¿½RAMA", "ORAMA"], ["GESTï¿½O", "GESTAO"], ["ADMINISTRAï¿½ï¿½O", "ADMINISTRACAO"], ["Tï¿½TULOS", "TITULOS"], ["MOBILIï¿½RIOS", "MOBILIARIOS"], ["ï¿½NDICE", "INDICE"], ["ï¿½ndice", "Indice"], ["PREVIDï¿½NCIA", "PREVIDENCIA"], ["PREï¿½O", "PRECO"], ["PREï¿½OS", "PRECOS"], ["MULTI-ï¿½NDICES", "MULTI-INDICES"], ["CAMBURIï¿½", "CAMBORIU"], ["ITAï¿½", "ITAU"], ["PERSONNALITï¿½", "PERSONALITE"], ["ARMAZï¿½M", "ARMAZEM"], ["ALIANï¿½A", "ALIANCA"], ["Pï¿½BLICOS", "PUBLICOS"], ["COMPENSAï¿½ï¿½ES", "COMPENSACOES"], ["GOIï¿½S", "GOIAS"], ["HIDROGRï¿½FICAS", "HIDROGRAFICAS"], ["HIDROGRï¿½FICA", "HIDROGRAFICA"], ["FAMï¿½LIA", "FAMILIA"], ["PARAï¿½BA", "PARAIBA"], ["CONSTRUï¿½ï¿½O", "CONSTRUCAO"], ["CONSTRUï¿½ï¿½O", "CONSTRUCAO"], ["CRï¿½D", "CRED."], ["CONCESSï¿½ES", "CONCESSOES"], ["BENEFï¿½CIO", "BENEICIO"], ["ALOCAï¿½ï¿½O", "ALOCACAO"], ["Aï¿½ï¿½es", "Acoes"], ["CR�DITO", "CREDITO"], ["A��ES", "ACOES"], ["ALOCA��O", "ALOCACAO"], ["CONVERG�NCIA", "CONVERGENCIA"], ["EFIG�NIA", "EFIGENIA"], ["APLICA��O", "APLICACAO"], ["N�VEL", "NIVEL"], ["TR�PICO", "TROPICO"], ["PORTIF�LIO", "PORTFOLIO"], ["MULTIESTRAT�GIA", "MULTIESTRATEGIA"], ["ALDEBAR�", "ALDEBARA"], ["DEB�NTURES", "DEBENTURES"], ["D�VIDA", "DIVIDA"], ["�RAMA", "ORAMA"], ["GEST�O", "GESTAO"], ["ADMINISTRA��O", "ADMINISTRACAO"], ["T�TULOS", "TITULOS"], ["MOBILI�RIOS", "MOBILIARIOS"], ["�NDICE", "INDICE"], ["�ndice", "Indice"], ["PREVID�NCIA", "PREVIDENCIA"], ["PRE�O", "PRECO"], ["PRE�OS", "PRECOS"], ["MULTI-�NDICES", "MULTI-INDICES"], ["CAMBURI�", "CAMBORIU"], ["ITA�", "ITAU"], ["PERSONNALIT�", "PERSONALITE"], ["ARMAZ�M", "ARMAZEM"], ["ALIAN�A", "ALIANCA"], ["P�BLICOS", "PUBLICOS"], ["COMPENSA��ES", "COMPENSACOES"], ["GOI�S", "GOIAS"], ["HIDROGR�FICAS", "HIDROGRAFICAS"], ["HIDROGR�FICA", "HIDROGRAFICA"], ["FAM�LIA", "FAMILIA"], ["PARA�BA", "PARAIBA"], ["CONSTRU��O", "CONSTRUCAO"], ["CONSTRU��O", "CONSTRUCAO"], ["CR�D", "CRED."], ["CONCESS�ES", "CONCESSOES"], ["BENEF�CIO", "BENEICIO"], ["ALOCA��O", "ALOCACAO"], ["A��es", "Acoes"]];
   //variaveis para utilizar no vue datepicker, com a finalidade de limitar a quantidade de datas que podem ser utilizadas
 
   var dateInvestLimit = {
@@ -39604,7 +39605,7 @@ racaz = function () {
                 return racaz.columnName(value);
               }
             });
-          } else if (value === "coupon" || value === "fgc" || value === "fundo_cotas") {
+          } else if (value === "coupon" || value === "fgc") {
             fields.push({
               key: value,
               label: racaz.columnName(value),
@@ -39619,7 +39620,7 @@ racaz = function () {
               }
             });
             //o item _cellVariants nao é renderizado
-          } else if (value === "_cellVariants" || value === "created_at" || value === "updated_at" || value === "redirect" || value === "user_id" || value === "issuer_id" || value === "security_id" || value === "canc_date" || value === "const_date" || value === "reg_date" || value === "fundos_cotas" || value === "fundo_exc" || value === "inv_qual" || value === "ir" || value === "taxa_perf" || value === "auditor" || value === "diretor"
+          } else if (value === "_cellVariants" || value === "created_at" || value === "updated_at" || value === "redirect" || value === "user_id" || value === "issuer_id" || value === "security_id" || value === "canc_date" || value === "const_date" || value === "reg_date" || value === "fundos_cotas" || value === "fundo_exc" || value === "inv_qual" || value === "ir" || value === "taxa_perf" || value === "auditor" || value === "diretor" || value === "fundo_cotas"
           //|| value === "name" || value === "code" || value === "symbol") {
           ) {
               // faz nada
@@ -39672,8 +39673,8 @@ racaz = function () {
         data[1] = moment(data[1]).format('DD/MM/YYYY HH:mm:ss');
       } else if (data[0] === "dif_percentage") {
         data[1] = data[1] + "%";
-      } else if (data[0] === "fundo_cotas") {
-        data[1] = data[1] === 1 ? "Sim" : "Não";
+        //       } else if (data[0] === "fundo_cotas") {
+        //         data[1] = data[1] === 1 ? "Sim" : "Não";
       } else {
         console.log('Nao formatado pelo formtt, mas sucesso' + data);
       }
@@ -39728,37 +39729,6 @@ racaz = function () {
     return +(value[0] + 'e' + (value[1] ? +value[1] - exp : -exp));
   };
 
-  //   function removeAcento (text)
-  // {       
-  //     // text = text.toLowerCase();                                                         
-  //     text = text.replace(new RegExp('[ÁÀÂÃ]','gi'), 'a');
-  //     text = text.replace(new RegExp('[ÉÈÊ]','gi'), 'e');
-  //     text = text.replace(new RegExp('[ÍÌÎ]','gi'), 'i');
-  //     text = text.replace(new RegExp('[ÓÒÔÕ]','gi'), 'o');
-  //     text = text.replace(new RegExp('[ÚÙÛ]','gi'), 'u');
-  //     text = text.replace(new RegExp('[Ç]','gi'), 'c');
-  //     return text;                 
-  // }
-
-  //   function removeAcento( newStringComAcento ) {
-  //   var string = newStringComAcento;
-  // 	var mapaAcentosHex 	= {
-  // 		a : /[\xE0-\xE6]/g,
-  // 		e : /[\xE8-\xEB]/g,
-  // 		i : /[\xEC-\xEF]/g,
-  // 		o : /[\xF2-\xF6]/g,
-  // 		u : /[\xF9-\xFC]/g,
-  // 		c : /\xE7/g,
-  // 		n : /\xF1/g
-  // 	};
-
-  // 	for ( var letra in mapaAcentosHex ) {
-  // 		var expressaoRegular = mapaAcentosHex[letra];
-  // 		string = string.replace( expressaoRegular, letra );
-  // 	}
-
-  // 	return string;
-  // }
   function removeAcento(s) {
     var i = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖŐòóôõöőÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜŰùúûüűÑñŠšŸÿýŽž'.split('');
     var o = 'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUUuuuuuNnSsYyyZz'.split('');
@@ -39769,6 +39739,45 @@ racaz = function () {
     return s.replace(/[^A-Za-z0-9]/g, function (ch) {
       return map[ch] || ch;
     });
+  }
+
+  function cvmStringReplace(s) {
+    return s.split(" ").map(function (word) {
+      var iterable = new Map(cvmWords);
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
+
+      try {
+        for (var _iterator3 = iterable[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var _ref3 = _step3.value;
+
+          var _ref4 = _slicedToArray(_ref3, 2);
+
+          var key = _ref4[0];
+          var value = _ref4[1];
+
+          if (key === word) {
+            return value;
+          }
+        }
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
+          }
+        }
+      }
+
+      return word;
+    }).join(" ");
   }
 
   //traz para
@@ -39790,7 +39799,8 @@ racaz = function () {
     "currFormatter": currFormatter,
     "numberForm": numberForm,
     "round": round,
-    "removeAcento": removeAcento
+    "removeAcento": removeAcento,
+    "cvmStringReplace": cvmStringReplace
   };
 }();
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
@@ -107275,11 +107285,10 @@ module.exports = __webpack_require__(55).PassThrough
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var fundsInfo = function () {
-  //constructor que inicializa a classe vazia
   function fundsInfo() {
     _classCallCheck(this, fundsInfo);
 
-    this.fundInfo = {};
+    this.counter = 1;
   }
 
   _createClass(fundsInfo, [{
@@ -107290,49 +107299,138 @@ var fundsInfo = function () {
       return new Promise(function (resolve, reject) {
         loadingon();
         progressBar("Baixando arquivo da CVM...");
-        axios.get('/api/lastworkingdate').then(function (response) {
-          var url = 'https://cacoma.tk/cvm/dados/FI/CAD/DADOS/inf_cadastral_fi_' + moment(response.data[0].date).format('YYYYMMDD') + '.csv';
-          axios.get(url, {
-            onDownloadProgress: function onDownloadProgress(progressEvent) {
-              var progress = Math.round(progressEvent.loaded * 100 / progressEvent.total);
-              //console.log(progress)
-              progressBarValue(progress);
-            }
-            // Do whatever you want with the native progress event
-          }).then(function (result) {
-            var fund = {};
-            Papa.parse(result.data, {
-              // download: true,
-              // worker: true,
-              header: true,
-              dynamicTyping: true,
-              step: function step(row) {
-                if (row.data[0].CNPJ_FUNDO === cnpj) {
-                  // console.log("Row:", row.data[0][0])
-                  console.log("Row:", row.data);
-                  fund = row.data;
-                }
-              },
-              //             complete: () => {
-              //               console.log('All done!')
-              //             },
-              error: function error(err) {
-                _this.onFail(err);
-                reject(err);
-              }
-            });
-            _this.onSuccess(fund);
-            resolve(fund);
-          }).catch(function (error) {
-            console.log(error);
-            _this.onFail(error.response.data);
-            reject(error.response.data);
-          });
+        _this.getLastWorkingDateUrl(0).then(function (url) {
+          return _this.downloadCVM(url);
+        }).then(function (data) {
+          return _this.papaParse(data, cnpj);
+        }).then(function (result) {
+          _this.onSuccess(result);
+          resolve(result);
         }).catch(function (error) {
           console.log(error);
-          _this.onFail(error.response.data);
-          reject(error.response.data);
+          _this.onFail(error);
+          reject(error);
         });
+
+        //         .catch(error => {
+        //           console.log(error);
+        //           this.onFail(error.response);
+        //           reject(error.response);
+        //         });
+      });
+    }
+  }, {
+    key: 'downloadCVM',
+    value: function downloadCVM(url) {
+      var _this2 = this;
+
+      return new Promise(function (resolve, reject) {
+        axios.get(url, {
+          onDownloadProgress: function onDownloadProgress(progressEvent) {
+            var progress = Math.round(progressEvent.loaded * 100 / progressEvent.total);
+            //console.log(progress)
+            progressBarValue(progress);
+          }
+        }).then(function (result) {
+          resolve(result.data);
+        })
+        //erro no pegar arquivo na CVM
+        .catch(function (error) {
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+            if (error.response.status === 502) {
+              console.log('erro de proxy');
+              if (_this2.counter < 5) {
+                _this2.getLastWorkingDateUrl(_this2.counter);
+              }
+            }
+          } else if (error.request) {
+            // The request was made but no response was received
+            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+            // http.ClientRequest in node.js
+            console.log(error.request);
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', error.message);
+          }
+          console.log(error.config);
+          _this2.onFail(error);
+          reject(error.response.status);
+        });
+        //             .catch(error => {
+
+        //               console.log(error);
+        //               this.onFail(error.response);
+        //               reject(error.response);
+        //             });
+      });
+    }
+  }, {
+    key: 'getLastWorkingDateUrl',
+    value: function getLastWorkingDateUrl(days) {
+      return new Promise(function (resolve, reject) {
+        var date = moment().subtract(days, 'day').format('YYYY-MM-DD');
+        console.log('date: ' + date);
+        axios.get('/api/lastworkingdate/' + date).then(function (response) {
+          var url = 'https://cacoma.tk/cvm/dados/FI/CAD/DADOS/inf_cadastral_fi_' + moment(response.data[0].date).format('YYYYMMDD') + '.csv';
+          resolve(url);
+        }).catch(function (error) {
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+            reject(error.response.data);
+          } else if (error.request) {
+            // The request was made but no response was received
+            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+            // http.ClientRequest in node.js
+            console.log(error.request);
+            reject(error.request);
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', error.message);
+            reject(error.message);
+          }
+          console.log(error.config);
+          this.onFail(error);
+          reject(error.response.status);
+        });
+      });
+    }
+  }, {
+    key: 'papaParse',
+    value: function papaParse(data, cnpj) {
+      var _this3 = this;
+
+      return new Promise(function (resolve, reject) {
+        var fund = {};
+        Papa.parse(data, {
+          // download: true,
+          // worker: true,
+          header: true,
+          dynamicTyping: true,
+          step: function step(row) {
+            if (row.data[0].CNPJ_FUNDO === cnpj) {
+              // console.log("Row:", row.data[0][0])
+              console.log("Row:", row.data);
+              fund = row.data;
+            }
+          },
+          //             complete: () => {
+          //               console.log('All done!')
+          //             },
+          error: function error(err) {
+            _this3.onFail(err);
+            reject(err);
+          }
+        });
+        resolve(fund);
       });
     }
   }, {
@@ -107344,10 +107442,11 @@ var fundsInfo = function () {
     }
   }, {
     key: 'onFail',
-    value: function onFail(errors) {
+    value: function onFail(error) {
       loadingoff();
       progressBarValue(100);
-      console.log(errors);
+      flash('Erro ao baixar arquivo da CVM.|danger');
+      console.log(error);
     }
   }]);
 
@@ -114556,6 +114655,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
   data: function data() {
     return {
       form: new __WEBPACK_IMPORTED_MODULE_1__javascript_classes_js__["Form"]({
+        id: '',
         name: '',
         cnpj: '',
         reg_date: '',
@@ -114671,6 +114771,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
     },
     populateData: function populateData(value) {
       if (value) {
+        this.fetched = true;
         if (!value.id) {
           this.editMode = false;
           for (var k in value) {
@@ -114698,6 +114799,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
         //         }
         //         this.show = true;
       } else {
+        this.fetched = false;
         this.editMode = false;
         this.form.reset();
         //         axios.get('/api/columns/' + this.pathArray[1])
@@ -114733,22 +114835,25 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
               case 4:
                 console.log(cnpj);
                 _context.next = 7;
-                return fundsInfo.get(cnpj);
+                return fundsInfo.get(cnpj).catch(function (error) {
+                  flash('Não foi encontrado registro com este CNPJ ou não foi possível buscar os dados.|warning');
+                  console.log(fund);
+                });
 
               case 7:
                 fund = _context.sent;
 
                 console.log(fund);
-                if (this.containsObject('CNPJ_FUNDO', fund)) {
+                if (Array.isArray(fund)) {
                   console.log('podemos popular');
-                  this.newFund.name = racaz.removeAcento(fund[0].DENOM_SOCIAL);
+                  this.newFund.name = racaz.removeAcento(racaz.cvmStringReplace(fund[0].DENOM_SOCIAL.toString()));
                   this.newFund.cnpj = fund[0].CNPJ_FUNDO;
                   this.newFund.reg_date = fund[0].DT_REG;
                   this.newFund.const_date = fund[0].DT_CONST;
                   this.newFund.canc_date = fund[0].DT_CANCEL;
-                  this.newFund.sit = racaz.removeAcento(fund[0].SIT);
-                  this.newFund.classe = racaz.removeAcento(fund[0].CLASSE);
-                  this.newFund.rentabilidade = racaz.removeAcento(fund[0].RENTAB_FUNDO);
+                  this.newFund.sit = racaz.removeAcento(racaz.cvmStringReplace(fund[0].SIT.toString()));
+                  this.newFund.classe = racaz.removeAcento(racaz.cvmStringReplace(fund[0].CLASSE.toString()));
+                  this.newFund.rentabilidade = racaz.removeAcento(racaz.cvmStringReplace(fund[0].RENTAB_FUNDO.toString()));
 
                   this.newFund.fundo_cotas = fund[0].FUNDO_COTAS === 'S' ? 1 : 0;
                   this.newFund.fundo_exc = fund[0].FUNDO_EXCLUSIVO === 'S' ? 1 : 0;
@@ -114764,11 +114869,11 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                   // this.newFund.fundo_exc = fund[0].FUNDO_EXCLUSIVO ;
                   // this.newFund.fundo_cotas = fund[0].FUNDO_COTAS ;
                   //this.newFund.ir = fund[0].TRIB_LPRAZO ;
-                  this.newFund.taxa_perf = fund[0].TAXA_PERFM.toString();
-                  this.newFund.diretor = racaz.removeAcento(fund[0].DIRETOR);
-                  this.newFund.admin = racaz.removeAcento(fund[0].ADMIN);
-                  this.newFund.gestor = racaz.removeAcento(fund[0].GESTOR);
-                  this.newFund.auditor = racaz.removeAcento(fund[0].AUDITOR);
+                  this.newFund.taxa_perf = typeof variable !== 'undefined' ? racaz.removeAcento(racaz.cvmStringReplace(fund[0].TAXA_PERFM.toString())) : '';
+                  this.newFund.diretor = racaz.removeAcento(racaz.cvmStringReplace(fund[0].DIRETOR.toString()));
+                  this.newFund.admin = racaz.removeAcento(racaz.cvmStringReplace(fund[0].ADMIN.toString()));
+                  this.newFund.gestor = racaz.removeAcento(racaz.cvmStringReplace(fund[0].GESTOR.toString()));
+                  this.newFund.auditor = racaz.removeAcento(racaz.cvmStringReplace(fund[0].AUDITOR.toString()));
                   this.fetched = true;
                   enlarge('createFund', this.newFund);
                 } else {
@@ -114789,17 +114894,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
       }
 
       return getFunds;
-    }(),
-    containsObject: function containsObject(obj, list) {
-      var i;
-      for (i = 0; i < list.length; i++) {
-        if (list[i] === obj) {
-          return true;
-        }
-      }
-
-      return false;
-    }
+    }()
   }
 });
 
@@ -115659,51 +115754,6 @@ var render = function() {
                         "b-form-group",
                         {
                           attrs: {
-                            id: "namelabel",
-                            label: "Nome",
-                            "label-for": "name"
-                          }
-                        },
-                        [
-                          _c("b-form-input", {
-                            ref: "name",
-                            class: {
-                              "is-invalid": _vm.form.errors.has("name")
-                            },
-                            attrs: {
-                              id: "name",
-                              oninput:
-                                "setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira o nome.')",
-                              required: "",
-                              dusk: "name"
-                            },
-                            model: {
-                              value: _vm.form.name,
-                              callback: function($$v) {
-                                _vm.$set(_vm.form, "name", $$v)
-                              },
-                              expression: "form.name"
-                            }
-                          }),
-                          _vm._v(" "),
-                          _vm.form.errors.has("name")
-                            ? _c("p", {
-                                staticClass: "text-danger",
-                                domProps: {
-                                  textContent: _vm._s(
-                                    _vm.form.errors.get("name")
-                                  )
-                                }
-                              })
-                            : _vm._e()
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "b-form-group",
-                        {
-                          attrs: {
                             id: "cnpjlabel",
                             label: "CNPJ",
                             "label-for": "cnpj"
@@ -115715,9 +115765,8 @@ var render = function() {
                               {
                                 name: "mask",
                                 rawName: "v-mask",
-                                value: ["###.###.###-##", "##.###.###/####-##"],
-                                expression:
-                                  "['###.###.###-##', '##.###.###/####-##']"
+                                value: "##.###.###/####-##",
+                                expression: "'##.###.###/####-##'"
                               }
                             ],
                             ref: "cnpj",
@@ -115771,6 +115820,53 @@ var render = function() {
                         "b-form-group",
                         {
                           attrs: {
+                            id: "namelabel",
+                            label: "Nome",
+                            "label-for": "name"
+                          }
+                        },
+                        [
+                          _c("b-form-input", {
+                            ref: "name",
+                            class: {
+                              "is-invalid": _vm.form.errors.has("name")
+                            },
+                            attrs: {
+                              disabled:
+                                _vm.form.name === "" && _vm.form.id === "",
+                              id: "name",
+                              oninput:
+                                "setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira o nome.')",
+                              required: "",
+                              dusk: "name"
+                            },
+                            model: {
+                              value: _vm.form.name,
+                              callback: function($$v) {
+                                _vm.$set(_vm.form, "name", $$v)
+                              },
+                              expression: "form.name"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.form.errors.has("name")
+                            ? _c("p", {
+                                staticClass: "text-danger",
+                                domProps: {
+                                  textContent: _vm._s(
+                                    _vm.form.errors.get("name")
+                                  )
+                                }
+                              })
+                            : _vm._e()
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "b-form-group",
+                        {
+                          attrs: {
                             id: "reg_datelabel",
                             label: "Data de registro",
                             "label-for": "reg_date"
@@ -115784,6 +115880,8 @@ var render = function() {
                             attrs: {
                               id: "reg_date",
                               name: "reg_date",
+                              disabled:
+                                _vm.form.name === "" && _vm.form.id === "",
                               autocomplete: "off",
                               "input-class": "form-control",
                               oninput:
@@ -115833,6 +115931,8 @@ var render = function() {
                             attrs: {
                               id: "const_date",
                               name: "const_date",
+                              disabled:
+                                _vm.form.name === "" && _vm.form.id === "",
                               autocomplete: "off",
                               "input-class": "form-control",
                               oninput:
@@ -115882,6 +115982,8 @@ var render = function() {
                             attrs: {
                               id: "canc_date",
                               name: "canc_date",
+                              disabled:
+                                _vm.form.name === "" && _vm.form.id === "",
                               autocomplete: "off",
                               "input-class": "form-control",
                               oninput:
@@ -115928,6 +116030,8 @@ var render = function() {
                             class: { "is-invalid": _vm.form.errors.has("sit") },
                             attrs: {
                               id: "sit",
+                              disabled:
+                                _vm.form.name === "" && _vm.form.id === "",
                               oninput:
                                 "setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira esta informação.')",
                               required: "",
@@ -115973,6 +116077,8 @@ var render = function() {
                             },
                             attrs: {
                               id: "classe",
+                              disabled:
+                                _vm.form.name === "" && _vm.form.id === "",
                               oninput:
                                 "setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira esta informação.')",
                               required: "",
@@ -116018,6 +116124,8 @@ var render = function() {
                             },
                             attrs: {
                               id: "rentabilidade",
+                              disabled:
+                                _vm.form.name === "" && _vm.form.id === "",
                               dusk: "rentabilidade"
                             },
                             model: {
@@ -116060,7 +116168,12 @@ var render = function() {
                               class: {
                                 "is-invalid": _vm.form.errors.has("inv_qual")
                               },
-                              attrs: { id: "inv_qual", dusk: "inv_qual" },
+                              attrs: {
+                                id: "inv_qual",
+                                disabled:
+                                  _vm.form.name === "" && _vm.form.id === "",
+                                dusk: "inv_qual"
+                              },
                               model: {
                                 value: _vm.form.inv_qual,
                                 callback: function($$v) {
@@ -116117,7 +116230,12 @@ var render = function() {
                               class: {
                                 "is-invalid": _vm.form.errors.has("fundo_exc")
                               },
-                              attrs: { id: "fundo_exc", dusk: "fundo_exc" },
+                              attrs: {
+                                id: "fundo_exc",
+                                disabled:
+                                  _vm.form.name === "" && _vm.form.id === "",
+                                dusk: "fundo_exc"
+                              },
                               model: {
                                 value: _vm.form.fundo_exc,
                                 callback: function($$v) {
@@ -116174,7 +116292,12 @@ var render = function() {
                               class: {
                                 "is-invalid": _vm.form.errors.has("fundo_cotas")
                               },
-                              attrs: { id: "fundo_cotas", dusk: "fundo_cotas" },
+                              attrs: {
+                                id: "fundo_cotas",
+                                disabled:
+                                  _vm.form.name === "" && _vm.form.id === "",
+                                dusk: "fundo_cotas"
+                              },
                               model: {
                                 value: _vm.form.fundo_cotas,
                                 callback: function($$v) {
@@ -116231,7 +116354,12 @@ var render = function() {
                               class: {
                                 "is-invalid": _vm.form.errors.has("ir")
                               },
-                              attrs: { id: "ir", dusk: "ir" },
+                              attrs: {
+                                id: "ir",
+                                disabled:
+                                  _vm.form.name === "" && _vm.form.id === "",
+                                dusk: "ir"
+                              },
                               model: {
                                 value: _vm.form.ir,
                                 callback: function($$v) {
@@ -116284,7 +116412,12 @@ var render = function() {
                             class: {
                               "is-invalid": _vm.form.errors.has("taxa_perf")
                             },
-                            attrs: { id: "taxa_perf", dusk: "taxa_perf" },
+                            attrs: {
+                              id: "taxa_perf",
+                              disabled:
+                                _vm.form.name === "" && _vm.form.id === "",
+                              dusk: "taxa_perf"
+                            },
                             model: {
                               value: _vm.form.taxa_perf,
                               callback: function($$v) {
@@ -116325,6 +116458,8 @@ var render = function() {
                             },
                             attrs: {
                               id: "diretor",
+                              disabled:
+                                _vm.form.name === "" && _vm.form.id === "",
                               oninput:
                                 "setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira o diretor.')",
                               required: "",
@@ -116370,6 +116505,8 @@ var render = function() {
                             },
                             attrs: {
                               id: "admin",
+                              disabled:
+                                _vm.form.name === "" && _vm.form.id === "",
                               oninput:
                                 "setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira o administrador.')",
                               required: "",
@@ -116415,6 +116552,8 @@ var render = function() {
                             },
                             attrs: {
                               id: "gestor",
+                              disabled:
+                                _vm.form.name === "" && _vm.form.id === "",
                               oninput:
                                 "setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira o gestor.')",
                               required: "",
@@ -116460,6 +116599,8 @@ var render = function() {
                             },
                             attrs: {
                               id: "auditor",
+                              disabled:
+                                _vm.form.name === "" && _vm.form.id === "",
                               oninput:
                                 "setCustomValidity(''); checkValidity(); setCustomValidity(validity.valid ? '' :'Insira o auditor.')",
                               required: "",

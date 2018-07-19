@@ -457,10 +457,11 @@ Route::get('/api/treasurycheck/{date}', function ($date) {
     return response()->json(false);
   }
 })->middleware('auth');
-Route::get('/api/lastworkingdate', function () {
+Route::get('/api/lastworkingdate/{date}', function ($date) {
     //$user = Auth::user();
-    $today = Carbon::today();
-    $lastWorkingDate = DB::select('SELECT date FROM working_days WHERE working_day = 1 AND date < :date ORDER BY date DESC LIMIT 1', ['date' => $today]);
+    // $date = Carbon::today(); ->toDateString()
+    $parsedDate = Carbon::createFromFormat('Y-m-d', $date)->toDateString();
+    $lastWorkingDate = DB::select('SELECT date FROM working_days WHERE working_day = 1 AND date < :date ORDER BY date DESC LIMIT 1', ['date' => $parsedDate]);
  return response()->json($lastWorkingDate);
 
 })->middleware('auth');
