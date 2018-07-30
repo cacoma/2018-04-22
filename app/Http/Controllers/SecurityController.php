@@ -81,6 +81,7 @@ class SecurityController extends Controller
                 // 'liquidity.required'  => 'A liquidez é requerida.',
                 // 'liquidity.max'  => 'A liquidez é de no máximo 255 caracteres.',
                 'fgc.required'  => 'A informação de cobertura do FGC é requerida.',
+                'index_id' => 'numeric|exists:indices,id',
     ]);
             $security = new security;
             // $security->symbol = strtoupper($request->symbol);
@@ -90,6 +91,7 @@ class SecurityController extends Controller
             $security->ir = strtoupper($request->ir);
             // $security->liquidity = strtoupper($request->liquidity);
             $security->fgc = $request->fgc;
+            $security->index_id = $request->index_id;
             $security->save();
             return response()->json([
                       'type' => 'success',
@@ -149,6 +151,7 @@ class SecurityController extends Controller
               'ir' => 'required|string|max:255',
               // 'liquidity' => 'required|string|max:255',
               'fgc' => 'required|boolean',
+              'index_id' => 'numeric|exists:indices,id',
           ], [
               // 'symbol.required' => 'O código do titulo deve ser inserido.',
               // 'symbol.max' => 'O código do titulo deve ter no máximo 9 caracteres.',
@@ -164,6 +167,7 @@ class SecurityController extends Controller
               // 'liquidity.required'  => 'A liquidez é requerida.',
               // 'liquidity.max'  => 'A liquidez é de no máximo 255 caracteres.',
               'fgc.required'  => 'A informação de cobertura do FGC é requerida.',
+              'index_id.exists'  => 'O indice de referencia deve constar no BD.',
   ]);
             // $security->symbol = strtoupper($request->symbol);
             $security->name = strtoupper($request->name);
@@ -172,6 +176,7 @@ class SecurityController extends Controller
             $security->ir = strtoupper($request->ir);
             // $security->liquidity = strtoupper($request->liquidity);
             $security->fgc = $request->fgc;
+            $security->index_id = $request->index_id;
             $security->save();
             return response()->json([
                       'type' => 'success',
@@ -207,9 +212,9 @@ class SecurityController extends Controller
                         ], 200);
         }
     }
-  
-      //funcoes para inserir o investimento em titulos
-      public function investstore(Request $request)
+
+    //funcoes para inserir o investimento em titulos
+    public function investstore(Request $request)
     {
         $user = Auth::user();
         //$invest->quant = floatval(preg_replace(',', '.', preg_replace('.', '', $request->quant)));
@@ -230,16 +235,16 @@ class SecurityController extends Controller
                       'signal.required' => 'Favor informar se é compra ou venda.',
                       'name.required' => 'O código do título deve ser inserido.',
                       'name.exists' => 'O código do título deve constar no sistema.',
-                      'quant.required'  => 'A quantidade é necessária.',
-                      'price.required'  => 'O preço é necessário.',
-                      'price.min'  => 'O preço deve ser maior que zero.',
+                      'price.required'  => 'A quantidade é necessária.',
+                      'quant.required'  => 'O preço é necessário.',
+                      'quant.min'  => 'O preço deve ser maior que zero.',
                       'broker_fee.min'  => 'A corretagem deve ser inserida, mesmo que zero.',
                       'broker_fee.required'  => 'A corretagem deve ser inserida, mesmo que zero.',
                       'rate.required'  => 'A taxa deve ser inserida, mesmo que zero.',
                       'date_invest.required'  => 'A data do investimento deve ser inserida.',
                       'date_invest.before'  => 'A data do investimento deve ser menor que o dia de hoje.',
                       'broker_name.required'  => 'A corretora deve ser inserida.',
-                      'broker_name.exists'  => 'A corretora deve estar cadastrada.',                      
+                      'broker_name.exists'  => 'A corretora deve estar cadastrada.',
                       'issuer_name.required'  => 'A emissora deve ser inserida.',
                       'issuer_name.exists'  => 'A emissora deve estar cadastrada.',
                   ]);
@@ -256,11 +261,13 @@ class SecurityController extends Controller
         $invest->type = 'security';
         //$invest->symbol = strtoupper($request->symbol);
         $invest->quant = $request->quant;
+        $invest->quant_orig = $request->quant;
         $invest->price = $request->price;
         //$invest->rate = floatval($request->rate);
         $invest->rate = $request->rate;
         $invest->broker_fee = $request->broker_fee;
         $invest->date_invest = new Carbon($request->date_invest);
+        $invest->liquidated = 0;
         $invest->user_id = $user->id;
         $invest->security_id = $securityid;
         $invest->broker_id = $brokerid;

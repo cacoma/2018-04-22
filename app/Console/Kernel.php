@@ -43,17 +43,32 @@ class Kernel extends ConsoleKernel
            ->between('8:00', '18:00')
            ->sendOutputTo('/var/www/html/storage/logs/treasuryScrape2.log')
            ->emailOutputTo('rcaziraghi@gmail.com')
+           ->emailOutputTo('rodrigobertinmachado@gmail.com')
            ->withoutOverlapping();         
       $schedule->exec('node /home/ubuntu/scraping/getIndicesValues.js')
           ->dailyAt('18:15')
            ->sendOutputTo('/var/www/html/storage/logs/IndicesScrape.log')
            ->emailOutputTo('rcaziraghi@gmail.com')
+           ->emailOutputTo('rodrigobertinmachado@gmail.com')
            ->withoutOverlapping();      
+      $schedule->exec('node /home/ubuntu/scraping/getFundsQuotes.js')
+          ->dailyAt('18:30')
+           ->sendOutputTo('/var/www/html/storage/logs/FundsQuotes.log')
+           ->emailOutputTo('rcaziraghi@gmail.com')
+           ->emailOutputTo('rodrigobertinmachado@gmail.com')
+           ->withoutOverlapping();      
+      $schedule->exec('node /home/ubuntu/scraping/getStocksDailyYF.js')
+          ->dailyAt('19:00')
+           ->sendOutputTo('/var/www/html/storage/logs/StocksDailyYF.log')
+           ->emailOutputTo('rcaziraghi@gmail.com')
+           ->emailOutputTo('rodrigobertinmachado@gmail.com')
+           ->withoutOverlapping();
       $schedule->exec('node /home/ubuntu/scraping/getStocksIntradayYF.js')
           ->dailyAt('19:15')
            ->sendOutputTo('/var/www/html/storage/logs/StocksIntradayYF.log')
            ->emailOutputTo('rcaziraghi@gmail.com')
-           ->withoutOverlapping();
+           ->emailOutputTo('rodrigobertinmachado@gmail.com')
+           ->withoutOverlapping();        
 //            ->after(function () {
 //              Log::info("Execução da importação de títulos programada.");
 //          })

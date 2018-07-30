@@ -192,6 +192,7 @@ class StockController extends Controller
                                         Rule::in(['buy', 'sell']),
                                     ],
                         'symbol' => 'required|string|max:255|exists:stocks,symbol',
+                        'date_invest' => 'required|date|before_or_equal:today',
                         'quant' => 'required|numeric|min:1',
                         'price' => 'required|numeric|min:0.0001',
                         'broker_fee' => 'required|numeric|min:0',
@@ -201,6 +202,7 @@ class StockController extends Controller
                         'signal.required' => 'Favor informar se é compra ou venda.',
                         'symbol.required' => 'O código da ação deve ser inserido.',
                         'symbol.exists' => 'O código da ação deve constar no sistema.',
+                        'date_invest' => 'A data de investimento deve ser de hoje ou anterior.',
                         'quant.required'  => 'A quantidade é necessária.',
                         'price.required'  => 'O preço é necessário.',
                         'price.min'  => 'O preço deve ser maior que zero.',
@@ -217,7 +219,7 @@ class StockController extends Controller
 //                         ->withInput();
 //         };
         if ($request->signal === 'sell') {
-          $request->quant = 0 - $request->quant;
+            $request->quant = 0 - $request->quant;
         };
         //dd($request);
         $brokerid = DB::table('brokers')->where('name', $request->broker_name)->value('id');
@@ -240,9 +242,11 @@ class StockController extends Controller
         $invest->type = 'stock';
         //$invest->symbol = strtoupper($request->symbol);
         $invest->quant = floatval($request->quant);
+        $invest->quant_orig = floatval($request->quant);
         $invest->price = $request->price;
         $invest->broker_fee = $request->broker_fee;
         $invest->date_invest = new Carbon($request->date_invest);
+        $invest->liquidated = 0;
         $invest->user_id = $user->id;
         $invest->stock_id = $stockid;
         $invest->broker_id = $brokerid;
@@ -269,19 +273,69 @@ class StockController extends Controller
 
 //         //return $request;
 //     }
-    public function investedit($id)
+    public function investedit(Request $request)
     {
         //abre a tela onde vai ser feita a edicao
-        $invest = invest::with('broker')->findOrFail($id);
-        $invest->broker_name = $invest->broker->name;
-        unset($invest->broker);
-        //$invest->price = strtr($invest->price, array('.' => ','));
-        $invest->price = floatval($invest->price);
-        //$invest->broker_fee = strtr($invest->broker_fee, array('.' => ','));
-        $invest->broker_fee = floatval($invest->broker_fee);
-        $invest->quant = floatval($invest->quant);
-        return view('stocks.stockinvestedit', compact('invest', 'id'));
+//         $invest = invest::with('broker')->findOrFail($id);
+//         $invest->broker_name = $invest->broker->name;
+//         unset($invest->broker);
+//         //$invest->price = strtr($invest->price, array('.' => ','));
+//         $invest->price = floatval($invest->price);
+//         //$invest->broker_fee = strtr($invest->broker_fee, array('.' => ','));
+//         $invest->broker_fee = floatval($invest->broker_fee);
+//         $invest->quant = floatval($invest->quant);
+//         return view('stocks.stockinvestedit', compact('invest', 'id'));
         //return redirect('invests')->with('success', 'Foi ao lugar certo.');
+
+      //TODO fazer busca no bd para operations com este
+
+      //primeiro ajusta os valores para formato de bando de dados, depois acha o investimento entao valida os dados e por fim faz o store
+        //$request = $this->formatcurrencytodb($request);
+        //acha o investimento
+//         $investUpdate = Invest::findOrFail($request->id);
+//         //pega o id do user
+//         $userid = $request->user()->id;
+//         //valida as informacoes
+//         $this->validate(request(), [
+//                         'symbol' => 'required|string|max:255|exists:stocks,symbol',
+//                         'quant' => 'required|numeric|min:1',
+//                         'price' => 'required|numeric|min:0.0001',
+//                         'broker_fee' => 'required|numeric|min:0',
+//                         'date_invest' => 'required|before:tomorrow',
+//                         'broker_name' => 'required|exists:brokers,name',
+//                      ], [
+//                         'symbol.required' => 'O código da ação deve ser inserido.',
+//                         'symbol.exists' => 'O código da ação deve constar no sistema.',
+//                         'quant.required'  => 'A quantidade é necessária.',
+//                         'price.required'  => 'O preço é necessário.',
+//                         'price.min'  => 'O preço deve ser maior que zero.',
+//                         'broker_fee.min'  => 'A corretagem deve ser inserida, mesmo que zero.',
+//                         'date_invest.required'  => 'A data do investimento deve ser inserida.',
+//                         'date_invest.before'  => 'A data do investimento deve ser menor que o dia de hoje.',
+//                         'broker_name.required'  => 'A corretora deve ser inserida.',
+//                         'broker_name.exists'  => 'A corretora deve estar cadastrada.',
+//                     ]);
+//         //pega info de broker e stock id
+//         $brokerid = DB::table('brokers')->where('name', $request->broker_name)->value('id');
+//         //$brokerid = $request->broker()->id;
+//         $stockid = DB::table('stocks')->where('symbol', $request->symbol)->value('id');
+//         //atualiza BD
+//         $investUpdate->type = 'stock';
+//         //$investUpdate->symbol = strtoupper($request->get('symbol'));
+//         $investUpdate->quant = $request->get('quant');
+//         $investUpdate->quant_orig = $request->get('quant');
+//         $investUpdate->price = $request->get('price');
+//         $investUpdate->broker_fee = $request->get('broker_fee');
+//         $investUpdate->date_invest = new Carbon($request->get('date_invest'));
+//         $investUpdate->user_id = $userid;
+//         $investUpdate->stock_id = $stockid;
+//         $investUpdate->broker_id = $brokerid;
+//         $investUpdate->save();
+//         //retorna com sucesso
+//         return response()->json([
+//                               'type' => 'success',
+//                               'message' => 'O investimento foi atualizado.|success'
+//                           ]);
     }
     public function investupdate(Request $request)
     {
@@ -294,14 +348,17 @@ class StockController extends Controller
         //valida as informacoes
         $this->validate(request(), [
                         'symbol' => 'required|string|max:255|exists:stocks,symbol',
+                        'date_invest' => 'required|date|before_or_equal:today',
                         'quant' => 'required|numeric|min:1',
                         'price' => 'required|numeric|min:0.0001',
                         'broker_fee' => 'required|numeric|min:0',
                         'date_invest' => 'required|before:tomorrow',
                         'broker_name' => 'required|exists:brokers,name',
-                     ], [
+                    ], [
+                        'signal.required' => 'Favor informar se é compra ou venda.',
                         'symbol.required' => 'O código da ação deve ser inserido.',
                         'symbol.exists' => 'O código da ação deve constar no sistema.',
+                        'date_invest' => 'A data de investimento deve ser de hoje ou anterior.',
                         'quant.required'  => 'A quantidade é necessária.',
                         'price.required'  => 'O preço é necessário.',
                         'price.min'  => 'O preço deve ser maior que zero.',
@@ -338,7 +395,6 @@ class StockController extends Controller
         $user = Auth::user();
         $investDel = invest::findOrFail($id);
         if ($user->role_id == '1' || $user->id == $investDel->user_id) {
-            
             $investDel->delete();
             return response()->json([
                               'type' => 'success',

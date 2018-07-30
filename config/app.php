@@ -150,10 +150,12 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
+      // debugger de php adicionado por rcaziraghi em, 26/07/2018
+        Barryvdh\Debugbar\ServiceProvider::class,
         /*
          * Package Service Providers...
          */
-
+      
         /*
          * Application Service Providers...
          */
@@ -211,6 +213,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+      // debugger de php adicionado por rcaziraghi em, 26/07/2018
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
 
     ],
 

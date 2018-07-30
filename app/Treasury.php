@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Invests;
+use App\investTreasury;
 
 class Treasury extends Model
 {
@@ -19,5 +20,10 @@ class Treasury extends Model
     public function invests()
       {
           return $this->hasMany(invests::Class,'id','stock_id');
+      }    
+  
+  public function investTreasury()
+      {
+          return $this->hasMany(investTreasury::Class,'id','stock_id');
       }
 }

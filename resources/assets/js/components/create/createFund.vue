@@ -386,7 +386,7 @@ export default {
         this.newFund.canc_date = fund[0].DT_CANCEL ;
         this.newFund.sit = racaz.removeAcento(racaz.cvmStringReplace(fund[0].SIT.toString()));
         this.newFund.classe = racaz.removeAcento(racaz.cvmStringReplace(fund[0].CLASSE.toString()));
-        this.newFund.rentabilidade = racaz.removeAcento(racaz.cvmStringReplace(fund[0].RENTAB_FUNDO.toString()));
+        this.newFund.rentabilidade = typeof fund[0].RENTAB_FUNDO !== 'undefined' ? fund[0].RENTAB_FUNDO !== null ? racaz.removeAcento(racaz.cvmStringReplace(fund[0].RENTAB_FUNDO.toString())) : '' : '';
         
         this.newFund.fundo_cotas = fund[0].FUNDO_COTAS === 'S' ? 1 : 0;
         this.newFund.fundo_exc = fund[0].FUNDO_EXCLUSIVO === 'S' ? 1 : 0;
@@ -402,7 +402,7 @@ export default {
         // this.newFund.fundo_exc = fund[0].FUNDO_EXCLUSIVO ;
         // this.newFund.fundo_cotas = fund[0].FUNDO_COTAS ;
         //this.newFund.ir = fund[0].TRIB_LPRAZO ;
-        this.newFund.taxa_perf = typeof variable !== 'undefined' ? racaz.removeAcento(racaz.cvmStringReplace(fund[0].TAXA_PERFM.toString())) : '';
+        this.newFund.taxa_perf = typeof fund[0].TAXA_PERFM !== 'undefined' ? fund[0].TAXA_PERFM !== null ? racaz.removeAcento(racaz.cvmStringReplace(fund[0].TAXA_PERFM.toString())) : '' : '';
         this.newFund.diretor = racaz.removeAcento(racaz.cvmStringReplace(fund[0].DIRETOR.toString()));
         this.newFund.admin = racaz.removeAcento(racaz.cvmStringReplace(fund[0].ADMIN.toString()));
         this.newFund.gestor = racaz.removeAcento(racaz.cvmStringReplace(fund[0].GESTOR.toString()));

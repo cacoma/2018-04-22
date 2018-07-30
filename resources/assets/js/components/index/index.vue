@@ -50,14 +50,17 @@
       <!-- Main table element -->
       <b-table ref="table" id="table" show-empty responsive stacked="lg" :busy.sync="isBusy" :items="items" :fields="fields" :current-page="currentPage" :per-page="perPage" :filter="filter" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" @filtered="onFiltered">
         <template slot="actions" slot-scope="row">
+        <b-row>
+  <b-col>
         <!-- We use @click.stop here to prevent a 'row-clicked' event from also happening -->
         <b-button size="sm" @click.stop="toggleInfo(row.item, row.index)">
-          {{ row.detailsShowing ? 'Fechar' : 'Abrir' }} detalhes
+<!--           {{ row.detailsShowing ? 'Fechar' : 'Abrir' }} detalhes -->
+          <span v-html="octicons.search.toSVG()"></span>
         </b-button>
         <b-button v-if="slug != 'invests'" size="sm" @click.stop="this.enlarge('create',row.item)">
-          Editar
+          <span v-html="octicons.pencil.toSVG()"></span>
         </b-button>
-         <div v-if="slug == 'invests'">
+<!--          <div v-if="slug == 'invests'">
         <b-button v-if="row.item.type === 'stock'" size="sm" @click.stop="this.enlarge('createTypeStocks',row.item)">
           Editar ação
         </b-button>
@@ -66,14 +69,19 @@
         </b-button>
         <b-button v-if="row.item.type === 'security'" size="sm" @click.stop="this.enlarge('createTypeSecurities',row.item)">
           Editar renda fixa
+        </b-button>        
+           <b-button v-if="row.item.type === 'fund'" size="sm" @click.stop="this.enlarge('createTypeFunds',row.item)">
+          Editar fundo
         </b-button>
-        </div>
+        </div> -->
         <b-button v-if="slug != 'users'" size="sm" @click.stop="this.deleteconfirmation(row.item)">
-          Excluir
+          <span v-html="octicons.trashcan.toSVG()"></span>
         </b-button>
         <b-button v-if="slug == 'users'" size="sm" @click.stop="this.flash('Usuários não podem ser excluídos, somente desativados.|warning')">
-          Excluir
+          <span v-html="octicons.trashcan.toSVG()"></span>
         </b-button>
+  </b-col>
+  </b-row>
       </template>
         <template slot="row-details" slot-scope="row">
         <b-card>
@@ -94,6 +102,7 @@
         <createinveststypestocks></createinveststypestocks>
         <createinveststypetreasuries></createinveststypetreasuries>
         <createinveststypesecurities></createinveststypesecurities>
+        <createinveststypefunds></createinveststypefunds>
       </enlarge>
       <!-- <enlarge> -->
       <!-- <createinvests></createinvests> -->
@@ -107,6 +116,7 @@
 
 <script>
 let items = {};
+var octicons = require("octicons");
 export default {
   data() {
     return {
@@ -133,6 +143,7 @@ export default {
       delUrl: '',
       isBusy: false,
       items: [],
+      octicons: octicons,
     }
   },
   created: function() {

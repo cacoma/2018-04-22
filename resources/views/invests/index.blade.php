@@ -2,5 +2,5 @@
 
 @section('content')
 
-      <index></index>
+      <indexinvests></indexinvests>
 @endsection

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Invest;
+use App\investStock;
 use App\Stock;
 
 class DailyQuote extends Model
@@ -20,6 +21,10 @@ class DailyQuote extends Model
     public function invest()
         {
             return $this->belongsTo(invest::Class, 'stock_id', 'stock_id');
+        }    
+  public function investStock()
+        {
+            return $this->belongsTo(investStock::Class, 'stock_id', 'stock_id');
         }
   
 }

@@ -22,10 +22,16 @@
         "vue": "^2.5.7"
     },
     "dependencies": {
+        "@fortawesome/fontawesome": "^1.1.8",
+        "@fortawesome/fontawesome-free-brands": "^5.0.13",
+        "@fortawesome/fontawesome-free-regular": "^5.0.13",
+        "@fortawesome/fontawesome-free-solid": "^5.0.13",
         "bootstrap-vue": "^2.0.0-rc.8",
         "chart.js": "^2.7.2",
         "moment": "^2.22.1",
+        "octicons": "^8.0.0",
         "papaparse": "^4.5.0",
+        "remove": "^0.1.5",
         "v-money": "^0.8.1",
         "vue-chartjs": "^3.3.1",
         "vue-chartkick": "^0.3.1",

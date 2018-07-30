@@ -14,7 +14,7 @@
               :dusk="key">
 
               <!--              symbol -->
-              <b-form-input v-if="key == 'symbol'" v-mask="['AAAA#.AA','AAAA##.AA']" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="value" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')"
+              <b-form-input v-if="key == 'symbol'" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="value" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')"
                 oninvalid="this.setCustomValidity('Insira esta informação.')" required :dusk="key">
               </b-form-input>
               <!--              code -->
@@ -43,7 +43,17 @@
               <!--           index -->
               <b-form-input v-if="key == 'index'" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="key" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira esta informação.')"
                 required :dusk="key">
-              </b-form-input>
+              </b-form-input>              
+              <!--           index_id -->
+<!--               <b-form-input type="text" class="form-control" v-if="key == 'index_id'" list="listindices" :key="key" :value="value" :ref="key" v-bind:id="key" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira esta informação.')"
+                required :dusk="key">
+                          <datalist id="listindices">
+                   <option v-for="(v, k) in resultindices" v-bind:value="k" v-on:click="updateData(key)">{{ v }}</option>
+            </datalist>
+              </b-form-input>               -->
+              <b-form-select v-if="key == 'index_id'" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="key" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" class="mb-3" :dusk="key">
+                  <option v-for="(v, k) in resultindices" v-bind:value="k" v-on:click="updateData(key)">{{k}} - {{ v }}</option>
+              </b-form-select>
               <!--           liquidity -->
               <b-form-input v-if="key == 'liquidity'" :key="key" :value="value" :ref="key" v-on:input="updateData(key)" v-bind:id="key" v-bind:name="key" v-bind:class="{ 'is-invalid': form.errors.has(key) }" oninput="setCustomValidity('')" oninvalid="this.setCustomValidity('Insira esta informação.')"
                 required :dusk="key">
@@ -134,12 +144,16 @@ export default {
       pathArray: racaz.pathArray,
       editMode: false,
       hasCoupon: '',
+      resultindices: [],
     }
   },
   created: function() {
     window.events.$on('create', (item) => this.populateData(item));
     if (this.data){
       this.populateData(this.data);
+    }
+    if (racaz.pathArray[1] === "securities") {
+      this.autoCompleteIndices();
     }
     // else {
     //   this.populateData();
@@ -227,7 +241,17 @@ export default {
           });
         this.show = true;
       }
-    }
+    },
+    autoCompleteIndices() {
+      axios.get('/api/indices', {})
+        .then(response => {
+          this.resultindices = response.data;
+        })
+        .catch(error => {
+          console.log('buscou indices');
+          console.log(error.response);
+        });
+    },
   },
 }
 </script>

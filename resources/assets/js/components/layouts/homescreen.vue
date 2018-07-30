@@ -132,7 +132,7 @@ export default {
     const uniqueType = this.invests.map(item => item.type);
     //monta objeto com os dados acima
     for (let i = 0; i < uniqueDesignation.length; i++) {
-      if (uniqueType[i] === 'stock' || uniqueType[i] === 'treasury') {
+      if (uniqueType[i] === 'stock' || uniqueType[i] === 'treasury' || uniqueType[i] === 'fund') {
       this.investList.push({
         text: uniqueDesignation[i],
         value: uniqueID[i],

@@ -1,6 +1,6 @@
 <template>
 <b-modal dusk="deleteModal" ref="deleteModal" id="deleteModal" hide-footer size="md" centered v-model="this.show" header-bg-variant="danger" no-close-on-backdrop no-close-on-esc hide-header-close>
-  <div class="d-block text-center">
+  <div class="d-block">
     <h5 v-text="this.title"></h5>
     <div v-for="(value, key) in this.body">
       <div v-if="key !== '_cellVariants' && key !== '_showDetails' && key !== 'index'" :key="key">{{ this.racaz.columnName(key) }}: {{ this.racaz.formtt([key,value]) }}</div>
@@ -20,6 +20,7 @@ export default {
       body: {},
       title: '',
       dusk: 'ok',
+      delType: '',
     }
   },
   created() {
@@ -32,43 +33,60 @@ export default {
     deleteconfirmation(item) {
       this.body = {};
       this.title = 'Voce tem certeza que deseja deletar este registro?';
-      if (this.isJson(item)) {
-        this.body = item;
+//       if (this.isJson(item)) {
+//         this.body = item;
 
-        console.log("isJson");
-        this.show = true;
-      } else {
-        console.log(item);
+//         console.log("isJson");
+//         this.show = true;
+//       } else {
+//         console.log(item);
         this.body = item;
         this.show = true;
         console.log('notJson');
-      }
+//       }
     },
     hide() {
       this.show = false;
     },
-    isJson(item) {
-      item = typeof item !== "string" ?
-        JSON.stringify(item) :
-        item;
+//     isJson(item) {
+//       item = typeof item !== "string" ?
+//         JSON.stringify(item) :
+//         item;
 
-      try {
-        item = JSON.parse(item);
-      } catch (e) {
-        return false;
-      }
+//       try {
+//         item = JSON.parse(item);
+//       } catch (e) {
+//         return false;
+//       }
 
-      if (typeof item === "object" && item !== null) {
-        return true;
-      }
+//       if (typeof item === "object" && item !== null) {
+//         return true;
+//       }
 
-      return false;
-    },
+//       return false;
+//     },
     deleteRow() {
       loadingon();
       this.hide();
+      switch(this.body.type) {
+          case 'security':
+              this.delType = 'securities';
+              break;
+          case 'stock':
+              this.delType = 'stocks';
+              break;          
+        case 'treasury':
+              this.delType = 'treasuries';
+              break;          
+        case 'fund':
+              this.delType = 'funds';
+              break;
+          default:
+              console.log('erro no switch do deleteconfirmation')
+      }
+      
       if (racaz.slug == 'invests') {
-        this.delUrl = '/' + this.body.type + 's/' + racaz.slug + '/' + this.body.id + '/destroy'
+        this.delUrl = '/' + this.delType + '/' + racaz.slug + '/' + this.body.id + '/destroy'
         console.log(this.delUrl);
       } else {
         this.delUrl = '/' + racaz.slug + '/' + this.body.id + '/destroy'
@@ -78,6 +96,7 @@ export default {
         .then(response => {
           console.log(response);
           this.$bus.$emit('updateindexedit');
+          this.$bus.$emit('updateindexinvestedit');
           loadingoff();
           flash(response.data.message + '|success');
         })
@@ -110,7 +129,7 @@ export default {
           //this.delRowMessage = error.message;
           //this.showModalDeleteResult();
         });
-      console.log('Deletado: ' + this.delRow.id);
+      // console.log('Deletado: ' + this.delRow.id);
     },
 
   }

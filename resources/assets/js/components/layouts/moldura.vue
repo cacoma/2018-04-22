@@ -22,6 +22,7 @@ export default {
       createTypeStocks();
       createTypeTreasuries();
       createTypeSecurities();
+      createTypeFunds();
     } else if (this.slug !== 'invests' && this.slug !== 'funds' && this.Slug2 === 'create') {
     //caso seja usado para criar algum elemento sem modal, no caminho de http
       create();

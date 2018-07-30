@@ -15,6 +15,7 @@ class CreateFundQuotesTable extends Migration
     {
         Schema::create('fund_quotes', function (Blueprint $table) {
             $table->increments('id');
+            //$table->integer('fund_id')->references('id')->on('indices');
             $table->integer('fund_id')->unsigned();
             $table->string('cnpj', 18);
             $table->dateTime('comp_date');
@@ -22,8 +23,14 @@ class CreateFundQuotesTable extends Migration
             $table->decimal('quote',18,4);
             $table->decimal('patrim_liq',18,4);
             $table->decimal('capta_dia',18,4)->nullable();
+            $table->decimal('resg_dia',18,4)->nullable();
             $table->decimal('quotistas',18,0)->nullable();
             $table->timestamps();
+        });
+      Schema::table('fund_quotes', function($table) {
+            //foreign keys
+            $table->foreign('fund_id')->references('id')->on('indices');
+            
         });
     }
 

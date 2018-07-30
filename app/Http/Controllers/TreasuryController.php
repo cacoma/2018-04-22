@@ -61,7 +61,7 @@ class TreasuryController extends Controller
         if ($user->role_id === 1) {
             $this->validate(request(), [
                         'code' => 'required|string|max:25|unique:treasuries,code',
-                        'name' => 'required|string|max:255',
+                        'name' => 'required|string|max:255|unique:treasuries,name',
                         'due_date' => 'required|date',
                         'coupon' => 'required|boolean',
                         'coupon_date' => 'nullable',
@@ -69,6 +69,7 @@ class TreasuryController extends Controller
                         'code.required' => 'O código do titulo deve ser inserido.',
                         'code.max' => 'O código do titulo deve ter no máximo 9 caracteres.',
                         'code.unique' => 'O código do titulo não deve ser duplicado.',
+                        'name.unique' => 'O nome do titulo não deve ser duplicado.',
                         'name.required'  => 'O nome do titulo é requerido.',
                         'name.max'  => 'O tamanho máximo de texto é 255 caracteres.',
                         'due_date.required'  => 'A data de vencimento é requerido.',
@@ -140,7 +141,7 @@ class TreasuryController extends Controller
             $treasury = Treasury::find($id);
             $this->validate(request(), [
                         'code' => ['required', 'string', 'max:25', Rule::unique('treasuries')->ignore($treasury->code, 'code'),],
-                        'name' => 'required|string|max:255',
+                        'name' => ['required', 'string', 'max:255', Rule::unique('treasuries')->ignore($treasury->name, 'name'),],
                         'due_date' => 'required|date',
                         'coupon' => 'required|boolean',
                         'coupon_date' => 'nullable',
@@ -148,6 +149,7 @@ class TreasuryController extends Controller
                         'code.required' => 'O código do titulo deve ser inserido.',
                         'code.max' => 'O código do titulo deve ter no máximo 9 caracteres.',
                         'code.unique' => 'O código do titulo não deve ser duplicado.',
+                        'name.unique' => 'O nome do titulo não deve ser duplicado.',
                         'name.required'  => 'O nome do titulo é requerido.',
                         'name.max'  => 'O tamanho máximo de texto é 255 caracteres.',
                         'due_date.required'  => 'A data de vencimento é requerido.',
@@ -208,7 +210,7 @@ class TreasuryController extends Controller
                                       'required',
                                       Rule::in(['buy', 'sell']),
                                   ],
-                      'code' => 'required|string|max:25|exists:treasuries,code',
+                      'name' => 'required|string|max:255|exists:treasuries,name',
                       'quant' => 'required|numeric|min:0.01',
                       'price' => 'required|numeric|min:0.0001',
                       'broker_fee' => 'required|numeric|min:0',
@@ -217,8 +219,8 @@ class TreasuryController extends Controller
                       'broker_name' => 'required|exists:brokers,name',
                   ], [
                       'signal.required' => 'Favor informar se é compra ou venda.',
-                      'code.required' => 'O código do título deve ser inserido.',
-                      'code.exists' => 'O código do título deve constar no sistema.',
+                      'name.required' => 'O código do título deve ser inserido.',
+                      'name.exists' => 'O código do título deve constar no sistema.',
                       'quant.required'  => 'A quantidade é necessária.',
                       'price.required'  => 'O preço é necessário.',
                       'price.min'  => 'O preço deve ser maior que zero.',
@@ -236,7 +238,7 @@ class TreasuryController extends Controller
         //dd($request);
         $brokerid = DB::table('brokers')->where('name', $request->broker_name)->value('id');
         //$brokerid = $request->broker()->id;
-        $treasuryid = DB::table('treasuries')->where('code', $request->code)->value('id');
+        $treasuryid = DB::table('treasuries')->where('name', $request->name)->value('id');
 
         $invest = new Invest;
         $invest->type = 'treasury';
@@ -247,6 +249,7 @@ class TreasuryController extends Controller
         $invest->rate = $request->rate;
         $invest->broker_fee = $request->broker_fee;
         $invest->date_invest = new Carbon($request->date_invest);
+        $invest->liquidated = 0;
         $invest->user_id = $user->id;
         $invest->treasury_id = $treasuryid;
         $invest->broker_id = $brokerid;
@@ -282,7 +285,7 @@ class TreasuryController extends Controller
         if ($userid === $user->id || $user->role_id === 1) {
             //$request->quant = floatval(preg_replace('/[,]/','.',preg_replace('/[.]/', '',$request->quant)));
             $this->validate(request(), [
-            'code' => 'required|string|max:25|exists:treasuries,code',
+            'name' => 'required|string|max:255|exists:treasuries,name',
             'quant' => 'required|numeric|min:0.01',
             'price' => 'required|numeric|min:0.0001',
             'broker_fee' => 'required|numeric|min:0',
@@ -291,8 +294,8 @@ class TreasuryController extends Controller
             'broker_name' => 'required|exists:brokers,name',
         ], [
             'signal.required' => 'Favor informar se é compra ou venda.',
-            'code.required' => 'O código do título deve ser inserido.',
-            'code.exists' => 'O código do título deve constar no sistema.',
+            'name.required' => 'O código do título deve ser inserido.',
+            'name.exists' => 'O código do título deve constar no sistema.',
             'quant.required'  => 'A quantidade é necessária.',
             'price.required'  => 'O preço é necessário.',
             'price.min'  => 'O preço deve ser maior que zero.',
@@ -308,7 +311,7 @@ class TreasuryController extends Controller
             //pega info de broker e stock id
             $brokerid = DB::table('brokers')->where('name', $request->broker_name)->value('id');
             //$brokerid = $request->broker()->id;
-            $treasuryid = DB::table('treasuries')->where('code', $request->code)->value('id');
+            $treasuryid = DB::table('treasuries')->where('name', $request->name)->value('id');
             //atualiza BD
             $investUpdate->type = 'treasury';
             //$investUpdate->symbol = strtoupper($request->get('symbol'));

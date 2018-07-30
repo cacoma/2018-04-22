@@ -87,7 +87,7 @@ racaz = function() {
     ["code", "Código"],
     ["0", "Não"],
     ["1", "Sim"],
-    ["rate", "Taxa"],
+    ["rate", "Rentab."],
     ["avgprice", "Preço médio"],
     ["sumquant", "Quantidade"],
     ["index", "Índice"],
@@ -264,6 +264,8 @@ racaz = function() {
     }
     return column;
   };
+
+
   fieldsFiller = function(data) {
     let fields = [];
     //depois ele vai fazer o tratamento dos dados apresentados, trazendo para formatos de apresentacao
@@ -284,7 +286,7 @@ racaz = function() {
           //aqui formata os precos
         } else if (value === "open" || value === "high" || value === "low" ||
           value === "close" || value === "price" || value === "quote" ||
-          value === "broker_fee" || value === "total" ||
+          value === "total" ||
           value === "1. open" || value === "2. high" || value === "3. low" ||
           value === "4. close" || value === "avgprice" ||
           value === "total_invested" || value === "total_updated" ||
@@ -326,7 +328,14 @@ racaz = function() {
             label: racaz.columnName(value),
             sortable: true,
             formatter: (value) => {
-              return percFormatter.format(value / 100);
+              if (typeof value === 'number') {
+                return percFormatter.format(value / 100);
+              } else if (typeof value === 'string') {
+                return value;
+              } else {
+                console.log(`FieldsFiller: value===rate: nao eh string nem number: ${value} - ${typeof value}`)
+                return value;
+              }
             }
           });
           //ajusta o nome do investimento
@@ -353,12 +362,19 @@ racaz = function() {
               }
             }
           });
-          //o item _cellVariants nao é renderizado
+          //na pagina de criacao de stocks ele renderiza o campo symbol
+        } else if (value === "symbol" && slug === "stocks") {
+          fields.push({
+            key: value,
+            label: racaz.columnName(value),
+            sortable: true,
+          });
+          //estes itens nao serao renderizados
         } else if (value === "_cellVariants" || value === "created_at" || value === "updated_at" || value === "redirect" ||
           value === "user_id" || value === "issuer_id" || value === "security_id" || value === "canc_date" ||
           value === "const_date" || value === "reg_date" || value === "fundos_cotas" || value === "fundo_exc" ||
           value === "inv_qual" || value === "ir" || value === "taxa_perf" || value === "auditor" || value === "diretor" ||
-          value === "fundo_cotas"
+          value === "fundo_cotas" || value === "symbol" || value === "broker_name" || value === "broker_fee" || value === "deleted_at"
           //|| value === "name" || value === "code" || value === "symbol") {
         ) {
           // faz nada
@@ -375,6 +391,468 @@ racaz = function() {
       console.log('fields filler' + data);
     }
   };
+
+  const columnDescInvest = [
+    ["id", 'ID'],
+    ["name", 'Nome'],
+    ["email", 'E-mail'],
+    ["role_id", 'Permissão'],
+    ["created_at", "Criado em"],
+    ["updated_at", "Atual. em"],
+    ["timestamp", "Data do reg."],
+    ["symbol", "Ticket"],
+    ["stock_id", "Ticket"],
+    ["type", "Tipo"],
+    ["cnpj", "CNPJ"],
+    ["open", "Abertura"],
+    ["volume", "Volume"],
+    ["price", "Preço"],
+    ["low", "Baixa"],
+    ["high", "Alta"],
+    ["close", "Fecham"],
+    ["date_invest", "Data inv."],
+    ["broker_fee", "Corretagem"],
+    ["broker_id", "Corretora"],
+    ["broker", "Corretora"],
+    ["quote", "Cotação"],
+    ["quant", "Quant."],
+    ["user_id", "Usuario"],
+    ["total", "Total"],
+    ["percentage", "%"],
+    ["invests", "Investimentos"],
+    ["stocks", "Ações"],
+    ["stock", "Ação"],
+    ["brokers", "Corretoras"],
+    ["broker_name", "Corretora"],
+    ["users", "Usuário"],
+    ["monthlyquotes", "Cotações mensais"],
+    ["dailyquotes", "Cotações diarias"],
+    ["fail", "Falha"],
+    ["success", "Sucesso"],
+    ["upToDate", "Atualiz. anteriormente"],
+    ["stock_name", "Ação"],
+    ["profile", "Perfil"],
+    ["treasuries", "Titulos"],
+    ["treasury", "Titulo"],
+    ["due_date", "Vencimento"],
+    ["coupon", "Juros semestrais"],
+    ["coupon_date", "Prim. pag. de juros"],
+    ["coupon_date2", "Seg. pag. de juros"],
+    ["code", "Código"],
+    ["0", "Não"],
+    ["1", "Sim"],
+    ["rate", "Rentab."],
+    ["avgprice", "Preço médio"],
+    ["sumquant", "Quantidade"],
+    ["index", "Índice"],
+    ["ir", "IR"],
+    ["name", "Nome"],
+    ["securities", "Renda fixa"],
+    ["security", "Renda fixa"],
+    ["liquidity", "Liquidez"],
+    ["fgc", "FGC"],
+    ["issuer_name", "Emissor"],
+    ["issuer", "Emissor"],
+    ["issuers", "Emissores"],
+    ["inv", "Invest."],
+    ["bc_code", "Codigo BC"],
+    ["unit", "Unidade"],
+    ["type_invest", "Tipo"],
+    ["designation", "Investimento"],
+    ["total_invested", "Tot. inv."],
+    ["total_updated", "Tot. atual."],
+    ["dif_percentage", "%"],
+    ["dif_reais", "Dif. (R$)"],
+    ["date_updated", "Data at."],
+    ["funds", "Fundos"],
+    ["fund", "Fundo"],
+    ["reg_date", "Data de registro"],
+    ["const_date", "Data de constituição"],
+    ["canc_date", "Data de cancelamento"],
+    ["sit", "Situação"],
+    ["classe", "Classe"],
+    ["rentabilidade", "Rentabilidade"],
+    ["inv_qual", "Investidor qualificado"],
+    ["fundo_exc", "Fundo exclusivo"],
+    ["fundo_cotas", "Fundo de cotas"],
+    ["taxa_perf", "Taxa de performance"],
+    ["diretor", "Diretor"],
+    ["admin", "Administrador"],
+    ["gestor", "Gestor"],
+    ["auditor", "Auditor"],
+    ["liquidated", "Liq."],
+  ];
+
+  columnNameInvest = function(column) {
+    let iterable = new Map(columnDescInvest);
+    for (let [key, value] of iterable) {
+      if (key === column) {
+        return value;
+      }
+    }
+    return column;
+  };
+
+  fieldsFillerInvests = function(data) {
+    let fields = [];
+    //depois ele vai fazer o tratamento dos dados apresentados, trazendo para formatos de apresentacao
+    if (Array.isArray(data)) {
+      for (let value of data) {
+        //value = value.replace(/[.\W\d]/g,'');
+        //aqui ele formata as datas
+        if (value === "timestamp" || value === "date_invest" || value === "data" || value === "due_date" || value === "date_updated") {
+          fields.push({
+            key: value,
+            label: this.columnNameInvest(value),
+            sortable: true,
+            formatter: (value) => {
+              // return moment(String(value)).format('DD/MM/YYYY hh:mm');
+              console.log('tempo')
+              return moment(String(value)).format('DD/MM/YYYY');
+            }
+          });
+          //aqui formata os precos
+        } else if (value === "open" || value === "high" || value === "low" ||
+          value === "close" || value === "price" || value === "quote" ||
+          value === "total" ||
+          value === "1. open" || value === "2. high" || value === "3. low" ||
+          value === "4. close" || value === "avgprice" ||
+          value === "total_invested" || value === "total_updated" ||
+          value === "dif_reais"
+        ) {
+          fields.push({
+            key: value,
+            label: this.columnNameInvest(value.replace(/[.\W\d]/g, '')),
+            sortable: true,
+            formatter: (value) => {
+              return currFormatter.format(parseFloat(value));
+              //return value;
+            }
+          });
+          //aqui traz volume para valor inteiro, sem fracao
+        } else if (value === "volume" || value === "quant" || value === "5. volume") {
+          fields.push({
+            key: value,
+            label: this.columnNameInvest(value.replace(/[.\W\d]/g, '')),
+            sortable: true,
+            formatter: (value) => {
+              //return parseFloat(value).toFixed(2);
+              return numberForm.format(value);
+            }
+          });
+          //acerta a forma de apresentar porcentagem
+        } else if (value === "percentage") {
+          fields.push({
+            key: value,
+            label: this.columnNameInvest(value),
+            sortable: true,
+            formatter: (value) => {
+              return percFormatter.format(value);
+            }
+          });
+        } else if (value === "rate") {
+          fields.push({
+            key: value,
+            label: this.columnNameInvest(value),
+            sortable: true,
+            formatter: (value) => {
+              if (typeof value === 'number') {
+                return percFormatter.format(value / 100);
+              } else if (typeof value === 'string') {
+                return value;
+              } else {
+                console.log(`FieldsFiller: value===rate: nao eh string nem number: ${value} - ${typeof value}`)
+                return value;
+              }
+            }
+          });
+          //ajusta o nome do investimento
+        } else if (value === "type") {
+          fields.push({
+            key: value,
+            label: this.columnNameInvest(value),
+            sortable: true,
+            formatter: (value) => {
+              return this.columnNameInvest(value);
+            }
+          });
+        } else if (value === "coupon" || value === "fgc") {
+          fields.push({
+            key: value,
+            label: this.columnNameInvest(value),
+            sortable: true,
+            formatter: (value) => {
+              //return this.columnNameInvest(value);
+              if (value === 0) {
+                return 'Não';
+              } else {
+                return 'Sim';
+              }
+            }
+          });
+          //na pagina de criacao de stocks ele renderiza o campo symbol
+        } else if (value === "symbol" && slug === "stocks") {
+          fields.push({
+            key: value,
+            label: this.columnNameInvest(value),
+            sortable: true,
+          });
+          //estes itens nao serao renderizados
+        } else if (value === "_cellVariants" || value === "created_at" || value === "updated_at" || value === "redirect" ||
+          value === "user_id" || value === "issuer_id" || value === "security_id" || value === "canc_date" ||
+          value === "const_date" || value === "reg_date" || value === "fundos_cotas" || value === "fundo_exc" ||
+          value === "inv_qual" || value === "ir" || value === "taxa_perf" || value === "auditor" || value === "diretor" ||
+          value === "fundo_cotas" || value === "symbol" || value === "broker_name" || value === "broker_fee" ||
+          value === "quant_orig" || value === "total_orig" || value === "deleted_at" || value === "operation"
+          //|| value === "name" || value === "code" || value === "symbol") {
+        ) {
+          // faz nada
+        } else {
+          fields.push({
+            key: value,
+            label: this.columnNameInvest(value),
+            sortable: true,
+          });
+        }
+      }
+      return fields;
+    } else {
+      console.log('fields filler invest' + data);
+    }
+  };
+
+  const columnDescOperations = [
+    ["id", 'ID'],
+    ["diffReais", 'Dif. Reais'],
+    ["diffPerc", 'Dif. %'],
+    //     ["role_id", 'Permissão'],
+    //     ["created_at", "Criado em"],
+    ["date_invest", "Data da venda"],
+    //     ["updated_at", "Atual. em"],
+    //     ["timestamp", "Data do reg."],
+    //     ["symbol", "Ticket"],
+    //     ["stock_id", "Ticket"],
+    ["type", "Tipo"],
+    //     ["cnpj", "CNPJ"],
+    //     ["open", "Abertura"],
+    //     ["volume", "Volume"],
+    ["price", "Preço"],
+    //     ["low", "Baixa"],
+    //     ["high", "Alta"],
+    //     ["close", "Fecham"],
+    ["date_operation", "Data da oper."],
+    ["duration_days", "Duração."],
+    //     ["broker_fee", "Corretagem"],
+    //     ["broker_id", "Corretora"],
+    //     ["broker", "Corretora"],
+    //     ["quote", "Cotação"],
+    ["quant", "Quant."],
+    //     ["user_id", "Usuario"],
+    ["total", "Total"],
+    //     ["percentage", "%"],
+    //     ["invests", "Investimentos"],
+    //     ["stocks", "Ações"],
+    //     ["stock", "Ação"],
+    //     ["brokers", "Corretoras"],
+    //     ["broker_name", "Corretora"],
+    //     ["users", "Usuário"],
+    //     ["monthlyquotes", "Cotações mensais"],
+    //     ["dailyquotes", "Cotações diarias"],
+    //     ["fail", "Falha"],
+    //     ["success", "Sucesso"],
+    //     ["upToDate", "Atualiz. anteriormente"],
+    //     ["stock_name", "Ação"],
+    //     ["profile", "Perfil"],
+    //     ["treasuries", "Titulos"],
+    //     ["treasury", "Titulo"],
+    //     ["due_date", "Vencimento"],
+    //     ["coupon", "Juros semestrais"],
+    //     ["coupon_date", "Prim. pag. de juros"],
+    //     ["coupon_date2", "Seg. pag. de juros"],
+    //     ["code", "Código"],
+    //     ["0", "Não"],
+    //     ["1", "Sim"],
+    //     ["rate", "Rentab."],
+    //     ["avgprice", "Preço médio"],
+    //     ["sumquant", "Quantidade"],
+    //     ["index", "Índice"],
+    //     ["ir", "IR"],
+    //     ["name", "Nome"],
+    //     ["securities", "Renda fixa"],
+    //     ["security", "Renda fixa"],
+    //     ["liquidity", "Liquidez"],
+    //     ["fgc", "FGC"],
+    //     ["issuer_name", "Emissor"],
+    //     ["issuer", "Emissor"],
+    //     ["issuers", "Emissores"],
+    //     ["inv", "Invest."],
+    //     ["bc_code", "Codigo BC"],
+    //     ["unit", "Unidade"],
+    //     ["type_invest", "Tipo"],
+    //     ["designation", "Investimento"],
+    //     ["total_invested", "Tot. inv."],
+    //     ["total_updated", "Tot. atual."],
+    //     ["dif_percentage", "%"],
+    //     ["dif_reais", "Dif. (R$)"],
+    //     ["date_updated", "Data at."],
+    //     ["funds", "Fundos"],
+    //     ["fund", "Fundo"],
+    //     ["reg_date", "Data de registro"],
+    //     ["const_date", "Data de constituição"],
+    //     ["canc_date", "Data de cancelamento"],
+    //     ["sit", "Situação"],
+    //     ["classe", "Classe"],
+    //     ["rentabilidade", "Rentabilidade"],
+    //     ["inv_qual", "Investidor qualificado"],
+    //     ["fundo_exc", "Fundo exclusivo"],
+    //     ["fundo_cotas", "Fundo de cotas"],
+    //     ["taxa_perf", "Taxa de performance"],
+    //     ["diretor", "Diretor"],
+    //     ["admin", "Administrador"],
+    //     ["gestor", "Gestor"],
+    //     ["auditor", "Auditor"],
+  ];
+
+  columnNameOperations = function(column) {
+    let iterable = new Map(columnDescOperations);
+    for (let [key, value] of iterable) {
+      if (key === column) {
+        return value;
+      }
+    }
+    return column;
+  };
+
+  fieldsFillerOperations = function(data) {
+    let fields = [];
+    //depois ele vai fazer o tratamento dos dados apresentados, trazendo para formatos de apresentacao
+    if (Array.isArray(data)) {
+      for (let value of data) {
+        //value = value.replace(/[.\W\d]/g,'');
+        //aqui ele formata as datas
+        if (value === "timestamp" || value === "date_invest" || value === "data" || value === "due_date" || value === "date_updated" || value === "date_operation") {
+          fields.push({
+            key: value,
+            label: this.columnNameOperations(value),
+            sortable: true,
+            formatter: (value) => {
+              // return moment(String(value)).format('DD/MM/YYYY hh:mm');
+              console.log('tempo')
+              return moment(String(value)).format('DD/MM/YYYY');
+            }
+          });
+          //aqui formata os precos
+        } else if (value === "open" || value === "high" || value === "low" ||
+          value === "close" || value === "price" || value === "quote" ||
+          value === "total" ||
+          value === "1. open" || value === "2. high" || value === "3. low" ||
+          value === "4. close" || value === "avgprice" ||
+          value === "total_invested" || value === "total_updated" ||
+          value === "dif_reais" || value === "diffReais"
+        ) {
+          fields.push({
+            key: value,
+            label: this.columnNameOperations(value.replace(/[.\W\d]/g, '')),
+            sortable: true,
+            formatter: (value) => {
+              return currFormatter.format(parseFloat(value));
+              //return value;
+            }
+          });
+          //aqui traz volume para valor inteiro, sem fracao
+        } else if (value === "volume" || value === "quant" || value === "5. volume") {
+          fields.push({
+            key: value,
+            label: this.columnNameOperations(value.replace(/[.\W\d]/g, '')),
+            sortable: true,
+            formatter: (value) => {
+              //return parseFloat(value).toFixed(2);
+              return numberForm.format(value);
+            }
+          });
+          //acerta a forma de apresentar porcentagem
+        } else if (value === "diffPerc") {
+          fields.push({
+            key: value,
+            label: this.columnNameOperations(value),
+            sortable: true,
+            formatter: (value) => {
+              return `${parseFloat(value).toFixed(4).replace(',', '').replace('.', ',')}%`;
+            }
+          });
+          //         } else if (value === "rate") {
+          //             fields.push({
+          //               key: value,
+          //               label: this.columnNameOperations(value),
+          //               sortable: true,
+          //               formatter: (value) => {
+          //                 if (typeof value === 'number') {
+          //                 return percFormatter.format(value / 100);
+          //                 } else if (typeof value === 'string') {
+          //                 return value;
+          //                 } else {
+          //                 console.log(`FieldsFiller: value===rate: nao eh string nem number: ${value} - ${typeof value}`)
+          //                 return value;
+          //                 }
+          //               }
+          //             });
+          //ajusta o nome do investimento
+        } else if (value === "type") {
+          fields.push({
+            key: value,
+            label: this.columnNameOperations(value),
+            sortable: true,
+            formatter: (value) => {
+              return this.columnNameOperations(value);
+            }
+          });
+        } else if (value === "coupon" || value === "fgc") {
+          fields.push({
+            key: value,
+            label: this.columnNameOperations(value),
+            sortable: true,
+            formatter: (value) => {
+              //return this.columnNameOperations(value);
+              if (value === 0) {
+                return 'Não';
+              } else {
+                return 'Sim';
+              }
+            }
+          });
+          //na pagina de criacao de stocks ele renderiza o campo symbol
+        } else if (value === "symbol" && slug === "stocks") {
+          fields.push({
+            key: value,
+            label: this.columnNameOperations(value),
+            sortable: true,
+          });
+          //estes itens nao serao renderizados
+        } else if (value === "_cellVariants" || value === "created_at" || value === "updated_at" || value === "redirect" ||
+          value === "user_id" || value === "issuer_id" || value === "security_id" || value === "canc_date" ||
+          value === "const_date" || value === "reg_date" || value === "fundos_cotas" || value === "fundo_exc" ||
+          value === "inv_qual" || value === "ir" || value === "taxa_perf" || value === "auditor" || value === "diretor" ||
+          value === "fundo_cotas" || value === "symbol" || value === "broker_name" || value === "broker_fee" ||
+          value === "quant_orig" || value === "total_orig" || value === "deleted_at" || value === "operation" || value === "inv_id" ||
+          value === "treasury_id" || value === "fund_id" || value === "broker" || value === "receiver" || value === "type" || value === "stock_id" ||
+          value === "price_orig" || value === "rate" || value === "broker_id" || value === "broker_fee_orig" || value === "type"
+          //|| value === "name" || value === "code" || value === "symbol") {
+        ) {
+          // faz nada
+        } else {
+          fields.push({
+            key: value,
+            label: this.columnNameOperations(value),
+            sortable: true,
+          });
+        }
+      }
+      return fields;
+    } else {
+      console.log('fields filler operations' + data);
+    }
+  };
+
   formtt = function(data) {
     //depois ele vai fazer o tratamento dos dados apresentados, trazendo para formatos de apresentacao
     if (Array.isArray(data)) {
@@ -496,7 +974,12 @@ racaz = function() {
     "fullSlug": fullSlug,
     "pathArray": pathArray,
     "columnName": columnName,
+    "columnNameInvest": columnNameInvest,
     "fieldsFiller": fieldsFiller,
+    "fieldsFillerInvests": fieldsFillerInvests,
+    "columnNameOperations": columnNameOperations,
+    "fieldsFillerOperations": fieldsFillerOperations,
+    "fieldsFillerOperations": fieldsFillerOperations,
     "formtt": formtt,
     "unformtt": unformtt,
     "dateInvestLimit": dateInvestLimit,

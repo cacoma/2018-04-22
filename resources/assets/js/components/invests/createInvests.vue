@@ -41,6 +41,12 @@
     component: {
       template: '<div><moldura><createinveststypesecurities dusk="createinveststypesecurities"></createinveststypesecurities> </moldura></div>',
     }
+  },
+  {
+    name: 'Fundos de investimento ',
+    component: {
+      template: '<div><moldura><createinveststypefunds dusk="createinveststypefunds"></createinveststypefunds> </moldura></div>',
+    }
   }
 ]
 

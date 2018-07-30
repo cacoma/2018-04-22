@@ -63,6 +63,26 @@ export default {
       } else if (type == 'createTypeSecurities'){
         console.log(info);
         createTypeSecurities(info);
+        this.show = true;      
+      } else if (type == 'createTypeFunds'){
+        console.log(info);
+        createTypeFunds(info);
+        this.show = true;      
+      } else if (type == 'sellTypeStocks'){
+        console.log(info);
+        sellTypeStocks(info);
+        this.show = true;
+      } else if (type == 'sellTypeTreasuries'){
+        console.log(info);
+        sellTypeTreasuries(info);
+        this.show = true;
+      } else if (type == 'sellTypeSecurities'){
+        console.log(info);
+        sellTypeSecurities(info);
+        this.show = true;      
+      } else if (type == 'sellTypeFunds'){
+        console.log(info);
+        sellTypeFunds(info);
         this.show = true;
       } else if (type == 'createFund'){
         console.log(info);

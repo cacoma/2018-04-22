@@ -1,3 +1,5 @@
+const Papa = require('papaparse')
+
 class fundsInfo {
   constructor() {
     this.counter = 1;

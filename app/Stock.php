@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use App\MonthlyQuotes;
 use App\Invests;
+use App\investStock;
+
 class stock extends Model
 {
     //
@@ -34,6 +36,10 @@ class stock extends Model
   public function invests()
     {
         return $this->hasMany(invests::Class,'id','stock_id');
+    }  
+  public function investStock()
+    {
+        return $this->hasMany(investStock::Class,'id','stock_id');
     }
     
   
